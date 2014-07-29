@@ -85,10 +85,12 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetbuttons.v1.Tag", {
       ' data-issw-price-value="' + this.valueForToken("product_value") + '"' +
       ' data-issw-load-config="1" data-issw-page-mode="normal"></div>';
     //?
-    eval(
-      this.valueForToken("jQuery") + '(window._tmp_html).' +
-      this.valueForToken("selector")
-    );
+    // eval(
+    //   this.valueForToken("jQuery") + '(window._tmp_html).' +
+    //   this.valueForToken("selector")
+    // );
+    window[this.valueForToken("jQuery")](window._tmp_html).insertAfter(this.valueForToken("selector"));
+
     var head, styleElement;
     var css_url = "//" + this.valueForToken('pinboard_domain') + ".insparq.com/assets/vendors/" + this.valueForToken("clientname") + "/insparq-widget/share-widget.css";
     head = document.getElementsByTagName('head')[0];
