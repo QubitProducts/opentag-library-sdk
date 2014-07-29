@@ -1,6 +1,6 @@
 //:include tagsdk-current.js
 
-qubit.opentag.LibraryTag.define("mediamind.confirmationpagetag.v1.Tag", {
+qubit.opentag.LibraryTag.define("sizmek.confirmationpagetag.v1.Tag", {
 	config: {
 		/*DATA*/
 		name: "Confirmation Page Tag",
@@ -13,7 +13,7 @@ qubit.opentag.LibraryTag.define("mediamind.confirmationpagetag.v1.Tag", {
 		usesDocWrite: false,
 		upgradeable: true,
 		parameters: [{
-			name: "MediaMind Confirmation Page Activity ID",
+			name: "Sizmek Confirmation Page Activity ID",
 			description: "",
 			token: "activity_id",
 			uv: ""
