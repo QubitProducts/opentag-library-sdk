@@ -33,8 +33,8 @@ qubit.opentag.LibraryTag.define("insparq.trendingproductsmodule.v1.Tag", {
       token: "jQuery",
       uv: ""
     }, {
-      name: "jQuery Element Selector",
-      description: "e.g. insertBefore(....) , insertAfter(.....) , appendTo(.....) etc..",
+      name: "jQuery Element Selector to Insert After",
+      description: "e.g. #content",
       token: "selector",
       uv: ""
     }]
@@ -44,15 +44,13 @@ qubit.opentag.LibraryTag.define("insparq.trendingproductsmodule.v1.Tag", {
     /*SCRIPT*/
     var _this = this;
     (function () {
-      eval(
-        _this.valueForToken("jQuery") + '(\'<div id="iecw"></div>\').' +
-        _this.valueForToken("selector")
-      );
+
+      window['' + _this.valueForToken('jQuery')]('<div id="iecw"></div>').insertAfter('' + _this.valueForToken('selector'));
 
       var e = document.createElement('script');
       e.type = 'text/javascript';
       e.async = true;
-      e.src = '//'+this.valueForToken('pinboarddomain')+'.insparq.com/assets/endcaps/insparq_endcaps.js';
+      e.src = '//' + _this.valueForToken('pinboarddomain') + '.insparq.com/assets/endcaps/insparq_endcaps.js';
       e.module = '' + _this.valueForToken("module") + '';
       e.apikey = '' + _this.valueForToken("key") + '';
       var s = document.getElementsByTagName('script')[0];

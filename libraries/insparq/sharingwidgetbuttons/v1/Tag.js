@@ -23,8 +23,8 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetbuttons.v1.Tag", {
       token: "key",
       uv: ""
     }, {
-      name: "jQuery Element Selector",
-      description: "e.g. insertAfter(...)  ,  appendTo(...)  , insertBefore(....) etc.",
+      name: "jQuery Element Selector to Insert After",
+      description: "e.g. #content",
       token: "selector",
       uv: ""
     }, {
@@ -76,7 +76,7 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetbuttons.v1.Tag", {
   },
   pre: function () {
     /*PRE*/
-    window._tmp_html = '<div id="issw" data-issw-publisher-id="' + this.valueForToken("key") + '"' +
+    var _tmp_html = '<div id="issw" data-issw-publisher-id="' + this.valueForToken("key") + '"' +
       ' data-issw-publisher-name="' + this.valueForToken("clientname") + '"' +
       ' data-issw-name="' + this.valueForToken("product_name") + '"' +
       ' data-issw-product-url="' + this.valueForToken("product_url") + '"' +
@@ -84,12 +84,8 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetbuttons.v1.Tag", {
       ' data-issw-product-image-url="' + this.valueForToken("product_image") + '"' +
       ' data-issw-price-value="' + this.valueForToken("product_value") + '"' +
       ' data-issw-load-config="1" data-issw-page-mode="normal"></div>';
-    //?
-    // eval(
-    //   this.valueForToken("jQuery") + '(window._tmp_html).' +
-    //   this.valueForToken("selector")
-    // );
-    window[this.valueForToken("jQuery")](window._tmp_html).insertAfter(this.valueForToken("selector"));
+
+    window[''+this.valueForToken("jQuery")](_tmp_html).insertAfter(''+this.valueForToken("selector"));
 
     var head, styleElement;
     var css_url = "//" + this.valueForToken('pinboard_domain') + ".insparq.com/assets/vendors/" + this.valueForToken("clientname") + "/insparq-widget/share-widget.css";

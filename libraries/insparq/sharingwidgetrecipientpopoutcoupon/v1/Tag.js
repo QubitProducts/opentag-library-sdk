@@ -24,8 +24,8 @@ qubit.opentag.LibraryTag.define(
         token: "jQuery",
         uv: ""
       }, {
-        name: "jQuery Element Selector",
-        description: "e.g. insertAfter(....) , appendTo(.....) , insertBefore(......) etc..",
+        name: "jQuery Element Selector to Insert After",
+        description: "e.g. #content",
         token: "selector",
         uv: ""
       }, {
@@ -47,13 +47,11 @@ qubit.opentag.LibraryTag.define(
     },
     pre: function () {
       /*PRE*/
-      window._tmp_html = '<div id="issw"	data-issw-publisher-id="' +
+      var _tmp_html = '<div id="issw"	data-issw-publisher-id="' +
         this.valueForToken("key") +
         '" data-issw-load-config="1" data-issw-page-mode="hidden"></div>';
-      eval(
-        this.valueForToken("jQuery") + '(window._tmp_html).' +
-        this.valueForToken("selector")
-      );
+
+      window['' + this.valueForToken("jQuery")](_tmp_html).insertAfter('' + this.valueForToken('selector'));
       var head, styleElement;
       var css_url = "//" + this.valueForToken('pinboard_domain') + ".insparq.com/assets/vendors/" + this.valueForToken("clientname") + "/insparq-widget/share-widget.css";
       head = document.getElementsByTagName('head')[0];

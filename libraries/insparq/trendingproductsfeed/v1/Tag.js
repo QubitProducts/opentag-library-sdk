@@ -18,8 +18,8 @@ qubit.opentag.LibraryTag.define("insparq.trendingproductsfeed.v1.Tag", {
       token: "jQuery",
       uv: ""
     }, {
-      name: "jQuery Element Selector",
-      description: "e.g. insertAfter(...) , insertBefore(....) , appendTo(....)",
+      name: "jQuery Element Selector to Insert After",
+      description: "e.g. #content",
       token: "selector",
       uv: ""
     }, {
@@ -48,21 +48,18 @@ qubit.opentag.LibraryTag.define("insparq.trendingproductsfeed.v1.Tag", {
     link.media = "all";
     link.rel = "stylesheet";
     link.type = "text/css";
-    link.href = "//" + this.valueForToken("pinboard_domain") + ".insparq.com/assets/insparq.css";
+    link.href = "//" + _this.valueForToken("pinboard_domain") + ".insparq.com/assets/insparq.css";
     document.head.appendChild(link);
 
     link = document.createElement('link');
     link.media = "all";
     link.rel = "stylesheet";
     link.type = "text/css";
-    link.href = "" + this.valueForToken("url");
+    link.href = "" + _this.valueForToken("url");
     document.head.appendChild(link);
 
     // HTML
-    eval(
-      this.valueForToken("jQuery") + '(\'<div id="insparq"></div>\').' +
-      this.valueForToken("selector")
-    );
+    window[''+_this.valueForToken("jQuery")]('<div id="insparq"></div>').insertAfter(''+_this.valueForToken('selector'));
 
     // JS
     (function (d, t) {
@@ -70,7 +67,7 @@ qubit.opentag.LibraryTag.define("insparq.trendingproductsfeed.v1.Tag", {
         s = d.getElementsByTagName(t)[0];
       g.type = 'text/javascript';
       g.async = true;
-      g.src = '//' + this.valueForToken('pinboard_domain') + '.insparq.com/assets/insparq.js';
+      g.src = '//' + _this.valueForToken('pinboard_domain') + '.insparq.com/assets/insparq.js';
       g.apikey = '' + _this.valueForToken("client");
       s.parentNode.insertBefore(g, s);
     })(document, 'script');
