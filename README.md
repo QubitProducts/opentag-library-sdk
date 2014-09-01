@@ -25,7 +25,7 @@ If you want to contribute code back to this repository, please use the following
  * Fork this repository (by clicking the fork button above). 
  * Checkout your fork of the repository 
 
-   ```git clone git@github.com:<your git account>/opentag-vendor-sdk.git```
+   ```git clone git@github.com:<your git account>/opentag-library-sdk.git```
  
  * Make a branch for the new/altered tag(s) 
  

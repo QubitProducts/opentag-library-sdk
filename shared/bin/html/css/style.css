@@ -1,0 +1,5 @@
+@font-face {
+  font-family: "Museo Sans 500";
+  src: url("../fonts/MuseoSans_500.eot");
+  src: local("Museo Sans 500"), local("MuseoSans-500"), url("../fonts/MuseoSans_500.otf") format("opentype");
+}

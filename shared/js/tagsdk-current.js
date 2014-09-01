@@ -24,7 +24,7 @@
 
 var global = this;
 try {
-  global = (false || eval)("this") || (function (){return this;}()) || window;
+  global = (false || eval)("this") || (function () {return this; }()) || window;
 } catch (e) {}
 
 global.NAMESPACE = global;
@@ -33,7 +33,7 @@ global.qubit = global.qubit || {};
 
 //shortcuts
 var EMPTY_FUN = function () {};
-var UNDEF = undefined;
+var UNDEF;
 
 
 /*
@@ -3570,6 +3570,27 @@ q.html.simplecookie.writeCookie = function (name, value, days, domain) {
     return ret;
   }
   
+  /**
+   * 
+   * @param {qubit.opentag.BaseTag} tag
+   * @returns {Array} Array of [parameter,variable] pairs
+   */
+  TagHelper.getAllVariablesWithParameters = function(tag) {
+    var vars = tag.getPageVariables();
+    var results = [];
+    for (var i = 0; i < vars.length; i++) {
+      var pageVar = vars[i];
+      var parameters = findParamatersForVariable(tag, pageVar);
+      for (var j = 0; j < parameters.length; j++) {
+        results.push({
+          parameter: parameters[j],
+          variable: pageVar
+        });
+      }
+    }
+    return results;
+  };
+  
   var _lock_obj = {};
   /**
    * Indicates if all parameters have variables assigned for the tag.
@@ -3660,7 +3681,9 @@ q.html.simplecookie.writeCookie = function (name, value, days, domain) {
       if (param.variable) {
         return param.variable = TagHelper.initPageVariable(param.variable);
       }
-    } else if (param.uv) {//empty strings are also excluded
+    }
+    
+    if (param.uv) {//empty strings are also excluded
       return param.variable = new Expression({
         name: param.uv,
         value: param.uv
@@ -4786,7 +4809,7 @@ q.html.simplecookie.writeCookie = function (name, value, days, domain) {
           this.log.WARN("timed out while loading dependencies.");
           this.addState("TIMED_OUT");
           this.loadingDependenciesFailed = new Date().valueOf();
-          this.onLoadTimeout();
+          this._triggerOnLoadTimeout();
         }
       } else {
         //wait for dependencies, no matter what.
@@ -4970,6 +4993,14 @@ q.html.simplecookie.writeCookie = function (name, value, days, domain) {
    * @param {String} error Error string.
    */
   GenericLoader.prototype.onError = EMPTY_FUN;
+  
+  /**
+   * Triggers onLoadTimeout event.
+   * @protected
+   */
+  GenericLoader.prototype._triggerOnLoadTimeout = function () {
+    this.onLoadTimeout();
+  };
   
   /**
    * It is called when tag loading is timed out
@@ -6310,6 +6341,68 @@ q.html.simplecookie.writeCookie = function (name, value, days, domain) {
     return variable;
   };
 
+  /**
+   * Logs this tag variables debugable information.
+   * @returns {Array} Array of objects with properties:
+   * 
+   *  name - name of variable
+   *  
+   *  exists - if variable value exists by tag meaning
+   *  
+   *  token - parameters token associated with variable, if exists,
+   *    null otherwise.
+   *  
+   *  value - current variable value
+   *  
+   *  variable - direct variable reference
+   */
+  BaseTag.prototype.checkVariablesState = function () {
+    var res = [];
+    this.log.FINE("Tag has been timed out, showing variables:");
+    var pairs = TagHelper.getAllVariablesWithParameters(this);
+    
+    for (var i = 0; i < pairs.length; i++) {
+      var param = pairs[i].parameter;
+      var variable = pairs[i].variable;
+      var val;
+      
+      if (param && param.token) {
+        val = this.valueForToken(param.token);
+      } else {
+        val = variable.getRelativeValue(true);
+      };
+      
+      var tmp = {
+        name: variable.config.name,
+        exists: variable.exists(),
+        token: param ? param.token : null,
+        value: val,
+        variable: variable
+      };
+      res.push(tmp);
+      
+      /*log*/
+      this.log.FINE(
+              " Variable Name: " + tmp.name +
+              ", Exists: " + tmp.exists +
+              ", Token: " + (param ? param.token : "<param is not assigned>") +
+              ", Value:" + val
+              );
+      /*~log*/
+    }
+    
+    return res;
+  };
+
+  /**
+   * @protected
+   * Triggers onLoadTimeout event.
+   */
+  BaseTag.prototype._triggerOnLoadTimeout = function () {
+    this.checkVariablesState();//L
+    this.onLoadTimeout();
+  };
+
   function _getSetNamedVariable(tag, token) {
     var variable = TagHelper.initPageVariable(tag.namedVariables[token]);
     tag.namedVariables[token] = variable;
@@ -6558,8 +6651,8 @@ q.html.PostData = function (url, data, type) {
   var _post, agent, isIe, isIe9, isOldIe, fullUrl, loaded, 
     retry, retryDelay, retryCount;
 
-  retryCount = 5;
-  retryDelay = 2000;
+  retryCount = 2;
+  retryDelay = 5000;
   loaded = false;
 
   retry = function () {
@@ -8916,6 +9009,7 @@ var JSON = {};
 
 
 
+
 (function() {
   var Utils = qubit.opentag.Utils;
   var PatternType = qubit.opentag.filter.pattern.PatternType;
@@ -8924,6 +9018,7 @@ var JSON = {};
   var LibraryTag = qubit.opentag.LibraryTag;
   var CustomTag = qubit.opentag.CustomTag;
   var DOMText = qubit.opentag.pagevariable.DOMText;
+  var BaseVariable = qubit.opentag.pagevariable.BaseVariable;
   var URLQuery = qubit.opentag.pagevariable.URLQuery;
   var Cookie = qubit.opentag.pagevariable.Cookie;
   var Expression = qubit.opentag.pagevariable.Expression;
@@ -9134,7 +9229,7 @@ var JSON = {};
             name: variableDefinition.name,
             value: variableDefinition.value
           };
-          //hard coded value????
+          
           switch (variableDefinition.type) {
             case V_JS_VALUE: //covers also UV
               variable = new Expression(varCfg);
@@ -9149,7 +9244,7 @@ var JSON = {};
               variable = new DOMText(varCfg);
               break;
             default:
-              //hard coded val???
+              variable = new BaseVariable(varCfg);
           }
           
           var parameter = {
@@ -9288,3 +9383,231 @@ var JSON = {};
     }
   }
 })();
+
+
+(function () {
+  var category = {
+    id: 4,
+    name: "AB & Multi-Variate Testing"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.ABMultiVariateTesting",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 10,
+    name: "Advertising Network"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.AdvertisingNetwork",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 5,
+    name: "Affiliate Networks"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.AffiliateNetworks",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 9,
+    name: "Audience Management"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.AudienceManagement",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 13,
+    name: "DSP"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.DSP",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 14,
+    name: "DSP (Ad Server)"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.DSPAdServer",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 12,
+    name: "Digital Media Agencies"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.DigitalMediaAgencies",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 15,
+    name: "Email Service Provider (ESP)"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.EmailServiceProviderESP",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 16,
+    name: "Feed Management (Shopping Comparison)"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.FeedManagementShoppingComparison",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 17,
+    name: "Live Chat & Customer Service Engine"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.LiveChatCustomerServiceEngine",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 18,
+    name: "Merchandising & Rich Media"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.MerchandisingRichMedia",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 19,
+    name: "Personalisation Platform"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.PersonalisationPlatform",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 6,
+    name: "Ratings & Review Engine"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.RatingsReviewEngine",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 8,
+    name: "Re-Targeting"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.ReTargeting",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 7,
+    name: "Search Engine"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.SearchEngine",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 3,
+    name: "Social"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.Social",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 11,
+    name: "Tag Management"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.TagManagement",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 2,
+    name: "Web Analytics"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.WebAnalytics",
+          category);
+}());
+
+
+(function () {
+  var category = {
+    id: 1,
+    name: "Web Utilities / JavaScript Tools"
+  };
+  
+  qubit.opentag.Utils.namespace(
+          "qubit.opentag.data.category.ABMultiVariateTesting",
+          category);
+}());
