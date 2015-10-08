@@ -19,6 +19,7 @@ dist
 .Trashes
 ehthumbs.db
 Thumbs.db
+.idea/
 .git
 dist
 build
