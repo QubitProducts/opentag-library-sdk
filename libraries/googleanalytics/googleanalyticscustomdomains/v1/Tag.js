@@ -16,12 +16,12 @@ qubit.opentag.LibraryTag.define(
 			parameters: [{
 				name: "GA Profile ID",
 				description: "Profile ID of your Google Analytics account",
-				token: "PROFILE_ID",
+				token: "profile_id",
 				uv: ""
 			}, {
 				name: "Domain URL",
-				description: "In the format www.yourdomain.com or subdomain.yourdomain.com",
-				token: "DOMAIN",
+				description: "In the format www.yourdomain.com, yourdomain.com or subdomain.yourdomain.com",
+				token: "domain",
 				uv: ""
 			}]
 			/*~DATA*/
@@ -29,8 +29,8 @@ qubit.opentag.LibraryTag.define(
 		script: function() {
 			/*SCRIPT*/
 			window._gaq = window._gaq || [];
-			_gaq.push(['_setAccount', '' + this.valueForToken("PROFILE_ID")]);
-			_gaq.push(['_setDomainName', '' + this.valueForToken("DOMAIN")]);
+			_gaq.push(['_setAccount', '' + this.valueForToken("profile_id")]);
+			_gaq.push(['_setDomainName', '' + this.valueForToken("domain")]);
 			_gaq.push(['_trackPageview']);
 
 			var ga = document.createElement('script');
