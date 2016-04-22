@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("rocketfuel.homepage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Home Page",
 		async: true,
 		description: "Place on the site's home page. Intended to fire once per session - requires custom implementation to enforce this.",
@@ -27,25 +28,30 @@ qubit.opentag.LibraryTag.define("rocketfuel.homepage.v1.Tag", {
 			description: "Random number for use as a cachebuster",
 			token: "random",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"DSP (Ad Server)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = new Image();
 		img.src = "//" +
 			this.valueForToken("campaign_id") + "p.rfihub.com/ca.gif?rb=" +
 			this.valueForToken("merchant_id") + "&ca=" +
 			this.valueForToken("campaign_id") + "&ra=" +
 			this.valueForToken("random")
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

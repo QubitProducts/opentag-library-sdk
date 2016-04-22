@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.uvapichangelistener.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "UV API - change listener",
 		async: true,
 		description: "Uses polling to check for changes to the UV, running callbacks when changes occur. Changes are detected on a deep level.",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("qubit.uvapichangelistener.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._uv = window._uv || [];
 		var u = window.universal_variable = window.universal_variable || {};
 		var currentUV;
@@ -256,14 +262,14 @@ qubit.opentag.LibraryTag.define("qubit.uvapichangelistener.v1.Tag", {
 		// Process things added before the API loads
 		processCallbacks();
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

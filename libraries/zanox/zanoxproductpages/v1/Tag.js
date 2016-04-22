@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("zanox.zanoxproductpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Zanox - Product Pages",
 		async: true,
 		description: "To be placed on product pages. Passes back product details as well as running the standard mastertag.",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("zanox.zanoxproductpages.v1.Tag", {
 			description: "",
 			token: "url",
 			uv: "universal_variable.product.url"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		// Populate product fields
 		window.zx_identifier = "" + this.valueForToken("product_id");
 		window.zx_fn = "" + this.valueForToken("name");
@@ -88,14 +94,14 @@ qubit.opentag.LibraryTag.define("zanox.zanoxproductpages.v1.Tag", {
 			}
 		};
 		waitForZanoxDiv();
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -27,3 +27,12 @@ shared/bin/html/scripts.txt
 nbproject/private/
 nbproject
 shared/bin/html/js/build-location.js
+
+# SPECFIC to REPO #
+######################
+_dist/
+_trash/
+_build/
+_releases/
+.*
+_branches/

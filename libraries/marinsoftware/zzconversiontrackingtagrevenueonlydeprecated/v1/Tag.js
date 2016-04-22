@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"marinsoftware.zzconversiontrackingtagrevenueonlydeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "zz-Conversion Tracking Tag - Revenue only [DEPRECATED]",
 			async: true,
 			description: "This conversion pixel tracks revenue only. Use either this or the asynchronous Conversion Capture Code depending on the instructions you have been given by Marin.",
@@ -38,11 +39,16 @@ qubit.opentag.LibraryTag.define(
 				description: "The order the currency is in. Can be hard coded to GBP if appropriate",
 				token: "currency",
 				uv: "universal_variable.transaction.currency"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._mf = document.createElement("form");
 			_mf.style.display = "none";
 			_mf.name = "utmform";
@@ -85,14 +91,14 @@ qubit.opentag.LibraryTag.define(
 				}
 			};
 			document.body.appendChild(_ml);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

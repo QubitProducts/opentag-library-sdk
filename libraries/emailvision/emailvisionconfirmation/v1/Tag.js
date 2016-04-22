@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("emailvision.emailvisionconfirmation.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Emailvision - Confirmation",
 		async: true,
 		description: "The Emailvision tag to be used on confirmation pages.",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("emailvision.emailvisionconfirmation.v1.Tag", {
 			description: "The PCT server on Emailvision to send pings to",
 			token: "pct_server",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var src = "//" + this.valueForToken("pct_server") +
 			".emv2.com/P?emv_client_id=" + this.valueForToken("client_id") +
 			"&emv_value=";
@@ -71,14 +77,14 @@ qubit.opentag.LibraryTag.define("emailvision.emailvisionconfirmation.v1.Tag", {
 		pixel.setAttribute("width", "1");
 		pixel.setAttribute("height", "1");
 		document.body.appendChild(pixel);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

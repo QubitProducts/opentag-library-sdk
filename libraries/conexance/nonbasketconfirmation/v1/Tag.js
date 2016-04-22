@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("conexance.nonbasketconfirmation.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Non basket/confirmation",
 		async: true,
 		description: "Conexance tag for non basket/confirmation pages. Requires tag ID (specifies which page).",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("conexance.nonbasketconfirmation.v1.Tag", {
 			description: "The full URL of the Web1by1 Functions script (i.e. http://www.your-website.com/w1x1.jpg)",
 			token: "web1by1_functions_script",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var require = function(url, cb) {
 			var script = document.createElement("script");
@@ -64,14 +70,14 @@ qubit.opentag.LibraryTag.define("conexance.nonbasketconfirmation.v1.Tag", {
 		});
 
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

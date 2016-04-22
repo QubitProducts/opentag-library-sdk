@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sizmek.confirmationpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page Tag",
 		async: true,
 		description: "To be placed on the confirmation page only",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("sizmek.confirmationpagetag.v1.Tag", {
 			description: "",
 			token: "quants",
 			uv: "universal_variable.transaction.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.ebRev = "" + this.valueForToken("order_total");
 		window.ebOrderID = "" + this.valueForToken("order_id");
 		window.ebProductID = "";
@@ -75,14 +81,14 @@ qubit.opentag.LibraryTag.define("sizmek.confirmationpagetag.v1.Tag", {
 			ebRev + "&OrderID=" + ebOrderID + "&ProductID=" + ebProductID +
 			"&ProductInfo=" + ebProductInfo + "&Quantity=" + ebQuantity;
 		document.getElementsByTagName("head")[0].appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

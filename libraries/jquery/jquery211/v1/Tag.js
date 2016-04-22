@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("jquery.jquery211.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "2.1.1",
 		async: false,
 		description: "jQuery, released on 2014-05-01",
@@ -14,19 +15,24 @@ qubit.opentag.LibraryTag.define("jquery.jquery211.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
-	]
-		/*~DATA*/
+	],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-	/*SCRIPT*/
-	/*~SCRIPT*/
+	/*script*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

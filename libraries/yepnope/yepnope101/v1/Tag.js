@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("yepnope.yepnope101.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "yepnope 1.0.1",
 		async: true,
 		description: "yepnope is an asynchronous conditional resource loader that's super-fast, and allows you to load only the scripts that your users need.",
@@ -14,19 +15,24 @@ qubit.opentag.LibraryTag.define("yepnope.yepnope101.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
-	},
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

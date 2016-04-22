@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("insparq.pinboard.v1.Tag", {
-  config: {
-    /*DATA*/
+  getDefaultConfig: function () {
+      return {
+    /*config*/
     name: "Trending Products Feed",
     async: true,
     description: "A pinboard-style feed that showcases your e-commerce site’s trending products. Best implemented in a standalone page.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("insparq.pinboard.v1.Tag", {
       description: "URL for pinboard's CSS",
       token: "stylesheeturl",
       uv: ""
-    }]
-    /*~DATA*/
+    }],
+		categories:[
+			"Social"
+		]
+
+    /*~config*/
+		};
   },
   script: function () {
-    /*SCRIPT*/
+    /*script*/
     var _this = this;
     // CSS
     var link = document.createElement('link');
@@ -66,14 +72,14 @@ qubit.opentag.LibraryTag.define("insparq.pinboard.v1.Tag", {
       g.apikey = '' + _this.valueForToken("insparq_api_key");
       s.parentNode.insertBefore(g, s);
     })(document, 'script');
-    /*~SCRIPT*/
+    /*~script*/
   },
   pre: function () {
-    /*PRE*/
-    /*~PRE*/
+    /*pre*/
+    /*~pre*/
   },
   post: function () {
-    /*POST*/
-    /*~POST*/
+    /*post*/
+    /*~post*/
   }
 });

@@ -1,41 +1,43 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webperfio.foglio.v1.Tag", {
-	config: {
-		/*DATA*/
-		name: "foglio",
-		async: true,
-		description: "Foglio sampling tag sends user navigation performance to Webperf.io and time markers.",
-		html: "",
-		locationDetail: "",
-		isPrivate: false,
-		url: "",
-		usesDocWrite: false,
-		upgradeable: true,
-		parameters: [
-			{
-				name: "App Id",
-				description: "Your unique app id",
-				token: "foglio_app_id",
-				uv: "universal_variable.foglio.app_id"
-			},
-			{
-				name: "Foglio sampling rate",
-				description: "Foglio sampling rate : 1 = 100%, generally : 0.1 (10%). Rates depends of your plan.",
-				token: "foglio_sampling_rate",
-				uv: "universal_variable.foglio.foglio_sampling_rate"
-			},
-			{
-				name: "Foglio token",
-				description: "Foglio token",
-				token: "foglio_token",
-				uv: "universal_variable.foglio.foglio_token"
-			}
-		]
-		/*~DATA*/
+	getDefaultConfig: function () {
+    return {
+      /*config*/
+      name: "foglio",
+      async: true,
+      description: "Foglio sampling tag sends user navigation performance to Webperf.io and time markers.",
+      html: "",
+      locationDetail: "",
+      isPrivate: false,
+      url: "",
+      usesDocWrite: false,
+      upgradeable: true,
+      parameters: [
+        {
+          name: "App Id",
+          description: "Your unique app id",
+          token: "foglio_app_id",
+          uv: "universal_variable.foglio.app_id"
+        },
+        {
+          name: "Foglio sampling rate",
+          description: "Foglio sampling rate : 1 = 100%, generally : 0.1 (10%). Rates depends of your plan.",
+          token: "foglio_sampling_rate",
+          uv: "universal_variable.foglio.foglio_sampling_rate"
+        },
+        {
+          name: "Foglio token",
+          description: "Foglio token",
+          token: "foglio_token",
+          uv: "universal_variable.foglio.foglio_token"
+        }
+      ]
+      /*~config*/
+    };
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 		var _this = this;
 		(function() {
 			var f,d,a,b = document.createElement("iframe");
@@ -65,10 +67,10 @@ qubit.opentag.LibraryTag.define("webperfio.foglio.v1.Tag", {
 			d.close();
 		})
 		();
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
+	/*pre*/
 		var FOGLIO = window.FOGLIO || {};
 		FOGLIO.queue = FOGLIO.queue || {};
 		FOGLIO.tag_s = new Date().getTime();
@@ -89,10 +91,10 @@ qubit.opentag.LibraryTag.define("webperfio.foglio.v1.Tag", {
 			};
 			return false;
 		};
-	/*~PRE*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

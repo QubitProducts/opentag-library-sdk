@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleuniversalanalytics.generictagsendingcustomfieldnameobjects.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Generic Tag sending custom Field Name Objects",
 			async: true,
 			description: "This tag sends a collection of custom field name objects, allowing for any combination of hit types to be sent. Consider populating a window variable with this array in a custom script. For field object reference, see: http://goo.gl/z9gs4",
@@ -23,11 +24,16 @@ qubit.opentag.LibraryTag.define(
 				description: "An array of field objects, each of which must define at least a 'hitType'",
 				token: "field_objects",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var _this = this;
 
 			(function(i, s, o, g, r, a, m) {
@@ -48,14 +54,14 @@ qubit.opentag.LibraryTag.define(
 			for (var i = 0; i < _this.valueForToken("field_objects").length; i++) {
 				ga('send', _this.valueForToken("field_objects")[i]);
 			}
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

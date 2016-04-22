@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.googleaffiliatenetworkconversion.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Affiliate Network Conversion",
 			async: true,
 			description: "Conversion script for Google Affiliate Network",
@@ -43,19 +44,24 @@ qubit.opentag.LibraryTag.define(
 				description: "Define the type of event. Valid options are \"transaction\" or \"action\".",
 				token: "EVENT_TYPE",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

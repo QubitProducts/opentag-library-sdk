@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Travel Search Page",
 		async: true,
 		description: "This is a search tag specifically built for travel enquiries, as it stores check-in and check-out dates.",
@@ -47,19 +48,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v1.Tag", {
 			description: "The date of check out, as a string \"YYYY-MM-DD\"",
 			token: "check_out",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		//Criteo suggests that this list should only be 3 products long.
 		var products = [];
 
@@ -98,6 +104,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v1.Tag", {
 				checkout_date: "" + this.valueForToken("check_out")
 			}
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

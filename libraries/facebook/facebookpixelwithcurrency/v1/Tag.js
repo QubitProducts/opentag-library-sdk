@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("facebook.facebookpixelwithcurrency.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Facebook Pixel with Currency",
 		async: true,
 		description: "",
@@ -32,23 +33,28 @@ qubit.opentag.LibraryTag.define("facebook.facebookpixelwithcurrency.v1.Tag", {
 			description: "",
 			token: "currency",
 			uv: "universal_variable.transaction.currency"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Social"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.fb_param = {};
 		fb_param.pixel_id = '' + this.valueForToken("pixel_id");
 		fb_param.value = '' + this.valueForToken("order_value");
 		fb_param.currency = '' + this.valueForToken("currency");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

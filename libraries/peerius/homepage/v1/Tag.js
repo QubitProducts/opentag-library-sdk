@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.homepage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Home Page",
 		async: true,
 		description: "Peerius tag for the home page",
@@ -37,15 +38,20 @@ qubit.opentag.LibraryTag.define("peerius.homepage.v1.Tag", {
 			description: "The name of the client for which the tag is to be implemented",
 			token: "client_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "home",
@@ -57,10 +63,10 @@ qubit.opentag.LibraryTag.define("peerius.homepage.v1.Tag", {
 				}
 			}
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

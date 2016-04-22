@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sojern.advertisertaghotelproductpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Advertiser Tag - Hotel Product Page",
 		async: true,
 		description: "",
@@ -17,21 +18,26 @@ qubit.opentag.LibraryTag.define("sojern.advertisertaghotelproductpage.v1.Tag", {
 			description: "Product ID",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		(new Image()).src = "https://beacon.sojern.com/p/1?hpid=" +
 			this.valueForToken("id");
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

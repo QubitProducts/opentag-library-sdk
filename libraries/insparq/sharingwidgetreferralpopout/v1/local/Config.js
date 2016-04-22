@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('insparq.sharingwidgetreferralpopout.v1.local');
 insparq.sharingwidgetreferralpopout.v1.local.Config = {
   "parameters": [
@@ -37,6 +37,6 @@ insparq.sharingwidgetreferralpopout.v1.local.Config = {
       "token": "jQuery",
       "uv": "",
       "inputVariable": "\"jQuery\""
-    },
+    }
   ]
 };

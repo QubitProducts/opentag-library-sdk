@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagcategorypage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Category Page",
 		async: true,
 		description: "Add to a page listing products. This will pick off the first three values in the Listing Product IDs array and send them to Criteo, with (by default) the page's subcategory as keywords. INTENDED FOR: Pages which do not include a query in their UV Listing.",
@@ -37,19 +38,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagcategorypage.v1.Tag", {
 			description: "The keywords used to generate the list.",
 			token: "list_keywords",
 			uv: "universal_variable.page.subcategory"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		//Criteo suggests that this list should only be 3 products long.
 		var products = [];
 
@@ -81,6 +87,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagcategorypage.v1.Tag", {
 			product: products,
 			keywords: "" + this.valueForToken("list_keywords")
 		});
-		/*~POST*/
+		/*~post*/
 	}
 });

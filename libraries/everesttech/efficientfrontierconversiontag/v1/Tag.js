@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"everesttech.efficientfrontierconversiontag.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Efficient Frontier Conversion Tag",
 			async: true,
 			description: "To be placed only on the confirmation page",
@@ -33,19 +34,24 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "order_id",
 				uv: "universal_variable.transaction.order_id"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			try {
 				window.ef_event_type = "transaction";
 				window.ef_transaction_properties = "ev_Very_Revenue=" +
@@ -58,6 +64,6 @@ qubit.opentag.LibraryTag.define(
 				effp();
 			} catch (err) {}
 
-			/*~POST*/
+			/*~post*/
 		}
 	});

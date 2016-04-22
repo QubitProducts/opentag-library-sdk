@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"coremetrics.coremetricsproductpageswithcustomattribute.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "CoreMetrics - Product pages (with Custom Attribute)",
 			async: true,
 			description: "The same as the product page tag, but with the extra parameter to distinguish a specific type of product page view content.",
@@ -58,19 +59,24 @@ qubit.opentag.LibraryTag.define(
 				description: "Any custom parameter you would like to pass to distinguish between product content",
 				token: "custom_attribute",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			// Client Setup
 			window.cmSetClientID(
 				"" + this.valueForToken("client_id"),
@@ -92,6 +98,6 @@ qubit.opentag.LibraryTag.define(
 				"" + this.valueForToken("category_id"),
 				"" + this.valueForToken("custom_attribute")
 			);
-			/*~POST*/
+			/*~post*/
 		}
 	});

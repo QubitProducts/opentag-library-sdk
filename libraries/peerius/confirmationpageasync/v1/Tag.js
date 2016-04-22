@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.confirmationpageasync.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page (Async)",
 		async: true,
 		description: "For use in single page checkouts, when transaction can happen after page load (virtual page views)",
@@ -67,15 +68,20 @@ qubit.opentag.LibraryTag.define("peerius.confirmationpageasync.v1.Tag", {
 			description: "The start of the URL in the ajax request: often just the Peerius client ID",
 			token: "url_start",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "order",
@@ -98,15 +104,15 @@ qubit.opentag.LibraryTag.define("peerius.confirmationpageasync.v1.Tag", {
 				price: this.valueForToken("unit_sale_price_list")[i]
 			});
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var orderString = JSON.stringify(PeeriusCallbacks.track.order);
 		var order = encodeURIComponent(orderString);
 		Peerius.sendAjax("" + this.valueForToken("url_start") +
 			"/order/add.pagex?order=" + order);
 
-		/*~POST*/
+		/*~post*/
 	}
 });

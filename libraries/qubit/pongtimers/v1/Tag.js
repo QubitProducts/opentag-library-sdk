@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.pongtimers.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Pong Timers",
 		async: false,
 		description: "Times how long it takes to load pong and pings the stats back.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("qubit.pongtimers.v1.Tag", {
 			description: "URL of the pong to be tested",
 			token: "pong_url",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		if (performance && performance.timing && (window.XDomainRequest ||
 			XMLHttpRequest)) {
 
@@ -50,14 +56,14 @@ qubit.opentag.LibraryTag.define("qubit.pongtimers.v1.Tag", {
 				data: times
 			});
 		}
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

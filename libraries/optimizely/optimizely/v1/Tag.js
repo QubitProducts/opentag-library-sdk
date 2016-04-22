@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("optimizely.optimizely.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Optimizely",
 		async: true,
 		description: "Simple, fast, and powerful. Optimizely is a dramatically easier way for you to improve your website through A/B testing. Create an experiment in minutes with our easy to use visual interface with absolutely no coding or engineering required.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("optimizely.optimizely.v1.Tag", {
 			description: "Please enter your account ID. Do not include the .js",
 			token: "ACCOUNT_ID",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"AB & Multi-Variate Testing"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

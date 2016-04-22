@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("googleuniversalanalytics.ecgeneric.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Enhanced Ecommerce - Pageview - Generic",
 		async: true,
 		description: "",
@@ -37,11 +38,16 @@ qubit.opentag.LibraryTag.define("googleuniversalanalytics.ecgeneric.v1.Tag", {
 				description: "JavaScript configuration object for pageview command",
 				defaultValue: {}
 			}
+		],
+		categories:[
+			"Web Analytics"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 		(function(i, s, o, g, r, a, m) {
 			i["GoogleAnalyticsObject"] = r;
 			i[r] = i[r] || function() {
@@ -62,14 +68,14 @@ qubit.opentag.LibraryTag.define("googleuniversalanalytics.ecgeneric.v1.Tag", {
 		}
 
 		ga("send", "pageview", this.valueForToken("pageview_conf"));
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

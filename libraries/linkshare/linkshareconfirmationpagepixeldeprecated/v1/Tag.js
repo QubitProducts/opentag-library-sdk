@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"linkshare.linkshareconfirmationpagepixeldeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "LinkShare Confirmation Page Pixel - DEPRECATED",
 			async: true,
 			description: "Reports transactions to linkshare server",
@@ -48,11 +49,16 @@ qubit.opentag.LibraryTag.define(
 				description: "This is the product name value.",
 				token: "name_list",
 				uv: "universal_variable.transaction.line_items[#].product.name"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var x = document.createElement("img");
 
 			var skuList = [],
@@ -75,14 +81,14 @@ qubit.opentag.LibraryTag.define(
 				"&qlist=" + qList.join("|") + "&amtlist=" + amtList.join("|") + "&cur=" +
 				this.valueForToken("cur") + "&namelist=" + nameList.join("|");
 			document.body.appendChild(x);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('tvsquared.action.v1.local');
 tvsquared.action.v1.local.Config = {
   "parameters": [

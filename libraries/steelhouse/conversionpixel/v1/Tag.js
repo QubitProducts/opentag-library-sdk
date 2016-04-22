@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("steelhouse.conversionpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Pixel",
 		async: true,
 		description: "The Steelhouse conversion pixel, for placing on confirmation pages. Bundled with the tracking pixel.",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("steelhouse.conversionpixel.v1.Tag", {
 			description: "Arbitrary additional information you'd like to pass back to SteelHouse",
 			token: "custom",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 
 		function shaddslashes(e) {
@@ -263,14 +269,14 @@ qubit.opentag.LibraryTag.define("steelhouse.conversionpixel.v1.Tag", {
 			e.load()
 		})();
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

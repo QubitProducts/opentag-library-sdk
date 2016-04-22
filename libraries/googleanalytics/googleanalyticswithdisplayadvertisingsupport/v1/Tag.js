@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.googleanalyticswithdisplayadvertisingsupport.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Analytics with display advertising support",
 			async: true,
 			description: "See https://support.google.com/analytics/answer/2444872 for details.",
@@ -18,11 +19,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Your unique profile id for GA, e.g. UA-1234567",
 				token: "profile_id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_setAccount', '' + this.valueForToken("profile_id")]);
 			_gaq.push(['_trackPageview']);
@@ -34,14 +40,14 @@ qubit.opentag.LibraryTag.define(
 				'stats.g.doubleclick.net/dc.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.combineduvlistener.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Combined UV Listener",
 		async: true,
 		description: "Until the UV Listener is released via qtag and qtracker, load this in as a dependency to get its features. This requires JSON.stringify and JSON.parse - that'll be handled when it's actually loaded in properly, but for now we're just getting a stopgap solution in.",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("qubit.combineduvlistener.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		if (!(JSON && JSON.stringify && JSON.parse &&
 			typeof JSON.stringify === "function" &&
 			typeof JSON.parse === "function")) {
@@ -318,14 +324,14 @@ qubit.opentag.LibraryTag.define("qubit.combineduvlistener.v1.Tag", {
 
 		UVListener.init();
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

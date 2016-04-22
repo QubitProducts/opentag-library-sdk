@@ -1,42 +1,44 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("facebook.productaudiencesaddtocart.v1.Tag", {
-	config: {
-		/*DATA*/
-		name: "Product Audiences - AddToCart",
-		async: true,
-		description: "",
-		html: "",
-		locationDetail: "",
-		isPrivate: false,
-		url: "",
-		usesDocWrite: false,
-		upgradeable: true,
-		parameters: [{
-			name: "FB Country Code",
-			description: "e.g. en_UK ( if not sure, use : en_US )",
-			token: "url_locale",
-			uv: ""
-		}, {
-			name: "Pixel ID",
-			description: "Client Specific (e.g. 6007143437659)",
-			token: "pixel_id",
-			uv: ""
-		}, {
-			name: "Value",
-			description: "Basket total, instead : 0.00",
-			token: "basket_value",
-			uv: "universal_variable.basket.total"
-		}, {
-			name: "Currency",
-			description: "",
-			token: "currency",
-			uv: "universal_variable.basket.currency"
-		}]
-		/*~DATA*/
+	getDefaultConfig: function () {
+    return {
+      /*config*/
+      name: "Product Audiences - AddToCart",
+      async: true,
+      description: "",
+      html: "",
+      locationDetail: "",
+      isPrivate: false,
+      url: "",
+      usesDocWrite: false,
+      upgradeable: true,
+      parameters: [{
+        name: "FB Country Code",
+        description: "e.g. en_UK ( if not sure, use : en_US )",
+        token: "url_locale",
+        uv: ""
+      }, {
+        name: "Pixel ID",
+        description: "Client Specific (e.g. 6007143437659)",
+        token: "pixel_id",
+        uv: ""
+      }, {
+        name: "Value",
+        description: "Basket total, instead : 0.00",
+        token: "basket_value",
+        uv: "universal_variable.basket.total"
+      }, {
+        name: "Currency",
+        description: "",
+        token: "currency",
+        uv: "universal_variable.basket.currency"
+      }]
+      /*~config*/
+    };
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 		n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 		n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -57,14 +59,14 @@ qubit.opentag.LibraryTag.define("facebook.productaudiencesaddtocart.v1.Tag", {
 			value: this.valueForToken("basket_value"),
 			currency: this.valueForToken("currency")
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

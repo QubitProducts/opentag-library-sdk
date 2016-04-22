@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webgains.webgainsdeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "WebGains [DEPRECATED]",
 		async: true,
 		description: "",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("webgains.webgainsdeprecated.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			,"Affiliate Networks"
 		]
-		/*~DATA*/
-	},
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		window.wgItems = function() {
 			var wgItemsString = "";
@@ -66,14 +72,14 @@ qubit.opentag.LibraryTag.define("webgains.webgainsdeprecated.v1.Tag", {
 		webGainsScript.src = wgUri;
 
 		document.body.appendChild(webGainsScript);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

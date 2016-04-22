@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.googleanalyticswithallowlinker.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Analytics - with allowLinker",
 			async: true,
 			description: "Setup cross domain tracking with GA, using just setAllowLinker (assumes domain will be set dynamically elsewhere)",
@@ -18,11 +19,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Please enter your Google Analytics profile Id here. Example UA-123123-12",
 				token: "profile_id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_setAccount', '' + this.valueForToken("profile_id")]);
 			_gaq.push(['_setAllowLinker', true]);
@@ -35,14 +41,14 @@ qubit.opentag.LibraryTag.define(
 				'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

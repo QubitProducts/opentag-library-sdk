@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mediaforge.basket.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Basket",
 		async: true,
 		description: "To be placed on the basket/cart page for cart abandonment targeting.",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("mediaforge.basket.v1.Tag", {
 			description: "The total value for all items in the basket",
 			token: "basket_total",
 			uv: "universal_variable.basket.subtotal"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var script = document.createElement("script");
 		var productArr = [];
 		for (var i = 0; i < this.valueForToken("product_ids").length; i++) {
@@ -41,14 +47,14 @@ qubit.opentag.LibraryTag.define("mediaforge.basket.v1.Tag", {
 		script.src = "//tags.mediaforge.com/js/" + this.valueForToken("merchant_id") +
 			"/?cart=" + this.valueForToken("basket_total") + "&prodID=" + productIDs;
 		document.body.appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("insparq.carousel.v1.Tag", {
-  config: {
-    /*DATA*/
+  getDefaultConfig: function () {
+      return {
+    /*config*/
     name: "Trending Products Carousel",
     async: true,
     description: "A carousel module that showcases your e-commerce site’s trending products. You can implement anywhere on your site.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("insparq.carousel.v1.Tag", {
       description: "e.g. #content",
       token: "selector",
       uv: ""
-    }]
-    /*~DATA*/
+    }],
+		categories:[
+			"Social"
+		]
+
+    /*~config*/
+		};
   },
   script: function () {
-    /*SCRIPT*/
+    /*script*/
     var _this = this;
     (function () {
 
@@ -51,14 +57,14 @@ qubit.opentag.LibraryTag.define("insparq.carousel.v1.Tag", {
       var s = document.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(e, s);
     })();
-    /*~SCRIPT*/
+    /*~script*/
   },
   pre: function () {
-    /*PRE*/
-    /*~PRE*/
+    /*pre*/
+    /*~pre*/
   },
   post: function () {
-    /*POST*/
-    /*~POST*/
+    /*post*/
+    /*~post*/
   }
 });

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"merchantadvantage.chanalyticsconfirmationpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Chanalytics - Confirmation Page",
 			async: true,
 			description: "The confirmation page tag creates image pixels for each unique type of product in the order, then makes a call to MerchantAdvantage to track the full order details.",
@@ -43,15 +44,20 @@ qubit.opentag.LibraryTag.define(
 				description: "The total value of this order",
 				token: "order_tot",
 				uv: "universal_variable.transaction.subtotal"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			,"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			function createAppendPixel(src) {
 				var pixel = document.createElement('img');
 				pixel.src = src;
@@ -70,10 +76,10 @@ qubit.opentag.LibraryTag.define(
 					"&zman=" + this.valueForToken("order_id") +
 					"&zmat=" + this.valueForToken("order_tot"));
 			}
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

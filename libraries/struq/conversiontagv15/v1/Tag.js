@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.conversiontagv15.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag v1.5",
 		async: true,
 		description: "To be placed on the confirmation page only. Make sure that the order total is a valid number and has a dot as decimal point.",
@@ -37,11 +38,16 @@ qubit.opentag.LibraryTag.define("struq.conversiontagv15.v1.Tag", {
 			description: "The id specific to the client",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._struqPI = window._struqPI || [];
 
 		var productArr = [];
@@ -75,14 +81,14 @@ qubit.opentag.LibraryTag.define("struq.conversiontagv15.v1.Tag", {
 		script.src =
 			"//media.struq.com/content/scripts/Struq_Pixel_Injector_min_v1-5.js";
 		document.body.appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

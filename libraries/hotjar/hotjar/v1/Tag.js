@@ -1,32 +1,34 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("hotjar.hotjar.v1.Tag", {
-	config: {
-		/*DATA*/
-		name: "hotjar",
-		async: true,
-		description: "Hotjar : all-in-one analytics and feedback. User tracking with heatmaps, record user sessions, create polls and surveys. Find the biggest opportunities for improvement and testing by identifying on which page and at which step most visitors are leaving your site.",
-		html: "",
-		locationDetail: "",
-		isPrivate: false,
-		url: "",
-		usesDocWrite: false,
-		upgradeable: true,
-		parameters: [{
-			name: "hotjar hjid",
-			description: "hjid",
-			token: "hjid",
-			uv: "universal_variable.hotjar.hjid"
-		}, {
-			name: "hotjar hjsv",
-			description: "hjsv",
-			token: "hjsv",
-			uv: "universal_variable.hotjar.hjsv"
-		}]
-		/*~DATA*/
+	getDefaultConfig: function () {
+    return {
+      /*config*/
+      name: "hotjar",
+      async: true,
+      description: "Hotjar : all-in-one analytics and feedback. User tracking with heatmaps, record user sessions, create polls and surveys. Find the biggest opportunities for improvement and testing by identifying on which page and at which step most visitors are leaving your site.",
+      html: "",
+      locationDetail: "",
+      isPrivate: false,
+      url: "",
+      usesDocWrite: false,
+      upgradeable: true,
+      parameters: [{
+        name: "hotjar hjid",
+        description: "hjid",
+        token: "hjid",
+        uv: "universal_variable.hotjar.hjid"
+      }, {
+        name: "hotjar hjsv",
+        description: "hjsv",
+        token: "hjsv",
+        uv: "universal_variable.hotjar.hjsv"
+      }]
+      /*~config*/
+    };
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 		var _this = this;
 		(function(f,b){
 			var c;
@@ -37,14 +39,14 @@ qubit.opentag.LibraryTag.define("hotjar.hotjar.v1.Tag", {
 			c.src = "//static.hotjar.com/c/hotjar-" + _this.valueForToken('hjid') + ".js?sv=" + _this.valueForToken('hjsv');
 			b.getElementsByTagName("head")[0].appendChild(c);
 		})(window,document);
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

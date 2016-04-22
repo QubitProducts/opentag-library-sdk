@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.productpagewithsmartrecs.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page (with SmartRecs)",
 		async: true,
 		description: "Peerius tag for the product pages. SmartRecs uses the global function renderRecsProduct, which needs to be defined on the window.",
@@ -27,15 +28,20 @@ qubit.opentag.LibraryTag.define("peerius.productpagewithsmartrecs.v1.Tag", {
 			description: "The product ID for the current product page view",
 			token: "peerius_product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "product",
@@ -51,10 +57,10 @@ qubit.opentag.LibraryTag.define("peerius.productpagewithsmartrecs.v1.Tag", {
 			}
 		};
 
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

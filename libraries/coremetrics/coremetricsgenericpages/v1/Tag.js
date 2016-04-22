@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("coremetrics.coremetricsgenericpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "CoreMetrics - Generic pages",
 		async: true,
 		description: "To be used on all pages that are not product, transactional, or conversion based.",
@@ -42,19 +43,24 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsgenericpages.v1.Tag", {
 			description: "Category ID for the leaf 256 node to which this page belongs. Should match the id from a CDF file.",
 			token: "category_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		// Top level settings	
 		window.cmSetClientID(
 			"" + this.valueForToken("client_id"),
@@ -68,6 +74,6 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsgenericpages.v1.Tag", {
 			"" + this.valueForToken("page_id"),
 			"" + this.valueForToken("category_id")
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

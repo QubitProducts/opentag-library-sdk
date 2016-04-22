@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"adobesitecatalyst.sitecatalystconversiontag.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "SiteCatalyst Conversion Tag",
 			async: true,
 			description: "This should be placed only conversion/confirmation page. Any unused variables should be left blank.",
@@ -133,19 +134,24 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "evar5",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var s = window.s;
 
 			s.pageName = "" + this.valueForToken("page_name");
@@ -188,6 +194,6 @@ qubit.opentag.LibraryTag.define(
 
 			window.s_code = s.t();
 
-			/*~POST*/
+			/*~post*/
 		}
 	});

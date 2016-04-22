@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.googleanalyticscrossdomain.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Analytics - Cross domain",
 			async: true,
 			description: "Setup cross domain tracking with GA, using setDomainName and setAllowLinker.",
@@ -28,11 +29,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Set to true if you want to enable cross domain tracking, set to false otherwise. (boolean)",
 				token: "allow_linker",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_setAccount', '' + this.valueForToken("profile_id")]);
 			_gaq.push(['_setDomainName', '' + this.valueForToken("domain_name")]);
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define(
 				'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

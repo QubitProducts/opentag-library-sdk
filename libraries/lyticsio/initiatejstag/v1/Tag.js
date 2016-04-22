@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("lyticsio.initiatejstag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Initiate JSTag",
 		async: true,
 		description: "**This script is REQUIRED BEFORE any events are sent**\nAnalytics tag for collecting data from browser and sending to server. This implementation has the minimum config. If more config is required, please send an email to customersupport@qubitdigital.com and we will make an update.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("lyticsio.initiatejstag.v1.Tag", {
 			description: "The ID given to you by Lytics.io",
 			token: "client_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.jstag = function() {
 			var t = {
 				_q: [],
@@ -68,14 +74,14 @@ qubit.opentag.LibraryTag.define("lyticsio.initiatejstag.v1.Tag", {
 			cid: "" + this.valueForToken("client_id"),
 			url: "//c.lytics.io"
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

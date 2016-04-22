@@ -1,27 +1,29 @@
 //:include tagsdk-current.js
 
 qubit.opentag.LibraryTag.define("cedexis.radar.v1.Tag", {
-	config: {
-		/*DATA*/
-		name: "radar",
-		async: true,
-		description: "Radar measures and collects Page Load Times, from around the globe. Used by Cedexis for DNS dynamic routing.",
-		html: "",
-		locationDetail: "",
-		isPrivate: false,
-		url: "",
-		usesDocWrite: false,
-		upgradeable: true,
-		parameters: [{
-			name: "Cedexis customer ID",
-			description: "Customer ID given by Cedexis.",
-			token: "customer_id",
-			uv: "universal_variable.cedexis.customer_id"
-		}]
-		/*~DATA*/
-	},
+	getDefaultConfig: function () {
+      return  {
+      /*config*/
+      name: "radar",
+      async: true,
+      description: "Radar measures and collects Page Load Times, from around the globe. Used by Cedexis for DNS dynamic routing.",
+      html: "",
+      locationDetail: "",
+      isPrivate: false,
+      url: "",
+      usesDocWrite: false,
+      upgradeable: true,
+      parameters: [{
+        name: "Cedexis customer ID",
+        description: "Customer ID given by Cedexis.",
+        token: "customer_id",
+        uv: "universal_variable.cedexis.customer_id"
+      }]
+      /*~config*/
+    };
+  },
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 		var a = function () {
 			var a = window.document.createElement('script');
 			a.type = 'text/javascript';
@@ -36,14 +38,14 @@ qubit.opentag.LibraryTag.define("cedexis.radar.v1.Tag", {
 		else if (window.attachEvent) {
 			window.attachEvent('onload', a);
 		}
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

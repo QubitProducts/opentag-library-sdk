@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.confirmationpagedeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page - DEPRECATED",
 		async: true,
 		description: "Peerius tag for the confirmation page",
@@ -57,15 +58,20 @@ qubit.opentag.LibraryTag.define("peerius.confirmationpagedeprecated.v1.Tag", {
 			description: "A list of unit sale prices for items on the confirmation page",
 			token: "price_list",
 			uv: "universal_variable.transaction.line_items[#].product.unit_sale_price"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "checkout",
@@ -87,10 +93,10 @@ qubit.opentag.LibraryTag.define("peerius.confirmationpagedeprecated.v1.Tag", {
 				price: this.valueForToken("price_list")[i]
 			});
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

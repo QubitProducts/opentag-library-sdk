@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("emailvision.notused.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Not Used",
 		async: true,
 		description: "",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("emailvision.notused.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Email Service Provider (ESP)"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		function setCookie(domain, label, val, minutes) {
 			var txpDate = new Date();
@@ -31,14 +37,14 @@ qubit.opentag.LibraryTag.define("emailvision.notused.v1.Tag", {
 			"opentag_emailvision_timestamp", (new Date()).getTime(),
 			60 * 24 * 2);
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

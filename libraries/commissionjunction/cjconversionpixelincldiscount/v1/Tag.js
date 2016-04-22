@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"commissionjunction.cjconversionpixelincldiscount.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "CJ Conversion Pixel incl. Discount",
 			async: true,
 			description: "The conversion pixel code to enable Commission Junction to track purchases on the confirmation pages. If individual product discounts are available (one at least), then an array of these discounts (of equal length to the number of products) should be used. If no individual product discounts are available, then a total discount should be assigned to the transaction (either zero or whatever value is available). Check documentation on how to calculate the individual product discounts.",
@@ -63,11 +64,16 @@ qubit.opentag.LibraryTag.define(
 				description: "JS returning empty array if no individual discounts. Else check documentation on how to calculate.",
 				token: "discounts",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var url = document.location.protocol +
 				"//www.emjcd.com/tags/c?containerTagId=" + this.valueForToken(
 					"container_tag_id") + "&";
@@ -101,14 +107,14 @@ qubit.opentag.LibraryTag.define(
 			iframe.scrolling = 0;
 			iframe.src = url;
 			document.body.appendChild(iframe);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

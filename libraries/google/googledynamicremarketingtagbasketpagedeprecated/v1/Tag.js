@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.googledynamicremarketingtagbasketpagedeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Dynamic Remarketing Tag - Basket Page [DEPRECATED]",
 			async: true,
 			description: "",
@@ -43,11 +44,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Your Google Conversion Label ID",
 				token: "google_conversion_label",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var productIdsArray = [];
 			for (var i = 0; i < this.valueForToken("product_ids").length; i++) {
 				productIdsArray.push(this.valueForToken("product_ids")[i]);
@@ -76,14 +82,14 @@ qubit.opentag.LibraryTag.define(
 			script.type = "text/javascript";
 			script.src = "//www.googleadservices.com/pagead/conversion.js";
 			document.head.appendChild(script);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

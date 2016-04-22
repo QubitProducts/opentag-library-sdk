@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('googleuniversalanalytics.ecommercetagconfirmationpage_allowlinker.v1.local');
 googleuniversalanalytics.ecommercetagconfirmationpage_allowlinker.v1.local.Config = {
   "parameters": [

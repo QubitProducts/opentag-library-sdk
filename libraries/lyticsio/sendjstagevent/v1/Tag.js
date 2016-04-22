@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("lyticsio.sendjstagevent.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Send JSTag event",
 		async: true,
 		description: "Requires the Initiate JSTag script to be on the page first.\nIt sends an event to JSTag in the form of valid JSON.",
@@ -17,25 +18,30 @@ qubit.opentag.LibraryTag.define("lyticsio.sendjstagevent.v1.Tag", {
 			description: "JSON stringified valid JSON data to send to Lytics i.e. \"{\\\"event-happened\\\":true}\"",
 			token: "event_json",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		if (window.jstag && jstag.send && window.JSON) {
 			try {
 				var data = this.valueForToken("event_json");
 				jstag.send(data);
 			} catch (e) {}
 		}
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

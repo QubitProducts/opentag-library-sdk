@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("gosquared.gosquaredallpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "GoSquared - all pages",
 		async: true,
 		description: "Real-time analytics for your website. GoSquared helps you understand and improve your online presence.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("gosquared.gosquaredallpages.v1.Tag", {
 			description: "The ID specific to your GoSquared account.",
 			token: "account_no",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.GoSquared = {};
 		GoSquared.acct = "" + this.valueForToken("account_no");
 		(function(w) {
@@ -38,14 +44,14 @@ qubit.opentag.LibraryTag.define("gosquared.gosquaredallpages.v1.Tag", {
 			w.addEventListener ? w.addEventListener("load", gs, false) : w.attachEvent(
 				"onload", gs);
 		})(window);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

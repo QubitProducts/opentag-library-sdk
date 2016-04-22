@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("chango.conversionpixelv2.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Pixel [v2]",
 		async: true,
 		description: "The conversion pixel passes back information about the order placed and should be placed only on the confirmation page.",
@@ -57,11 +58,16 @@ qubit.opentag.LibraryTag.define("chango.conversionpixelv2.v1.Tag", {
 			description: "",
 			token: "CONVERSION_TYPE",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var totalQuantity = (function() {
 			var total = 0;
@@ -102,14 +108,14 @@ qubit.opentag.LibraryTag.define("chango.conversionpixelv2.v1.Tag", {
 		}
 		(new Image()).src = document.location.protocol + '//as.chango.com/conv/i;' +
 			(new Date()).getTime() + '?' + p.join("&");
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

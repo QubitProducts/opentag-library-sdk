@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"adinsight.adinsightclicktocalldeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "AdInsight Click to Call DEPRECATED",
 			async: true,
 			description: "DEPRECATED",
@@ -18,20 +19,25 @@ qubit.opentag.LibraryTag.define(
 				description: "Your AdInsight account id, generally a 3 digit number",
 				token: "Account_Id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.adiInit = "" + this.valueForToken("Account_Id");
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

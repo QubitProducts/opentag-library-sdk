@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qype.qype.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Qype",
 		async: true,
 		description: "Qype is a local review site - http://www.qype.co.uk/.",
@@ -27,19 +28,24 @@ qubit.opentag.LibraryTag.define("qype.qype.v1.Tag", {
 			description: "In what url element should the reviews go? Must be an element id.",
 			token: "DIV_ID",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Ratings & Review Engine"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

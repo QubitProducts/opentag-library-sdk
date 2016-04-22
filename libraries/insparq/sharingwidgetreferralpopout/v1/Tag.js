@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("insparq.sharingwidgetreferralpopout.v1.Tag", {
-  config: {
-    /*DATA*/
+  getDefaultConfig: function () {
+      return {
+    /*config*/
     name: "Sharing Widget Referral Popout for Non-PDPs",
     async: true,
     description: "Reward your e-commerce site’s shoppers for sharing on social! Place this tag on non-PDP pages to enable site-wide referral popout.",
@@ -32,15 +33,20 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetreferralpopout.v1.Tag", {
       description: "e,g, jQuery , $ , myJquery etc.",
       token: "jQuery",
       uv: ""
-    }]
-    /*~DATA*/
+    }],
+		categories:[
+			"Social"
+		]
+
+    /*~config*/
+		};
   },
   script: function () {
-      /*SCRIPT*/
-      /*~SCRIPT*/
+      /*script*/
+      /*~script*/
     },
   pre: function () {
-    /*PRE*/
+    /*pre*/
     var _tmp_html = '<div id="issw" data-issw-publisher-id = "' + _this.valueForToken("insparq_api_key") + '" data-issw-load-config = "1" data-issw-page-mode="hidden"></div>';
     
     window['' + _this.valueForToken("jQuery")](_tmp_html).insertAfter('' + _this.valueForToken("selector"));
@@ -57,10 +63,10 @@ qubit.opentag.LibraryTag.define("insparq.sharingwidgetreferralpopout.v1.Tag", {
       }
       head.appendChild(styleElement);
 
-    /*~PRE*/
+    /*~pre*/
   },
   post: function () {
-    /*POST*/
-    /*~POST*/
+    /*post*/
+    /*~post*/
   }
 });

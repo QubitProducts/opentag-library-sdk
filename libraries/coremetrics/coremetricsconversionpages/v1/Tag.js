@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("coremetrics.coremetricsconversionpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "CoreMetrics - Conversion Pages",
 		async: true,
 		description: "To be placed on non-ecommerce conversion pages (e.g. user signups)",
@@ -62,19 +63,24 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsconversionpages.v1.Tag",
 			description: "A point value used in establishing an arbitrary “value” for a conversion.",
 			token: "points",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		// Top level settings	
 		cmSetClientID(
 			"" + this.valueForToken("client_id"),
@@ -101,6 +107,6 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsconversionpages.v1.Tag",
 			attributeString,
 			extraFieldString
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

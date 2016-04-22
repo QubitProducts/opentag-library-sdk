@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googledoubleclick.doubleclickforadvertiserscustom.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "DoubleClick for Advertisers - Custom",
 			async: true,
 			description: "The conversion version of the DoubleClick tag",
@@ -43,11 +44,16 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "custom",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"DSP (Ad Server)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var fl_if = document.createElement("iframe");
 			fl_if.src = '//' + this.valueForToken("doubleclick_id") +
 				'.fls.doubleclick.net/activityi;src=' +
@@ -68,14 +74,14 @@ qubit.opentag.LibraryTag.define(
 			fl_if.frameborder = "0";
 			fl_if.style.display = "none";
 			document.body.appendChild(fl_if);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

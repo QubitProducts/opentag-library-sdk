@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("clotheshorse.productpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page",
 		async: true,
 		description: "To be placed on all product pages of the website.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("clotheshorse.productpage.v1.Tag", {
 			description: "The token specific to the client using Clothes Horse",
 			token: "client_token",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Merchandising & Rich Media"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		window.ch212 = window.ch212 || [];
 		ch212['token'] = '' + this.valueForToken("client_token");
@@ -35,14 +41,14 @@ qubit.opentag.LibraryTag.define("clotheshorse.productpage.v1.Tag", {
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(ch, s);
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

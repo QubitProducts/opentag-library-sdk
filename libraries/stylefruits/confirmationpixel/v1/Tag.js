@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("stylefruits.confirmationpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Pixel",
 		async: true,
 		description: "The stylefruits tracking code has to be integrated on the final page of your checkout process. The \ncode has to be generated dynamically for every order.",
@@ -27,19 +28,24 @@ qubit.opentag.LibraryTag.define("stylefruits.confirmationpixel.v1.Tag", {
 			description: "The dynamically  generated, unique order-ID of your shop  system.",
 			token: "order_id",
 			uv: "universal_variable.transaction.order_id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

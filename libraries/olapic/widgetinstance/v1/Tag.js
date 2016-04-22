@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("olapic.widgetinstance.v1.Tag", {
-  config: {
-    /*DATA*/
+  getDefaultConfig: function () {
+      return {
+    /*config*/
     name: "Widget Instance",
     async: false,
     description: "",
@@ -39,11 +40,16 @@ qubit.opentag.LibraryTag.define("olapic.widgetinstance.v1.Tag", {
       description: "The location for where the <div/> created by the script will be inserted into the DOM. Example: .pdp-content or #side-content",
       defaultValue: "body",
       token: "appendat"
-    }]
-    /*~DATA*/
+    }],
+		categories:[
+			"Personalisation Platform"
+		]
+
+    /*~config*/
+		};
   },
   script: function () {
-    /*SCRIPT*/
+    /*script*/
     var olapicEl = document.createElement("div");
     olapicEl.id = this.valueForToken("elementref");
     if (document.querySelectorAll(this.valueForToken("appendat")).length > 0) {
@@ -61,14 +67,14 @@ qubit.opentag.LibraryTag.define("olapic.widgetinstance.v1.Tag", {
       }
       olapicEl.parentNode.insertBefore(olapicJs, olapicEl.nextSibling);
     }
-    /*~SCRIPT*/
+    /*~script*/
   },
   pre: function () {
-    /*PRE*/
-    /*~PRE*/
+    /*pre*/
+    /*~pre*/
   },
   post: function () {
-    /*POST*/
-    /*~POST*/
+    /*post*/
+    /*~post*/
   }
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("smartfocus.productpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page",
 		async: true,
 		description: "",
@@ -32,15 +33,20 @@ qubit.opentag.LibraryTag.define("smartfocus.productpage.v1.Tag", {
 			description: "e.g. Recommendations for You",
 			token: "title",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._advisorq = window._advisorq || [];
 
 		window._advisorq.push({
@@ -59,10 +65,10 @@ qubit.opentag.LibraryTag.define("smartfocus.productpage.v1.Tag", {
 				}
 			}
 		});
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagconfirmationwithoutdedupe.v2.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Confirmation without Dedupe",
 		async: true,
 		description: "This is a mandatory tag and must be executed on the confirmation page after user makes a payment. This version is preferred if the \"Criteo Referral\" parameter in the general confirmation tag is always going to be set to \"1\".",
@@ -63,19 +64,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagconfirmationwithoutdedupe.v2.Tag",
 			description: "Pass plain text e-mail to this parameter for X-Device. We will hash it.",
 			token: "email",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
         if (this.valueForToken("email")!='') {
             var passedemail = {event: "setEmail", email: [this.valueForToken("email")]};
         } else {
@@ -123,6 +129,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagconfirmationwithoutdedupe.v2.Tag",
 			new_customer: ret,
 			product: products
 		}, passedemail);
-		/*~POST*/
+		/*~post*/
 	}
 });

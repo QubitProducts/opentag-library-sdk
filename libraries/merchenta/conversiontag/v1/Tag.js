@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("merchenta.conversiontag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag",
 		async: true,
 		description: "Place this tag on the order confirmation page following a successful purchase.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("merchenta.conversiontag.v1.Tag", {
 			description: "The SKUs/IDs of the products being purchased",
 			token: "product_ids",
 			uv: "universal_variable.transaction.line_items[#].product.sku_code"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var i, ii, d, p = document.getElementById("mc_data");
 		for (i = 0, ii = this.valueForToken("product_ids").length; i < ii; i++) {
 			d = document.createElement("div");
@@ -56,14 +62,14 @@ qubit.opentag.LibraryTag.define("merchenta.conversiontag.v1.Tag", {
 			script.src = "http://cdn.merchenta.com/track/t.js";
 		}
 		document.getElementsByTagName('head')[0].appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

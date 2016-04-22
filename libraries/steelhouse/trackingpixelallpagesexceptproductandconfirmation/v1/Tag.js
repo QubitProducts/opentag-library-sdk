@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"steelhouse.trackingpixelallpagesexceptproductandconfirmation.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Tracking Pixel - All Pages Except Product and Confirmation",
 			async: true,
 			description: "The generic Steelhouse tracking pixel, to be placed on all pages except for product detail and confirmation pages.",
@@ -38,11 +39,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Any additional info to be passed along. Send an empty hard-coded variable to leave blank.",
 				token: "additional_info",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var _this = this;
 			function shaddslashes(e) {
 				"use strict";
@@ -170,14 +176,14 @@ qubit.opentag.LibraryTag.define(
 				};
 				e.load()
 			})()
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

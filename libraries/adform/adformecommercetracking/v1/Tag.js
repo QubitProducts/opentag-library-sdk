@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("adform.adformecommercetracking.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "AdForm - Ecommerce Tracking",
 		async: true,
 		description: "To be placed only on order confirmation page.",
@@ -112,15 +113,20 @@ qubit.opentag.LibraryTag.define("adform.adformecommercetracking.v1.Tag", {
 			description: "A list of the total sales of the product (qty x product value)",
 			token: "product_sales_arr",
 			uv: "universal_variable.transaction.line_items[#].product.unit_sale_price"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		// The basic tracker
 		window._adftrack = {
 			pm: '' + this.valueForToken("campaignid"),
@@ -169,10 +175,10 @@ qubit.opentag.LibraryTag.define("adform.adformecommercetracking.v1.Tag", {
 			zip: '' + this.valueForToken("postcode"),
 			itms: items
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sub2.sub2contactdetailsdependsuponsub2mainscriptallpages.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Sub2 - Contact Details (depends upon \"Sub2 - Main Script - All pages\")",
 			async: true,
 			description: "The purpose of this script is to capture the relevant contact details of any visitor to the site who has provided these details as part of the order, account creation or brochure request process. It should fire on all pages that contain these details.",
@@ -58,11 +59,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Y if user wants to be contacted, N if not",
 				token: "OptIns",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var _this = this;
 			var waitFor_S2Tech_MatchData_NA = setInterval(function() {
 				if (typeof S2Tech_MatchData_NA === 'function') {
@@ -80,14 +86,14 @@ qubit.opentag.LibraryTag.define(
 			setTimeout(function() {
 				clearInterval(waitFor_S2Tech_MatchData_NA);
 			}, 5000);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

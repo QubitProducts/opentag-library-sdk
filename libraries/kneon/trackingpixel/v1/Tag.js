@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("kneon.trackingpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Tracking Pixel",
 		async: true,
 		description: "The pixel would be embedded on your ‘thank you’ page, allowing Kneon to automate the process of tracking both referrals and successful sales. At no point does Kneon ever collect any personally identifiable information including: customer name, physical address, email address, or credit card number.",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("kneon.trackingpixel.v1.Tag", {
 			description: "The 44 character ID specific to the person using the tag (provided by Kneon)",
 			token: "client_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.img = new Image();
 		window.productsArr = [];
 		window.howManyProducts = this.valueForToken("product_sku_list").length;
@@ -62,14 +68,14 @@ qubit.opentag.LibraryTag.define("kneon.trackingpixel.v1.Tag", {
 			this.valueForToken("total") + "&rid=" +
 			this.valueForToken("client_id") + "&oid=" +
 			this.valueForToken("order_id") + "&" + productsArr.join("&");
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

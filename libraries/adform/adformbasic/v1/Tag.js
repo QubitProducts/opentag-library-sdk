@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("adform.adformbasic.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "AdForm - Basic",
 		async: true,
 		description: "To be placed on any page except order confirmation pages.",
@@ -22,23 +23,28 @@ qubit.opentag.LibraryTag.define("adform.adformbasic.v1.Tag", {
 			description: "Point ID for the tag. Usually unique to page type.",
 			token: "pointid",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._adftrack = {
 			pm: this.valueForToken("campaignid"),
 			id: this.valueForToken("pointid")
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

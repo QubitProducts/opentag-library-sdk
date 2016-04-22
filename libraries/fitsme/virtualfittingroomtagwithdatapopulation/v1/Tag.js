@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"fitsme.virtualfittingroomtagwithdatapopulation.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Virtual Fitting Room Tag - With Data Population",
 			async: true,
 			description: "This product page tag adds the code needed to populate the \"fitsme_launcher\" div and makes sure GA is properly prepared (if present). This tag also populates the FitsMeData object prior to loading the code.",
@@ -53,15 +54,20 @@ qubit.opentag.LibraryTag.define(
 				description: "An array of size prices of the same length and in the same order as the Size Title / Size ID arrays.",
 				token: "prices",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Merchandising & Rich Media"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			var _this = this;
 			var fm_categories = (function() {
 				var temp = [];
@@ -104,10 +110,10 @@ qubit.opentag.LibraryTag.define(
 			_gaq.push(['_setAllowHash', false]);
 			
 			window._gaq = _gaq;
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

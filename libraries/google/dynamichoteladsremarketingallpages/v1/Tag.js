@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.dynamichoteladsremarketingallpages.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Dynamic Hotel Ads Remarketing - All Pages",
 			async: true,
 			description: "",
@@ -38,29 +39,34 @@ qubit.opentag.LibraryTag.define(
 				description: "Check-Out Date",
 				token: "checkout",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var _this = this;
 			var poll = function() {
 				if (window.google_trackConversion) {
 					window.google_trackConversion({
 						google_conversion_id: _this.valueForToken("id"),
 						google_custom_params: { 
-							hotel_hotelid:  '' + _this.valueForToken("hotelid"),
-							hotel_pagetype:  '' + _this.valueForToken("pagetype"),
-							hotel_checkindate:  '' + _this.valueForToken("checkin"),
-							hotel_checkoutdate:  '' + _this.valueForToken("checkout") 
+							hotel_hotelid: '' + _this.valueForToken("hotelid"),
+							hotel_pagetype: '' + _this.valueForToken("pagetype"),
+							hotel_checkindate: '' + _this.valueForToken("checkin"),
+							hotel_checkoutdate: '' + _this.valueForToken("checkout") 
 						},
 						google_remarketing_only: true
 					});
@@ -70,6 +76,6 @@ qubit.opentag.LibraryTag.define(
 			};
 
 			poll();
-			/*~POST*/
+			/*~post*/
 		}
 	});

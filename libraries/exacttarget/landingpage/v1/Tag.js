@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("exacttarget.landingpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Landing Page",
 		async: true,
 		description: "This tag should fire on the page where a subscriber lands when they click the landing page link in the ExactTarget email. The URL of such an Exact Target landing page should look like this : http://*your site's landing page URL*?j=*JobIDvalue*&l=*ListIDvalue*&e=*emailValue*&u=*LinkIDvalue*&jb=*BatchIDvalue*&mid=*MemberIDvalue*. The tag will drop a cookie for each of these query parameters found in the URL (along with their values) : job ID (identifier of this email send), subscriber email address, list ID, ID of the landing page URL, job batch ID, your ExactTarget account number (member ID). These values will be picked up later by the Conversion Page tag.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("exacttarget.landingpage.v1.Tag", {
 			description: "Number of days the cookie should last",
 			token: "expire",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var ExpireDays = this.valueForToken("expire");
 		qstr = document.location.search;
 		qstr = qstr.substring(1, qstr.length);
@@ -68,14 +74,14 @@ qubit.opentag.LibraryTag.define("exacttarget.landingpage.v1.Tag", {
 			}
 		}
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

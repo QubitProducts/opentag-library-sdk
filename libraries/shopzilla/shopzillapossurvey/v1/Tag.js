@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("shopzilla.shopzillapossurvey.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Shopzilla POS Survey",
 		async: true,
 		description: "Survey to be placed after a user has made a purchase.",
@@ -57,15 +58,20 @@ qubit.opentag.LibraryTag.define("shopzilla.shopzillapossurvey.v1.Tag", {
 			description: "",
 			token: "order_id",
 			uv: "universal_variable.transaction.order_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		// Offset. Input blank to default to center.
 		window.passX = "" + this.valueForToken("passin_x");
 		window.passY = "" + this.valueForToken("passin_y");
@@ -92,10 +98,10 @@ qubit.opentag.LibraryTag.define("shopzilla.shopzillapossurvey.v1.Tag", {
 		};
 
 		window.productsPurchased = productsPurchasedArr.join("|");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

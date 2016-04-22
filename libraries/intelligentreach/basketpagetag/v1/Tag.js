@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("intelligentreach.basketpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Basket Page Tag",
 		async: true,
 		description: "The tag is placed on basket page only.",
@@ -22,15 +23,20 @@ qubit.opentag.LibraryTag.define("intelligentreach.basketpagetag.v1.Tag", {
 			description: "",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.istCompanyId = "" + this.valueForToken("id");
 		window.istItemCount = this.valueForToken("productSku").length;
 		window.istBasketItems = "";
@@ -45,10 +51,10 @@ qubit.opentag.LibraryTag.define("intelligentreach.basketpagetag.v1.Tag", {
 		window.istUserDefinedFieldOne = "";
 		window.istUserDefinedFieldTwo = "";
 		window.istUserDefinedFieldThree = "";
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

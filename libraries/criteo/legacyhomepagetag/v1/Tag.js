@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.legacyhomepagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Legacy - Home Page Tag",
 		async: true,
 		description: "The home page tag has to be integrated on the home page of the advertiser website.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("criteo.legacyhomepagetag.v1.Tag", {
 			description: "A specific call parameter provided by Criteo.",
 			token: "call_parameter",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		function pcto_dis() {
 			if (document.createElement) {
 				var cto_dis_im = document.createElement('iframe');
@@ -77,14 +83,14 @@ qubit.opentag.LibraryTag.define("criteo.legacyhomepagetag.v1.Tag", {
 		_cr_i.onload = pcto_dis;
 		_cr_d2.appendChild(_cr_i);
 		document.body.appendChild(_cr_d2);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

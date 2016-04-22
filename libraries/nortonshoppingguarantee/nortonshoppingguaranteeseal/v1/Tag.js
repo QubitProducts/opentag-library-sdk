@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguaranteeseal.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Norton Shopping Guarantee Seal",
 		async: false,
 		description: "This Tag enables the Norton Shopping Guarantee Seal, and should be placed on all pages within your ecommerce site.",
@@ -18,11 +19,16 @@ qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguarantee
         name: "Guarantee Seal Hash",
         description: "This value will be provided to you during integration."
       }
-    ]
-		/*~DATA*/
+    ],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 
     if(window._GUARANTEE && _GUARANTEE.Loaded) {
       // Check to see if a seal span is already present.  If not, create one.
@@ -38,14 +44,14 @@ qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguarantee
       _GUARANTEE.WriteSeal(id, "GuaranteedSeal");
     }
 
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

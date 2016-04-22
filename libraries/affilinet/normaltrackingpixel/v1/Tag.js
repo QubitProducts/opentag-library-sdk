@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("affilinet.normaltrackingpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Normal Tracking Pixel",
 		async: true,
 		description: "",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("affilinet.normaltrackingpixel.v1.Tag", {
 			description: "Affilinet domain, excluding https:// and http://",
 			token: "domain",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var src = "//" + this.valueForToken("domain") +
 			"/registersale.asp" +
 			"?site=" + this.valueForToken("program_id") +
@@ -69,14 +75,14 @@ qubit.opentag.LibraryTag.define("affilinet.normaltrackingpixel.v1.Tag", {
 
 		var image = new Image();
 		image.src = src;
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

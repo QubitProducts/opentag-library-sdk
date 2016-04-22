@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("adroll.smartpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "SmartPixel",
 		async: true,
 		description: "Asynchronously and independently registers a callback within the browser that will be called only at the end of the rendering process - adds an image to the head tag.",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("adroll.smartpixel.v1.Tag", {
 			description: "ID for the AdRoll pixel",
 			token: "adroll_pix_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.adroll_adv_id = "" + this.valueForToken("adroll_adv_id");
 		window.adroll_pix_id = "" + this.valueForToken("adroll_pix_id");
 		window.__adroll_loaded = true;
@@ -39,14 +45,14 @@ qubit.opentag.LibraryTag.define("adroll.smartpixel.v1.Tag", {
 		((document.getElementsByTagName('head') || [null])[0] ||
 			document.getElementsByTagName('script')[0].parentNode)
 			.appendChild(scr);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

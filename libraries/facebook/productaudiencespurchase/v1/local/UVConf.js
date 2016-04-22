@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 /*
  * Universal Variable Template
@@ -107,7 +107,7 @@ window.universal_variable = {
 				"total_discount": 5
 			}
 		]
-	}
+	},
 	"transaction": {
 		"id": "BASKET2203",
 		"currency": "GBP",

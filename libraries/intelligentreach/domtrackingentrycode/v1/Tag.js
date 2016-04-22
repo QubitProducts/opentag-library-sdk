@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("intelligentreach.domtrackingentrycode.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "DOM Tracking Entry Code",
 		async: true,
 		description: "Placed on all pages and entry points to the site, but not on any of the checkout / final confirmation pages. Async-compatible version of the code.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("intelligentreach.domtrackingentrycode.v1.Tag", 
 			description: "Unique ID assigned by IntelligentReach - must remain the same across the whole site",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

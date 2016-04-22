@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.ecommercetrackingcustomdomains.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Ecommerce Tracking - Custom Domains",
 			async: true,
 			description: "Provides the full functionality of Google Analytics Ecommerce tracking with the option to specify custom domains.",
@@ -88,11 +89,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Type the name of the domain you wish to track. For example www.example.com or subdomain.example.com",
 				token: "domainName",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_setAccount', '' + this.valueForToken("PROFILE_ID")]);
 			_gaq.push(['_setDomainName', '' + this.valueForToken("domainName")]);
@@ -128,14 +134,14 @@ qubit.opentag.LibraryTag.define(
 				'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

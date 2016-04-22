@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webtrends.webtrendslinktagging.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Webtrends link tagging",
 		async: true,
 		description: "Designed to replace inline on click tagging. Usually you'll want one tag per link tagged. Uses jQuery selectors, so jQuery is required to exist on the page.",
@@ -37,11 +38,16 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendslinktagging.v1.Tag", {
 			description: "Used to identify different types of web activity with a numeric value. See http://bit.ly/194oAXH.",
 			token: "type",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var $ = window["" + this.valueForToken("jquery_name")];
 
@@ -57,14 +63,14 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendslinktagging.v1.Tag", {
 				});
 			});
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

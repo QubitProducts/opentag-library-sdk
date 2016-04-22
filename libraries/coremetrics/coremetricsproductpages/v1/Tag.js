@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("coremetrics.coremetricsproductpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "CoreMetrics - Product pages",
 		async: true,
 		description: "To be used on product pages.",
@@ -57,19 +58,24 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsproductpages.v1.Tag", {
 			description: "Some CM setups don't require this on product pages - pass true or false depending on this.",
 			token: "sendpageview",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		// Client Setup
 		window.cmSetClientID(
 			"" + this.valueForToken("client_id"),
@@ -92,6 +98,6 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsproductpages.v1.Tag", {
 			"" + this.valueForToken("product_name"),
 			"" + this.valueForToken("category_id")
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

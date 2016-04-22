@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"marinsoftware.zzclicktrackingtagdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "zz-Click Tracking Tag [DEPRECATED]",
 			async: true,
 			description: "",
@@ -18,11 +19,16 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._mTrack = window._mTrack || [];
 			_mTrack.push(['trackPage']);
 
@@ -36,14 +42,14 @@ qubit.opentag.LibraryTag.define(
 			mt.src = mProto + mHost + '/tracker/async/' + mClientId + '.js';
 			var fscr = document.getElementsByTagName('script')[0];
 			fscr.parentNode.insertBefore(mt, fscr);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

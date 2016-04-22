@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.datapartnertagrentalcarpurchaseconfirmation.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Data Partner Tag - Rental Car Purchase Confirmation",
 			async: true,
 			description: "",
@@ -78,11 +79,16 @@ qubit.opentag.LibraryTag.define(
 				description: "e.g. if price is $350.23 then pass 350 only",
 				token: "car_purchase_price",
 				uv: ""
-			}]
-			/*~DATA*/
-		},
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
+  },
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = document.location.protocol + "//pixel.sojern.com/partner/" +
 				this.valueForToken("sojern_partner_key") + "/rc?";
 			src += "ra1=" + this.valueForToken("airport_to_pickup") + "&";
@@ -98,14 +104,14 @@ qubit.opentag.LibraryTag.define(
 			src += "g=" + this.valueForToken("gender") + "&";
 			src += "n=" + this.valueForToken("first_name");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

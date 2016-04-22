@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("snowplowanalytics.snowplowpagetracker.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Snowplow PageTracker",
 		async: true,
 		description: "Snowplow Analytics is a web analytics platform. Rather than deliver a canned set of reports, Snowplow delivers your granular, event-level and customer-level data into your own data warehouse, so you can perform any analysis on that data you want, with any tool you want, including Tableau, Excel, R, ChartIO etc.",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("snowplowanalytics.snowplowpagetracker.v1.Tag", 
 			description: "The cookie domain for your tracking",
 			token: "cookiedomain",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._snaq = window._snaq || [];
 
 		_snaq.push(['setCollectorCf', '' + this.valueForToken("cloudfront")]);
@@ -47,14 +53,14 @@ qubit.opentag.LibraryTag.define("snowplowanalytics.snowplowpagetracker.v1.Tag", 
 			'://d1fc8wv8zag5ca.cloudfront.net/0.12.0/sp.js';
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(sp, s);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

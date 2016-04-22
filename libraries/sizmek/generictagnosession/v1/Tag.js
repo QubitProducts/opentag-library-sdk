@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sizmek.generictagnosession.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Generic Tag (no session)",
 		async: true,
 		description: "",
@@ -17,24 +18,29 @@ qubit.opentag.LibraryTag.define("sizmek.generictagnosession.v1.Tag", {
 			description: "The ID that relates this pixel to Sizmek",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var r = (Math.random() * 1000000) + "";
 		var s = document.createElement("script");
 		s.src = "//bs.serving-sys.com/Serving/ActivityServer.bs?cn=as&ActivityID=" +
 			this.valueForToken("id") + "&rnd=" + r;
 		document.body.appendChild(s);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

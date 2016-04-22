@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("conexance.basketpagedeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Basket Page [DEPRECATED]",
 		async: true,
 		description: "Picks up on basket page abandonment",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("conexance.basketpagedeprecated.v1.Tag", {
 			description: "An array of the quantities of each respective item currently in the basket",
 			token: "quantity_list",
 			uv: "universal_variable.basket.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var require = function(url, cb) {
 			var script = document.createElement("script");
@@ -66,14 +72,14 @@ qubit.opentag.LibraryTag.define("conexance.basketpagedeprecated.v1.Tag", {
 			});
 		});
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

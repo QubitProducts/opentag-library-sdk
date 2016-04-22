@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("veinteractive.confirmationpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Pixel",
 		async: true,
 		description: "Tag to be added only to the confirmation page",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("veinteractive.confirmationpixel.v1.Tag", {
 			description: "The ID for the tag in this format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX with dashes included",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

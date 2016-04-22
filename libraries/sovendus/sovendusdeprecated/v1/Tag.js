@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sovendus.sovendusdeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Sovendus [DEPRECATED]",
 		async: true,
 		description: "",
@@ -67,11 +68,16 @@ qubit.opentag.LibraryTag.define("sovendus.sovendusdeprecated.v1.Tag", {
 			description: "See Sovendus Technical Integration Documentation on how to implement",
 			token: "checksum",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var sovendusNewDate = new Date();
 		var sovendusTimestamp = sovendusNewDate.getTime();
 		var _gconData = _gconData || [];
@@ -99,14 +105,14 @@ qubit.opentag.LibraryTag.define("sovendus.sovendusdeprecated.v1.Tag", {
 			'http://') + "api.gutscheinconnection.de/js/client.js";
 		sovendusScript.async = "true";
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

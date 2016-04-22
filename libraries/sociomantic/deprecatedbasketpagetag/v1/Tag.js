@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sociomantic.deprecatedbasketpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "{DEPRECATED} Basket Page Tag",
 		async: true,
 		description: "Product ID is required on the basket page, along with additional information like quantity, amount, currency",
@@ -37,15 +38,20 @@ qubit.opentag.LibraryTag.define("sociomantic.deprecatedbasketpagetag.v1.Tag", {
 			description: "An identifier for the client",
 			token: "advertiserid",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.basket = {
 			products: []
 		};
@@ -60,10 +66,10 @@ qubit.opentag.LibraryTag.define("sociomantic.deprecatedbasketpagetag.v1.Tag", {
 		}
 
 		window.basket = basket;
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"lengow.conversiontrackingconfirmationpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Conversion Tracking - Confirmation Page",
 			async: true,
 			description: "If you place this tag on the return page once the payment has been confirmed (order \nconfirmation page), you ensure that you’ll only find confirmed sales that have been validated by a \nbank or other payment method (i.e.: PayPal,…) in your Statistics board.\nIf you are using both tags (Payment Method Page & Confirmation Page), you need to visit this page https://solution.lengow.com/compte/tracking/\nto enable confirmation of orders by checking the box.\nDo not activate this box if you are only using the Payment Method Page tag.",
@@ -33,11 +34,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Conversion Tag - Lead Order ID must be identical with Conversion Tag - Lead Validation Order ID",
 				token: "lengow_order_id",
 				uv: "universal_variable.transaction.order_id"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var lengowTrackPixel = new Image();
 			lengowTrackPixel.src =
 				"https://tracking.lengow.com/leadValidation.php?idClient=" +
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define(
 				this.valueForToken("lengow_order_value") + "&idCommande=" +
 				this.valueForToken("lengow_order_id");
 			lengowTrackPixel.alt = "";
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

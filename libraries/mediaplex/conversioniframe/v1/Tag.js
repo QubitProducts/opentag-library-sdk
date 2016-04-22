@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mediaplex.conversioniframe.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion iframe",
 		async: true,
 		description: "The conversion iframe sends order details such as total, id, item count, and currency.",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("mediaplex.conversioniframe.v1.Tag", {
 			description: "The unique order ID for this purchase.",
 			token: "order_id",
 			uv: "universal_variable.transaction.order_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var item_count = 0;
 		for (var i = 0; i < this.valueForToken("item_qtys").length; i++) {
 			item_count += this.valueForToken("item_qtys")[i];
@@ -70,14 +76,14 @@ qubit.opentag.LibraryTag.define("mediaplex.conversioniframe.v1.Tag", {
 		frame.width = 1;
 		frame.frameborder = 0;
 		document.body.appendChild(frame);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

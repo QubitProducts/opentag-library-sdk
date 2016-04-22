@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sub2.sub2confirmationpagedependsuponsub2mainscriptallpages.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Sub2 - Confirmation Page (depends upon \"Sub2 - Main Script - All pages\")",
 			async: true,
 			description: "The script should be added to the Order Confirmation page on the website. The purpose of this script is to capture the relevant details relating to the user's order.",
@@ -143,11 +144,16 @@ qubit.opentag.LibraryTag.define(
 				description: "User Opted for SignUp Or Not",
 				token: "optins",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var _this = this;
 			var ii = 0;
 			var waitForConfirmationScripts = function() {
@@ -171,7 +177,7 @@ qubit.opentag.LibraryTag.define(
 						"address1"), "" + _this.valueForToken("address2"), "" + _this.valueForToken(
 						"address3"), "" + _this.valueForToken("address4"), "" + _this.valueForToken(
 						"postcode"), "" + _this.valueForToken("email"), "" + _this.valueForToken(
-						"landline"),  "" + _this.valueForToken("mobile"),  "" + _this.valueForToken(
+						"landline"), "" + _this.valueForToken("mobile"), "" + _this.valueForToken(
 						"optins"));
 				} else if (ii < 50) {
 					ii++;
@@ -179,14 +185,14 @@ qubit.opentag.LibraryTag.define(
 				}
 			};
 			waitForConfirmationScripts();
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

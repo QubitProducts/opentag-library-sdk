@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"nextag.confirmationtagwithproductdetails.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Confirmation Tag with product details",
 			async: true,
 			description: "ROI Tag without product details",
@@ -43,15 +44,20 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "quantities",
 				uv: "universal_variable.transaction.line_items[#].quantity"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			var cats = [],
 				prods = [],
 				units = [];
@@ -69,10 +75,10 @@ qubit.opentag.LibraryTag.define(
 			window.prods = prods.join("|");
 			window.units = units.join("|");
 
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

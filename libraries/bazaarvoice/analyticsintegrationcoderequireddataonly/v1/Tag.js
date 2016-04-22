@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"bazaarvoice.analyticsintegrationcoderequireddataonly.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Analytics Integration Code (Required Data Only)",
 			async: true,
 			description: "Uses required data only. Add JavaScript code to your transaction and conversion pages to send information to Bazaaarvoice analytics.",
@@ -53,19 +54,24 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "quantities",
 				uv: "universal_variable.transaction.line_items[#].quantity"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Ratings & Review Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var data = {
 				"orderId": "" + this.valueForToken("orderId"),
 				"total": "" + this.valueForToken("total"),
@@ -83,6 +89,6 @@ qubit.opentag.LibraryTag.define(
 				});
 			}
 			window.$BV.SI.trackTransactionPageView(data);
-			/*~POST*/
+			/*~post*/
 		}
 	});

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("merchenta.visittag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Visit Tag",
 		async: true,
 		description: "Use this tag to track visits to your home page or landing pages.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("merchenta.visittag.v1.Tag", {
 			description: "Your Merchenta account ID",
 			token: "Merchenta_Id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.mc_api_url = "api.merchenta.com/merchenta/t";
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
@@ -33,14 +39,14 @@ qubit.opentag.LibraryTag.define("merchenta.visittag.v1.Tag", {
 			script.src = "http://cdn.merchenta.com/track/t.js";
 		}
 		document.getElementsByTagName('head')[0].appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("tradedoubler.confirmationpager1.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page R1",
 		async: true,
 		description: "Product Level Tracking (PLT) Version",
@@ -77,11 +78,16 @@ qubit.opentag.LibraryTag.define("tradedoubler.confirmationpager1.v1.Tag", {
 			description: "Product group ID, supplied by TradeDoubler. Used  to distinguish different product categories.",
 			token: "productGroupId",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		function readCookie(name) {
 			var nameEQ = name + "=";
 			var ca = document.cookie.split(';');
@@ -125,14 +131,14 @@ qubit.opentag.LibraryTag.define("tradedoubler.confirmationpager1.v1.Tag", {
 		var img = document.createElement("img");
 		img.src = src;
 		document.body.appendChild(img);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

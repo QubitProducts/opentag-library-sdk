@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.googleanalyticscustomdomains.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Analytics - Custom Domains",
 			async: true,
 			description: "Allows the collecting of visits to multiple domains in a single profile—as if they were a single site rather than two separate ones.",
@@ -23,11 +24,16 @@ qubit.opentag.LibraryTag.define(
 				description: "In the format www.yourdomain.com, yourdomain.com or subdomain.yourdomain.com",
 				token: "domain",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_setAccount', '' + this.valueForToken("profile_id")]);
 			_gaq.push(['_setDomainName', '' + this.valueForToken("domain")]);
@@ -40,14 +46,14 @@ qubit.opentag.LibraryTag.define(
 				'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

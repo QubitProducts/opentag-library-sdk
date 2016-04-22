@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"linkshare.linkshareconfirmationpagepixel.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "LinkShare Confirmation Page Pixel",
 			async: true,
 			description: "Reports transactions to linkshare server",
@@ -53,11 +54,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Voucher discount amount (set to 0 if no discount)",
 				token: "voucher_discount",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var formatPrice = function(value) {
 				return Math.round(value * 100);
 			};
@@ -92,14 +98,14 @@ qubit.opentag.LibraryTag.define(
 				"&qlist=" + qList.join("|") + "&amtlist=" + amtList.join("|") + "&cur=" +
 				this.valueForToken("cur") + "&namelist=" + nameList.join("|");
 			document.body.appendChild(x);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

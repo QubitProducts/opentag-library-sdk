@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('facebook.productaudiencesviewcontent.v1.local');
 facebook.productaudiencesviewcontent.v1.local.Config = {
   "parameters": [

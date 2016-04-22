@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mythings.confirmationtaginactive.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Tag - INACTIVE",
 		async: true,
 		description: "",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("mythings.confirmationtaginactive.v1.Tag", {
 			description: "",
 			token: "advertiser_token",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var i = 0,
 			productIDArray = this.valueForToken("product_ids"),
 			productPriceArray = this.valueForToken("product_prices"),
@@ -82,14 +88,14 @@ qubit.opentag.LibraryTag.define("mythings.confirmationtaginactive.v1.Tag", {
 		document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok=" +
 			mtAdvertiserToken + "' type='text/javascript'%3E%3C/script%3E"));
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

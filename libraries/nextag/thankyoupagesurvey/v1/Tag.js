@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("nextag.thankyoupagesurvey.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Thankyou Page Survey",
 		async: true,
 		description: "The tag to display the NexTag survey on the thanyou page. Any popup dimension can be set to a blank string to take the default value.",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("nextag.thankyoupagesurvey.v1.Tag", {
 			description: "Default: 0",
 			token: "popup_resize",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.seller_id = this.valueForToken("nextag_seller_id");
 
 		if (this.valueForToken("pop_left") !== "") {
@@ -73,14 +79,14 @@ qubit.opentag.LibraryTag.define("nextag.thankyoupagesurvey.v1.Tag", {
 			'script type="text/javascript" src="https://merchants.nextag.com/seller/review/popup_include.js"><\/sc' + 'ript>'
 		);
 		// <script  src="https://merchants.nextag.com/seller/review/popup_include.js"
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

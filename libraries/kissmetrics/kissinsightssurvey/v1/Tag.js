@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("kissmetrics.kissinsightssurvey.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "KissInsights Survey",
 		async: true,
 		description: "KISSInsights customer survey slider",
@@ -22,20 +23,25 @@ qubit.opentag.LibraryTag.define("kissmetrics.kissinsightssurvey.v1.Tag", {
 			description: "The id of the particular website - the last part of the URL before ''.js",
 			token: "website_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._kiq = window._kiq || [];
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"silverpop.webtrackingengageconversioneot.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Web Tracking (Engage Conversion EOT)",
 			async: true,
 			description: "Web tracking if you use Engage Conversion Tracking EOT",
@@ -38,11 +39,16 @@ qubit.opentag.LibraryTag.define(
 				description: "The host for the Engage Conversion Tracking meta tag e.g. engage5.sliverpop.com",
 				token: "cot_host",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			function downloadJSAtOnload1() {
 
 				var x = document.createElement("script");
@@ -70,14 +76,14 @@ qubit.opentag.LibraryTag.define(
 			}
 			else window.onload = downloadJSAtOnload1;
 
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

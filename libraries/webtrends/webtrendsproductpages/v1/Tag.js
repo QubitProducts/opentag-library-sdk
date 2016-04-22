@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webtrends.webtrendsproductpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Webtrends - Product pages",
 		async: true,
 		description: "To be placed on product pages. Should be dependent on the main Webtrends tracking tag.",
@@ -37,11 +38,16 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsproductpages.v1.Tag", {
 			description: "",
 			token: "subcategory",
 			uv: "universal_variable.product.subcategory"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.dcsMultiTrack({
 			"WT.pn_sku": "" + this.valueForToken("sku"),
 			"WT.pn_id": "" + this.valueForToken("id"),
@@ -49,14 +55,14 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsproductpages.v1.Tag", {
 			"WT.pn_ma": "" + this.valueForToken("manufacturer"),
 			"WT.pn_sc": "" + this.valueForToken("subcategory")
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

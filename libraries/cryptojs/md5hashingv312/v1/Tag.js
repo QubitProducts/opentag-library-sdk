@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("cryptojs.md5hashingv312.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "MD5 Hashing - v3.1.2.",
 		async: true,
 		description: "e.g. var hash = CryptoJS.MD5(\"Message\").toString();",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("cryptojs.md5hashingv312.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		/*
 CryptoJS v3.1.2
@@ -362,14 +368,14 @@ code.google.com/p/crypto-js/wiki/License
 			r.MD5 = t._createHelper(q);
 			r.HmacMD5 = t._createHmacHelper(q)
 		})(Math);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

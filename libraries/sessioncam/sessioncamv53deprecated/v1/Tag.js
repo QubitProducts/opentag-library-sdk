@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sessioncam.sessioncamv53deprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "SessionCam v5.3 - DEPRECATED",
 		async: true,
 		description: "SessionCam tag v5.3",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("sessioncam.sessioncamv53deprecated.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Analytics"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		//<![CDATA[
 		window.ServiceTickDetection = function() {
@@ -686,14 +692,14 @@ qubit.opentag.LibraryTag.define("sessioncam.sessioncamv53deprecated.v1.Tag", {
 		ServiceTickDetection.AddServiceTick();
 		//]]>
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

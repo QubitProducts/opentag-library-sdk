@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("clicktale.clicktaleatlaslegacy.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "ClickTale - Atlas - Legacy",
 		async: true,
 		description: "Mouse tracking tag",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("clicktale.clicktaleatlaslegacy.v1.Tag", {
 			description: "The clicktale partition - normally something like \"www09\"",
 			token: "Partition",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		window.WRInitTime = (new Date()).getTime();
 
@@ -62,14 +68,14 @@ qubit.opentag.LibraryTag.define("clicktale.clicktaleatlaslegacy.v1.Tag", {
 		}
 
 		document.body.appendChild(ct);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

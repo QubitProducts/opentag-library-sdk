@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("netbooster.conversionpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion pixel",
 		async: true,
 		description: "",
@@ -32,25 +33,30 @@ qubit.opentag.LibraryTag.define("netbooster.conversionpixel.v1.Tag", {
 			description: "",
 			token: "partner_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.img = new Image();
 		img.src = "//conversion-pixel.invitemedia.com/pixel?pixelID=" + 
 				this.valueForToken("pixel_id") + "&clientID=" +
 				this.valueForToken("client_id") + "&partnerID=" +
 				this.valueForToken("partner_id") + "&key=conv&orderID=" +
 				this.valueForToken("order_id") + "&returnType=js";
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

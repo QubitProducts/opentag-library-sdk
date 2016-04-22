@@ -1,27 +1,29 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("krux.controltag.v1.Tag", {
-	config: {
-		/*DATA*/
-		name: "controltag",
-		async: true,
-		description: "Data Management Platform (DMP) : leverage data to inform first party targeting of advertising, content, or commerce on your own web properties.",
-		html: "",
-		locationDetail: "",
-		isPrivate: false,
-		url: "",
-		usesDocWrite: false,
-		upgradeable: true,
-		parameters: [{
-			name: "Configuration Id",
-			description: "Configuration id",
-			token: "configuration_id",
-			uv: "universal_variable.dmp.configuration_id"
-		}]
-		/*~DATA*/
+	getDefaultConfig: function () {
+    return {
+      /*config*/
+      name: "controltag",
+      async: true,
+      description: "Data Management Platform (DMP) : leverage data to inform first party targeting of advertising, content, or commerce on your own web properties.",
+      html: "",
+      locationDetail: "",
+      isPrivate: false,
+      url: "",
+      usesDocWrite: false,
+      upgradeable: true,
+      parameters: [{
+        name: "Configuration Id",
+        description: "Configuration id",
+        token: "configuration_id",
+        uv: "universal_variable.dmp.configuration_id"
+      }]
+      /*~config*/
+    };
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 		window.Krux || (( Krux = function() { Krux.q.push(arguments) }).q=[] );
 		var k = document.createElement('script');
 		k.type = 'text/javascript';
@@ -31,14 +33,14 @@ qubit.opentag.LibraryTag.define("krux.controltag.v1.Tag", {
 		( location.protocol === "https:" ? "https:" : "http:" ) + "//cdn.krxd.net/controltag?confid=" + this.valueForToken("configuration_id");
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(k,s);
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

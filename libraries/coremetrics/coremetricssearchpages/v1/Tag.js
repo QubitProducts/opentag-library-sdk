@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("coremetrics.coremetricssearchpages.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "CoreMetrics - Search Pages",
 		async: true,
 		description: "To be used on search pages.",
@@ -52,19 +53,24 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricssearchpages.v1.Tag", {
 			description: "Number of search results (new parameter, set as blank if not available)",
 			token: "number_results",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		// Client Setup
 		window.cmSetClientID(
 			"" + this.valueForToken("client_id"),
@@ -80,6 +86,6 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricssearchpages.v1.Tag", {
 			"" + this.valueForToken("search_query"),
 			"" + this.valueForToken("number_results")
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

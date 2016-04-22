@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguarantee.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Norton Shopping Guarantee",
 		async: false,
 		description: "This Tag creates the Norton Shopping Guarantee itself, and should be placed ONLY on your order complete / receipt page.",
@@ -33,11 +34,16 @@ qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguarantee
         name: "The transaction's order amount",
         uv: "universal_variable.transaction.subtotal"
       }
-    ]
-		/*~DATA*/
+    ],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 
     if(window._GUARANTEE && _GUARANTEE.Loaded) {
       // Check to see if a guarantee span is already present.  If not, create one.
@@ -56,14 +62,14 @@ qubit.opentag.LibraryTag.define("nortonshoppingguarantee.nortonshoppingguarantee
       _GUARANTEE.WriteGuarantee('JavaScript', id);
     }
 
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

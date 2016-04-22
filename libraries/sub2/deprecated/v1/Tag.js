@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sub2.deprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "DEPRECATED",
 		async: true,
 		description: "The script should be added to the Order Confirmation page on the website. The purpose of this script is to capture the relevant details relating to the user's order.",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("sub2.deprecated.v1.Tag", {
 			description: "List of Purchased items",
 			token: "product_id",
 			uv: "universal_variable.transaction.line_items[#].product.id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var ii = 0;
 		var waitForConfirmationScripts = function() {
@@ -93,8 +99,8 @@ qubit.opentag.LibraryTag.define("sub2.deprecated.v1.Tag", {
 						"" + _this.valueForToken("postcode"),
 						"" + _this.valueForToken("email"),
 						"" + _this.valueForToken("landline"),
-					  "" + _this.valueForToken("mobile"),
-					  "" + _this.valueForToken("optins"));
+						"" + _this.valueForToken("mobile"),
+						"" + _this.valueForToken("optins"));
 			} else if (ii < 50) {
 				ii++;
 				setTimeout(waitForConfirmationScripts, 100);
@@ -102,14 +108,14 @@ qubit.opentag.LibraryTag.define("sub2.deprecated.v1.Tag", {
 		};
 
 		waitForConfirmationScripts();
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

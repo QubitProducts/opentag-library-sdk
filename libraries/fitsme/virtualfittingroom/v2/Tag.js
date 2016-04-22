@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("fitsme.virtualfittingroom.v2.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Virtual Fitting Room",
 		async: true,
 		description: "We provide virtual fitting room solutions online stores and help people find their right size and fit.",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("fitsme.virtualfittingroom.v2.Tag", {
 			description: "An array of size titles of the same length and in the same order as the Size ID / Size Price arrays.",
 			token: "titles",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Merchandising & Rich Media"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		(function() {
 			var fm = document.createElement('script');
@@ -55,10 +61,10 @@ qubit.opentag.LibraryTag.define("fitsme.virtualfittingroom.v2.Tag", {
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(fm, s);
 		})();
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 
 		var sizeArray = [];
 		console.log(this.valueForToken("titles")[1]);
@@ -81,10 +87,10 @@ qubit.opentag.LibraryTag.define("fitsme.virtualfittingroom.v2.Tag", {
 			}
 		};
 
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

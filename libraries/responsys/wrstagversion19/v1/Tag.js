@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("responsys.wrstagversion19.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "WRS Tag - version 1.9",
 		async: true,
 		description: "",
@@ -72,11 +73,16 @@ qubit.opentag.LibraryTag.define("responsys.wrstagversion19.v1.Tag", {
 			description: "Account ID",
 			token: "account_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var _riTrack;
 		function _riInit() {
@@ -125,14 +131,14 @@ qubit.opentag.LibraryTag.define("responsys.wrstagversion19.v1.Tag", {
 		this.loadURL(window.location.protocol +
 			"//custom-wrs.api.responsys.net/ts-wrs/js/ri.min.js");
 		//</scr ipt><script type="text/javascript" src=""></sc ript>
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

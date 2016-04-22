@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("olark.olarkchat.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Olark Chat",
 		async: true,
 		description: "In-page chat widget",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("olark.olarkchat.v1.Tag", {
 			description: "Olark Site Id",
 			token: "SITE_ID",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Live Chat & Customer Service Engine"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		(window.olark && Object.prototype.toString.call(window.olark) ===
 			"[object Function]") || (function(c) {
 			var f = window,
@@ -114,14 +120,14 @@ qubit.opentag.LibraryTag.define("olark.olarkchat.v1.Tag", {
 		});
 		/* custom configuration goes here (www.olark.com/documentation) */
 		olark.identify('' + this.valueForToken("SITE_ID"));
-	/*~SCRIPT*/
+	/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

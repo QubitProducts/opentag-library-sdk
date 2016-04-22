@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"channeladvisor.confirmationordertracking.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Confirmation - Order Tracking",
 			async: true,
 			description: "The Order Tracking pixels captures order and conversion information which is used to measure the effectiveness of each campaign.  The code has several parameters ( order value, order ID, Product ID ) that will need to be integrated and customized for the particular store or shopping cart.",
@@ -48,19 +49,24 @@ qubit.opentag.LibraryTag.define(
 				description: "The identifier that relates Channel Advisor to you",
 				token: "ca_id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			window._caq = window._caq || [];
 			var products = [];
 
@@ -78,6 +84,6 @@ qubit.opentag.LibraryTag.define(
 				CurrencyCode: "" + this.valueForToken("order_currency"),
 				Products: products
 			}]);
-			/*~POST*/
+			/*~post*/
 		}
 	});

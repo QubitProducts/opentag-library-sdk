@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("bazaarvoice.displayintegrationcode.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Display Integration Code",
 		async: true,
 		description: "Requirement: 1) Place the following code on every product page where you want to display the ratings summary. <div id=\"BVRRSummaryContainer\"></div> 2) Place the following code on every product page where you want to display review content. <div id=\"BVRRContainer\"></div>",
@@ -27,22 +28,27 @@ qubit.opentag.LibraryTag.define("bazaarvoice.displayintegrationcode.v1.Tag", {
 			description: "The ID of the product displayed on the page",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Ratings & Review Engine"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		windopw.$BV.ui("rr", "show_reviews", {
 			productId: "" + this.valueForToken("product_id")
 		});
-		/*~POST*/
+		/*~post*/
 	}
 });

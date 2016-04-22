@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"quantcast.quantcastwebmeasurementwithlabels.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "QuantCast Web Measurement - with labels",
 			async: true,
 			description: "Provides audience information showcasing your website’s traffic, demographic, geographic, affinities and business stats. This version includes the \"labels\" parameter.",
@@ -23,11 +24,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Labels for visitor segmentation, see Quantcast documentation for further info",
 				token: "labels",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._qevents = window._qevents || [];
 
 			var e = document.createElement("script");
@@ -39,14 +45,14 @@ qubit.opentag.LibraryTag.define(
 				qacct: "" + this.valueForToken("account_no"),
 				labels: "" + this.valueForToken("labels")
 			});
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

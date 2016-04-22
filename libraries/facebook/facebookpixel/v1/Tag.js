@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("facebook.facebookpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Facebook Pixel",
 		async: true,
 		description: "",
@@ -27,22 +28,27 @@ qubit.opentag.LibraryTag.define("facebook.facebookpixel.v1.Tag", {
 			description: "if not on Transaction Page, use following hardcoded value  instead : 0.00",
 			token: "param_value",
 			uv: "universal_variable.transaction.total"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Social"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.fb_param = {};
 		fb_param.pixel_id = '' + this.valueForToken("pixel_id");
 		fb_param.value = '' + this.valueForToken("param_value");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

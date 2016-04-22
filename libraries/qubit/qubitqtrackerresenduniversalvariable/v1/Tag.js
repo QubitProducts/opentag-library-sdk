@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"qubit.qubitqtrackerresenduniversalvariable.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "QuBit QTracker - resend Universal Variable",
 			async: true,
 			description: "Ties in with QuBit QTracker, re-sending Universal Variables to QTracker when they exist on the page. This is useful when the Universal Variable is not declared before OpenTag.",
@@ -15,11 +16,16 @@ qubit.opentag.LibraryTag.define(
 			upgradeable: true,
 			parameters: [
 
-			]
-			/*~DATA*/
+			],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			// Wait for UV and then resend data to QTracker
 			var wait = function() {
 				if (window.universal_variable) {
@@ -32,14 +38,14 @@ qubit.opentag.LibraryTag.define(
 				}
 			};
 			wait();
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

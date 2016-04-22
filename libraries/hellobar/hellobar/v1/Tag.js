@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("hellobar.hellobar.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Hello Bar",
 		async: true,
 		description: "The Hello bar is a Web Toolbar that Helps You Get More Clicks on Your Website. Delopy this simple notification bar to better engage your users.",
@@ -22,20 +23,25 @@ qubit.opentag.LibraryTag.define("hellobar.hellobar.v1.Tag", {
 			description: "Your Bar's id number",
 			token: "BAR_ID",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		new HelloBar(this.valueForToken("ACCOUNT_ID"), this.valueForToken("BAR_ID"));
-		/*~POST*/
+		/*~post*/
 	}
 });

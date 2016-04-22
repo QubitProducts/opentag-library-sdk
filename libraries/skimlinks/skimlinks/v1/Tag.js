@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("skimlinks.skimlinks.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Skimlinks",
 		async: true,
 		description: "Converts any normal product or merchant link in your content into its equivalent affiliate link as a user clicks on it.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("skimlinks.skimlinks.v1.Tag", {
 			description: "A publisher ID provided by Skimlinks. The format should be 0000X1111",
 			token: "publisher_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

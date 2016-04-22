@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("uservoice.uservoicechat.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "User Voice Chat",
 		async: true,
 		description: "UserVoice creates simple online feedback, help desk and knowledge base software. Our insight and support platforms enable businesses to understand and engage with customers with ease.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("uservoice.uservoicechat.v1.Tag", {
 			description: "Unique JavaScript File name",
 			token: "ID",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Ratings & Review Engine"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.uvOptions = {};
 		var ID = this.valueForToken("ID");
     var uv = document.createElement('script');
@@ -31,14 +37,14 @@ qubit.opentag.LibraryTag.define("uservoice.uservoicechat.v1.Tag", {
 				"widget.uservoice.com/" + ID +".js";
     var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(uv, s);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

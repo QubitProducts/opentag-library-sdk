@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("adroll.confirmationpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page Tag",
 		async: true,
 		description: "Tag must be implemented on the confirmation page after user has made payment.",
@@ -37,11 +38,16 @@ qubit.opentag.LibraryTag.define("adroll.confirmationpagetag.v1.Tag", {
 			description: "The identifier relating to the user",
 			token: "user_id",
 			uv: "universal_variable.user.user_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		window.adroll_adv_id = "" + this.valueForToken("adroll_ad_id");
 		window.adroll_pix_id = "" + this.valueForToken("adroll_pix_id");
@@ -65,14 +71,14 @@ qubit.opentag.LibraryTag.define("adroll.confirmationpagetag.v1.Tag", {
 			if (oldonload) oldonload();
 		};
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

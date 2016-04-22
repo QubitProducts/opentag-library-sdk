@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sojern.datapartnertagcruisesearch.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Data Partner Tag - Cruise Search",
 		async: true,
 		description: "",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("sojern.datapartnertagcruisesearch.v1.Tag", {
 			description: "Blank string if not available",
 			token: "rooms",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var src = document.location.protocol + "//pixel.sojern.com/partner/" +
 			this.valueForToken("sojern_partner_key") + "/cs?";
 		src += "cco=" + this.valueForToken("cruise_line") + "&";
@@ -67,14 +73,14 @@ qubit.opentag.LibraryTag.define("sojern.datapartnertagcruisesearch.v1.Tag", {
 		src += "t=" + this.valueForToken("travellers") + "&";
 		src += "cr=" + this.valueForToken("rooms");
 		(new Image()).src = src;
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

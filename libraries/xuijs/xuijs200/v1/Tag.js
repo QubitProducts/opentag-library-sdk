@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("xuijs.xuijs200.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "xuijs 2.0.0",
 		async: true,
 		description: "xui is the smallest framework that works across all of the devices in the mobile landscape. it does not try and dictate a page structure or widget paradigm. instead, it uses the dom and since most mobile applications consist of lists and buttons, we feel, html and css do a fine job of rendering.",
@@ -14,19 +15,24 @@ qubit.opentag.LibraryTag.define("xuijs.xuijs200.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
-	},
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

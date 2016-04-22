@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webgains.webgainsdeprecatedr2.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "WebGains [DEPRECATED] R2",
 		async: true,
 		description: "",
@@ -88,11 +89,16 @@ qubit.opentag.LibraryTag.define("webgains.webgainsdeprecatedr2.v1.Tag", {
 			description: "array of product.wgeventid values - should return empty array if no product.wegeventid are available",
 			token: "product_event_id",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		var wgItems = function() {
 			var wgItemsString = "";
@@ -155,14 +161,14 @@ qubit.opentag.LibraryTag.define("webgains.webgainsdeprecatedr2.v1.Tag", {
 		var img = new Image();
 		img.src = wgUri;
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

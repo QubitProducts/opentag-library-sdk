@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webtrends.webtrendsbasicmultitrack.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Webtrends - basic multiTrack",
 		async: true,
 		description: "Use multiTrack for sending back custom data, or overriding the values from Webtrends' standard set of data.",
@@ -17,22 +18,27 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsbasicmultitrack.v1.Tag", {
 			description: "You should return an object (key/value) from within a self executing anonymous function.",
 			token: "data",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		Webtrends.multiTrack({
 			args: this.valueForToken("data")
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

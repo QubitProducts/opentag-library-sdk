@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.deprecatedproductlistingtag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "[Deprecated] Product Listing Tag",
 		async: true,
 		description: "To be placed only on product listing/search result pages",
@@ -17,15 +18,20 @@ qubit.opentag.LibraryTag.define("struq.deprecatedproductlistingtag.v1.Tag", {
 			description: "An array containing a list of product IDs",
 			token: "product_id_list",
 			uv: "universal_variable.listing.items[#].id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._struqPI = window._struqPI || [];
 		var productArr = [];
 		for (var i = 0, ii = this.valueForToken("product_id_list").length; i < ii; i++) {
@@ -45,10 +51,10 @@ qubit.opentag.LibraryTag.define("struq.deprecatedproductlistingtag.v1.Tag", {
 				timeoutMs: 2000
 			}
 		}]);
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.productpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page",
 		async: true,
 		description: "Peerius tag for the product page",
@@ -27,15 +28,20 @@ qubit.opentag.LibraryTag.define("peerius.productpage.v1.Tag", {
 			description: "The id for the product on the current product page",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "product",
@@ -45,10 +51,10 @@ qubit.opentag.LibraryTag.define("peerius.productpage.v1.Tag", {
 				}
 			}
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

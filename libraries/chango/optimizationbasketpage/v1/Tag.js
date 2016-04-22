@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("chango.optimizationbasketpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Optimization - Basket Page",
 		async: true,
 		description: "",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("chango.optimizationbasketpage.v1.Tag", {
 			description: "Hashed Visitor ID",
 			token: "visitor_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var namesAndSkus = [];
 		var names = [];
 		var prices = [];
@@ -105,14 +111,14 @@ qubit.opentag.LibraryTag.define("chango.optimizationbasketpage.v1.Tag", {
 		script.async = true;
 		script.src = document.location.protocol + '//cc.chango.com/static/o.js';
 		document.head.appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"appnexus.appnexusthankyoupagewithcustomdomain.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "AppNexus - Thank you page with custom domain",
 			async: true,
 			description: "To be placed on the confirmation page, allowing for a custom domain.",
@@ -43,19 +44,24 @@ qubit.opentag.LibraryTag.define(
 				description: "e.g. 2",
 				token: "t",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"DSP"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

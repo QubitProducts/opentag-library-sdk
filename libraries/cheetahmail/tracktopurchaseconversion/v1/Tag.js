@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("cheetahmail.tracktopurchaseconversion.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Track-to-Purchase Conversion",
 		async: true,
 		description: "Track-to-purchase reporting is typically used by clients that utilize e-commerce components to track conversions on their site resulting from an email campaign sent through CheetahMail.",
@@ -52,19 +53,24 @@ qubit.opentag.LibraryTag.define("cheetahmail.tracktopurchaseconversion.v1.Tag", 
 			description: "Any client specific data to be associated with each transaction - numbers only",
 			token: "cust3",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

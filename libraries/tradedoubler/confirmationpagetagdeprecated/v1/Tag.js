@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"tradedoubler.confirmationpagetagdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Confirmation Page Tag [DEPRECATED]",
 			async: true,
 			description: "DO NOT USE",
@@ -73,11 +74,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Enter hard coded value s for sales tracking or l for lead tracking",
 				token: "tracking_type",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			function readCookie(name) {
 				var nameEQ = name + "=";
 				var ca = document.cookie.split(';');
@@ -120,14 +126,14 @@ qubit.opentag.LibraryTag.define(
 			var img = document.createElement("img");
 			img.src = src;
 			document.body.appendChild(img);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

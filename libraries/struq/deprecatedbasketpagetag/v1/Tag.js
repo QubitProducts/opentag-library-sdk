@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.deprecatedbasketpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "[Deprecated] Basket Page Tag",
 		async: true,
 		description: "To be placed on the Basket Page",
@@ -17,15 +18,20 @@ qubit.opentag.LibraryTag.define("struq.deprecatedbasketpagetag.v1.Tag", {
 			description: "An array of the product IDs in the basket",
 			token: "basket_pid_listing",
 			uv: "universal_variable.basket.line_items[#].product.id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._struqPI = window._struqPI || [];
 		var productArr = [];
 		for (var i = 0, ii = this.valueForToken("basket_pid_listing").length; i < ii; i++) {
@@ -45,10 +51,10 @@ qubit.opentag.LibraryTag.define("struq.deprecatedbasketpagetag.v1.Tag", {
 				timeoutMs: 2000
 			}
 		}]);
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

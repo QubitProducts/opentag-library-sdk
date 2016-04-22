@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("commissionjunction.commissionjunction.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Commission Junction",
 		async: true,
 		description: "Commission Junction is a global leader in Affiliate Marketing, Online Marketing, and Search Engine Marketing.",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("commissionjunction.commissionjunction.v1.Tag", 
 			description: "If not available in UV, hard code e.g. \"GBP\"",
 			token: "currency",
 			uv: "universal_variable.transaction.currency"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var pixel = new Image();
 		var src = "https://www.emjcd.com/u?";
 		var items = [];
@@ -81,14 +87,14 @@ qubit.opentag.LibraryTag.define("commissionjunction.commissionjunction.v1.Tag", 
 <img src="https://www.emjcd.com/u?CID=<ENTERPRISEID>&OID=<OID>&TYPE=<ACTIONID>&ITEM1=
 <ITEMID>&AMT1=<AMT>&QTY1=<QTY>&CURRENCY=<CURRENCY>&METHOD=IMG" height="1" 
 width="20">*/
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

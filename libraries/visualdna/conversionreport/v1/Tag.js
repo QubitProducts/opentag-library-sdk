@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("visualdna.conversionreport.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Report",
 		async: true,
 		description: "This tag should fire on the user converting to a designated goal identified by a Conversion ID.\nThe tag must have a dependency on the Visual DNA Page View Report tag.\nThe \"Extra Data\" parameter should be assigned a string. The format/value of the string should be agreed with VisualDNA in advance on a partner­ by ­partner, conversion­ by ­conversion basis.\nIf no extra data is available, then an empty string should be assigned to that parameter",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("visualdna.conversionreport.v1.Tag", {
 			description: "An ID identifying the designated Conversion Goal",
 			token: "conversion_id",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.VDNA = window.VDNA || {};
 		window.VDNA.queue = window.VDNA.queue || [];
 
@@ -47,14 +53,14 @@ qubit.opentag.LibraryTag.define("visualdna.conversionreport.v1.Tag", {
 			method: "reportConversion",
 			args: args
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

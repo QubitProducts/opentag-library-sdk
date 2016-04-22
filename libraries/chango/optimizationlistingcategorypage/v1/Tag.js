@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("chango.optimizationlistingcategorypage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Optimization - Listing/Category page",
 		async: true,
 		description: "",
@@ -62,11 +63,16 @@ qubit.opentag.LibraryTag.define("chango.optimizationlistingcategorypage.v1.Tag",
 			description: "Leave blank if not available",
 			token: "visitor_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var names = [];
 		var prices = [];
 		var sale_prices = [];
@@ -108,14 +114,14 @@ qubit.opentag.LibraryTag.define("chango.optimizationlistingcategorypage.v1.Tag",
 		script.async = true;
 		script.src = document.location.protocol + '//cc.chango.com/static/o.js';
 		document.head.appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

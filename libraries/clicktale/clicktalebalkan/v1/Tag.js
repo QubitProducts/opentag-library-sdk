@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("clicktale.clicktalebalkan.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "ClickTale - Balkan",
 		async: true,
 		description: "New Balkan version of ClickTale mouse tracking",
@@ -17,21 +18,26 @@ qubit.opentag.LibraryTag.define("clicktale.clicktalebalkan.v1.Tag", {
 			description: "Fill this dynamically with HTTPS or HTTP URL using JavaScript variable",
 			token: "clicktale_url",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.WRInitTime = (new Date()).getTime();
 
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

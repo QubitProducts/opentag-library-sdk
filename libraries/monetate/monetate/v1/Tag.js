@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("monetate.monetate.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Monetate",
 		async: true,
 		description: "Generic Monetate tag to be added on all pages.",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("monetate.monetate.v1.Tag", {
 			description: "e.g. qubitproducts.com",
 			token: "domain",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"AB & Multi-Variate Testing"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.monetateT = new Date().getTime();
 		var p = document.location.protocol;
 		if (p == "http:" || p == "https:") {
@@ -39,14 +45,14 @@ qubit.opentag.LibraryTag.define("monetate.monetate.v1.Tag", {
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(m, s);
 		}
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

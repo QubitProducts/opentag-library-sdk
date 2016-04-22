@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("intelligentreach.productpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page Tag",
 		async: true,
 		description: "This tag should be applied to product pages only",
@@ -22,21 +23,26 @@ qubit.opentag.LibraryTag.define("intelligentreach.productpagetag.v1.Tag", {
 			description: "",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.istCompanyId = "" + this.valueForToken("id");
 		window.istItem = "" + this.valueForToken("product_id");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

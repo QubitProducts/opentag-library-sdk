@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.categorypage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Category Page",
 		async: true,
 		description: "Peerius tag for the category page (if using universal_variable: universal_variable.page.subcategory should be in - separated format e.g. * - * - * etc)",
@@ -27,15 +28,20 @@ qubit.opentag.LibraryTag.define("peerius.categorypage.v1.Tag", {
 			description: "The name of the subcategory for the current page",
 			token: "subcategory",
 			uv: "universal_variable.page.subcategory"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "category",
@@ -43,10 +49,10 @@ qubit.opentag.LibraryTag.define("peerius.categorypage.v1.Tag", {
 				category: ("" + this.valueForToken("subcategory")).replace(/\s-\s/g, ">")
 			}
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

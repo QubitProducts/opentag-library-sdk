@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.basketpagewithsmartrecs.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Basket Page (with SmartRecs)",
 		async: true,
 		description: "The Peerius tag for the Basket page include SmartRecs. Uses renderRecsBasket function. renderRecsBasket needs to be a global function on the window",
@@ -42,15 +43,20 @@ qubit.opentag.LibraryTag.define("peerius.basketpagewithsmartrecs.v1.Tag", {
 			description: "The list of item quantities for products in the basket",
 			token: "item_quantities",
 			uv: "universal_variable.basket.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "basket",
@@ -74,10 +80,10 @@ qubit.opentag.LibraryTag.define("peerius.basketpagewithsmartrecs.v1.Tag", {
 				qty: this.valueForToken("item_quantities")[i]
 			});
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

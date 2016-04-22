@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mentionme.referrertagdeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Referrer Tag [DEPRECATED]",
 		async: true,
 		description: "The implementation can be either as a modal popup or embedded in the page using an iFrame, both of which lead to a popup where the customer can register to become a referrer. If the client requires, they can set the implementation parameter to 'embed', in which case the content is loaded into an iframe within the page. This is inserted within a DIV <div id=\"mmWrapper\"></div> which should be on the page. All parameters marked with * are optional (if not used populate with empty hardcoded value, even if default is 'uses universal variable')",
@@ -107,11 +108,16 @@ qubit.opentag.LibraryTag.define("mentionme.referrertagdeprecated.v1.Tag", {
 			description: "String representing the customer segment 'new' or 'existing' (leave blank if not used)",
 			token: "segment",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			,"Social"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var baseUrl = "https://" + this.valueForToken("domain") +
 			"/api/v2/referreroffer/" + this.valueForToken("partner_code") + "?";
 		var paramArr = [];
@@ -175,14 +181,14 @@ qubit.opentag.LibraryTag.define("mentionme.referrertagdeprecated.v1.Tag", {
 		function beginningZero(digit) {
 			return (digit < 10) ? "0" + digit : "" + digit;
 		}
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

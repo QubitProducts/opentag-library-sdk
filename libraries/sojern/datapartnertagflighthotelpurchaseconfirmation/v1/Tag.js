@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.datapartnertagflighthotelpurchaseconfirmation.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Data Partner Tag - Flight + Hotel Purchase Confirmation",
 			async: true,
 			description: "",
@@ -133,11 +134,16 @@ qubit.opentag.LibraryTag.define(
 				description: "e.g. if price is $450.23 then pass 450 only",
 				token: "hotel_purchase_price",
 				uv: ""
-			}]
-			/*~DATA*/
-		},
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
+  },
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = document.location.protocol + "//pixel.sojern.com/partner/" +
 				this.valueForToken("sojern_partner_key") + "/fc?";
 			src += "fa1=" + this.valueForToken("origin_airport_code") + "&";
@@ -164,14 +170,14 @@ qubit.opentag.LibraryTag.define(
 			src += "hl=" + this.valueForToken("customer_loyalty_hash") + "&";
 			src += "hc=" + this.valueForToken("room_type");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

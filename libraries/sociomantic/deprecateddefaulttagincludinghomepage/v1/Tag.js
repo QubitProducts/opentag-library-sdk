@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sociomantic.deprecateddefaulttagincludinghomepage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "{DEPRECATED} Default Tag (including Home Page)",
 			async: true,
 			description: "Homepage tracking code as Default for all pages that can't be assigned to a specific page type",
@@ -18,19 +19,24 @@ qubit.opentag.LibraryTag.define(
 				description: "Your Sociomantic customer ID. Please only use the token that has been created and sent to you.",
 				token: "TOKEN",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Advertising Network"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

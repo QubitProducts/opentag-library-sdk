@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("rocketfuel.universaltrackingpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Universal Tracking Pixel",
 		async: true,
 		description: "This tag is to fire on every page to provide general pageview tracking.",
@@ -22,25 +23,30 @@ qubit.opentag.LibraryTag.define("rocketfuel.universaltrackingpixel.v1.Tag", {
 			description: "The campaign ID for the specific campaign this tag applies to.",
 			token: "campaign_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"DSP (Ad Server)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var cachebust = (Math.random() + "").substr(2);
 		var img = new Image();
 		img.src = "//" +
 			this.valueForToken("campaign_id") + "p.rfihub.com/ca.gif?rb=" +
 			this.valueForToken("merchant_id") + "&ca=" +
 			this.valueForToken("campaign_id") + "&ra=" + cachebust;
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

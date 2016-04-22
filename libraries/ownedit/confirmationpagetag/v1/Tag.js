@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("ownedit.confirmationpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page Tag",
 		async: true,
 		description: "Owned it is integrated at the order confirmation page of a store. Owned it allocates a unique store ID for each\nstore to manage, test and analyse post-purchase campaigns from its back end.",
@@ -87,19 +88,24 @@ qubit.opentag.LibraryTag.define("ownedit.confirmationpagetag.v1.Tag", {
 			description: "The name of the store that would be displayed on referrals",
 			token: "STORE_NAME",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var _this = this;
 
 		function post_to_owned_it() {
@@ -126,6 +132,6 @@ qubit.opentag.LibraryTag.define("ownedit.confirmationpagetag.v1.Tag", {
 			post_it(details);
 		}
 		onLoadCallBack(post_to_owned_it);
-		/*~POST*/
+		/*~post*/
 	}
 });

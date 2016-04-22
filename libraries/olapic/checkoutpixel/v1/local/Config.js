@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('olapic.checkoutpixel.v1.local');
 olapic.checkoutpixel.v1.local.Config = {
   "parameters": [

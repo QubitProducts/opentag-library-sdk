@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webtrends.webtrendsscenarioanalysis.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Webtrends - Scenario analysis",
 		async: true,
 		description: "Analyse paths through your website to measure conversion or abandonment. Depends on the main Webtrends pageview tag.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsscenarioanalysis.v1.Tag", {
 			description: "If the value is 1, the page is identified as a conversion page. Set as 0 otherwise.",
 			token: "step_where_conversion_occurs",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		window.dcsMultiTrack({
 			"WT.si_n": "" + _this.valueForToken("name"),
@@ -44,14 +50,14 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsscenarioanalysis.v1.Tag", {
 			"WT.si_x": _this.valueForToken("step_position"),
 			"WT.si_cs": _this.valueForToken("step_where_conversion_occurs")
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

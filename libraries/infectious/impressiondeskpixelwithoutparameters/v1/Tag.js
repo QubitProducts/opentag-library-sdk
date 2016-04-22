@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("infectious.impressiondeskpixelwithoutparameters.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Impression Desk Pixel Without Parameters",
 		async: true,
 		description: "",
@@ -23,11 +24,16 @@ qubit.opentag.LibraryTag.define("infectious.impressiondeskpixelwithoutparameters
 			description: "Doubleclick Type",
 			token: "type",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		var x = document.createElement("script");
 		x.src = (document.location.protocol === "https:") ?
@@ -54,14 +60,14 @@ qubit.opentag.LibraryTag.define("infectious.impressiondeskpixelwithoutparameters
 	    img.setAttribute("src", src);
 	    document.body.appendChild(img);
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

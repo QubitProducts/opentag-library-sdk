@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.uvtestbasketpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "UV Test - Basket Page",
 		async: true,
 		description: "Test Universal Variables on a basket page",
@@ -87,11 +88,16 @@ qubit.opentag.LibraryTag.define("qubit.uvtestbasketpage.v1.Tag", {
 			description: "",
 			token: "o",
 			uv: "universal_variable.basket.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		console.log("" + this.valueForToken("a"));
 		console.log("" + this.valueForToken("b"));
 		console.log("" + this.valueForToken("c"));
@@ -107,14 +113,14 @@ qubit.opentag.LibraryTag.define("qubit.uvtestbasketpage.v1.Tag", {
 		console.log("" + this.valueForToken("m"));
 		console.log("" + this.valueForToken("n"));
 		console.log("" + this.valueForToken("o"));
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('criteo.onetaghomepage.v2.local');
 criteo.onetaghomepage.v2.local.Config = {
   "parameters": [

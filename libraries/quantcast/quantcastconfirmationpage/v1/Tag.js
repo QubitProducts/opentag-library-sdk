@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("quantcast.quantcastconfirmationpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "QuantCast - Confirmation Page",
 		async: true,
 		description: "To be placed on the confirmation page instead of the regular Quantcast tag.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("quantcast.quantcastconfirmationpage.v1.Tag", {
 			description: "",
 			token: "revenue",
 			uv: "universal_variable.transaction.subtotal"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._qevents = _qevents || [];
 
 		var elem = document.createElement('script');
@@ -52,14 +58,14 @@ qubit.opentag.LibraryTag.define("quantcast.quantcastconfirmationpage.v1.Tag", {
 			orderid: "" + this.valueForToken("order_id"),
 			revenue: "" + this.valueForToken("revenue")
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

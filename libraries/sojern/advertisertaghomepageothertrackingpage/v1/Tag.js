@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.advertisertaghomepageothertrackingpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Advertiser Tag - Homepage/Other Tracking Page",
 			async: true,
 			description: "",
@@ -48,11 +49,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Assign blank string if not available",
 				token: "residence",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = "https://beacon.sojern.com/p/1?";
 			src += "n=" + this.valueForToken("page") + "&";
 			src += "fl=" + this.valueForToken("flight_loyal") + "&";
@@ -62,14 +68,14 @@ qubit.opentag.LibraryTag.define(
 			src += "l=" + this.valueForToken("language") + "&";
 			src += "c=" + this.valueForToken("residence");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

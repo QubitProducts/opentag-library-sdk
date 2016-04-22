@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v2.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Travel Search Page",
 		async: true,
 		description: "This is a search tag specifically built for travel enquiries, as it stores check-in and check-out dates.",
@@ -58,19 +59,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v2.Tag", {
 			description: "Pass plain text e-mail to this parameter for X-Device. We will hash it.",
 			token: "email",
 			uv: "universal_variable.user.email"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
         
         if (this.valueForToken("email")!='') {
             var passedemail = {event: "setEmail", email: [this.valueForToken("email")]};
@@ -116,6 +122,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagtravelsearchpage.v2.Tag", {
 				checkout_date: "" + this.valueForToken("check_out")
 			}, passedemail
 		);
-		/*~POST*/
+		/*~post*/
 	}
 });

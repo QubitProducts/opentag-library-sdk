@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("appnexus.conversiontag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag",
 		async: true,
 		description: "",
@@ -22,19 +23,24 @@ qubit.opentag.LibraryTag.define("appnexus.conversiontag.v1.Tag", {
 			description: "",
 			token: "appnexus_segment",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"DSP"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

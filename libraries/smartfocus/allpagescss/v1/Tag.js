@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("smartfocus.allpagescss.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "All Pages (CSS)",
 		async: true,
 		description: "",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("smartfocus.allpagescss.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Analytics"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var styleContent = "";
 		styleContent += ".advisor_suggestion_container .item {";
 		styleContent += "    margin: 5px;";
@@ -48,14 +54,14 @@ qubit.opentag.LibraryTag.define("smartfocus.allpagescss.v1.Tag", {
 		var style = document.createElement('style');
 		style.innerHTML = styleContent;
 		document.head.appendChild(style);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

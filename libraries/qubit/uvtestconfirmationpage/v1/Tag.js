@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.uvtestconfirmationpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "UV Test - Confirmation Page",
 		async: true,
 		description: "This script contains every confirmation page variable so that you can test your universal variable setup",
@@ -147,11 +148,16 @@ qubit.opentag.LibraryTag.define("qubit.uvtestconfirmationpage.v1.Tag", {
 			description: "",
 			token: "aa",
 			uv: "universal_variable.transaction.delivery.name"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		console.log("" + this.valueForToken("a"));
 		console.log("" + this.valueForToken("b"));
 		console.log("" + this.valueForToken("c"));
@@ -179,14 +185,14 @@ qubit.opentag.LibraryTag.define("qubit.uvtestconfirmationpage.v1.Tag", {
 		console.log("" + this.valueForToken("y"));
 		console.log("" + this.valueForToken("z"));
 		console.log("" + this.valueForToken("aa"));
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

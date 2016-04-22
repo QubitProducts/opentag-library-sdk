@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sociomantic.deprecatedconfirmationpagewithlastclicktracking.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "{DEPRECATED} Confirmation Page (with last click tracking)",
 			async: true,
 			description: "As confirmation page tag, but with last click tracking",
@@ -48,15 +49,20 @@ qubit.opentag.LibraryTag.define(
 				description: "The total value of items at checkout",
 				token: "trans_total",
 				uv: "universal_variable.transaction.subtotal"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Advertising Network"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.sale = {
 				confirmed: true
 			};
@@ -77,10 +83,10 @@ qubit.opentag.LibraryTag.define(
 			basket.transaction = '' + this.valueForToken("trans_id");
 			basket.amount = '' + this.valueForToken("trans_total");
 			basket.currency = '' + this.valueForToken("trans_currency");
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

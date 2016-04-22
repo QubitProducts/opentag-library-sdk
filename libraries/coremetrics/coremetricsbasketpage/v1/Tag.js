@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("coremetrics.coremetricsbasketpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "CoreMetrics - Basket page",
 		async: true,
 		description: "The shop action 5 tag, to be placed on basket pages.",
@@ -67,19 +68,24 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsbasketpage.v1.Tag", {
 			description: "A list of all the category ids the products belong to. Uses line_items[].product.category by default",
 			token: "product_category_id_list",
 			uv: "universal_variable.basket.line_items[#].product.category"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var i = 0,
 			ii = this.valueForToken("product_ids").length;
 
@@ -109,6 +115,6 @@ qubit.opentag.LibraryTag.define("coremetrics.coremetricsbasketpage.v1.Tag", {
 		};
 
 		window.cmDisplayShops();
-		/*~POST*/
+		/*~post*/
 	}
 });

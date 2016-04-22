@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("hubspot.analytics.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Analytics",
 		async: true,
 		description: "For all Professional and Enterprise HubSpot customers that want to use HubSpot's website analytics on a non-HubSpot hosted website.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("hubspot.analytics.v1.Tag", {
 			description: "",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		(function(d, s, i, r) {
 			if (d.getElementById(i)) {
@@ -34,14 +40,14 @@ qubit.opentag.LibraryTag.define("hubspot.analytics.v1.Tag", {
 				'/' + _this.valueForToken("id") + '.js';
 			e.parentNode.insertBefore(n, e);
 		})(document, "script", "hs-analytics", 300000);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

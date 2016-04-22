@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.orderpagedeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Order Page DEPRECATED",
 		async: true,
 		description: "DO NOT USE. Peerius tag for the order page",
@@ -42,15 +43,20 @@ qubit.opentag.LibraryTag.define("peerius.orderpagedeprecated.v1.Tag", {
 			description: "The total of the order and other expenses like shipping",
 			token: "total",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "order",
@@ -73,10 +79,10 @@ qubit.opentag.LibraryTag.define("peerius.orderpagedeprecated.v1.Tag", {
 				price: window.universal_variable.basket.line_items[i].product.unit_sale_price
 			});
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

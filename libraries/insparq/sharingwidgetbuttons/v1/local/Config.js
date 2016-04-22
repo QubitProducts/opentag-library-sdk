@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 qubit.opentag.Utils.namespace('insparq.sharingwidgetbuttons.v1.local');
 insparq.sharingwidgetbuttons.v1.local.Config = {
   "parameters": [
@@ -61,6 +61,6 @@ insparq.sharingwidgetbuttons.v1.local.Config = {
       "token": "jQuery",
       "uv": "",
       "inputVariable": "\"jQuery\""
-    },
+    }
   ]
 };

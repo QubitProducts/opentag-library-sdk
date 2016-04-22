@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"coremetrics.coremetricsconfirmationpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "CoreMetrics - Confirmation page",
 			async: true,
 			description: "To be placed on the confirmation page.",
@@ -113,19 +114,24 @@ qubit.opentag.LibraryTag.define(
 				description: "List of all the product categories.",
 				token: "product_category_id_list",
 				uv: "universal_variable.transaction.line_items[#].product.category"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var i = 0,
 				ii = this.valueForToken("product_ids").length;
 
@@ -180,6 +186,6 @@ qubit.opentag.LibraryTag.define(
 				"" + this.valueForToken("post_code"),
 				"" + this.valueForToken("country")
 			);
-			/*~POST*/
+			/*~post*/
 		}
 	});

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("tvsquared.action.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Action Tag",
 		async: true,
 		description: "The basic hit tracker should be fired on all pages of the site. Our service is territory specific, so clients should be able to setup rules to ensure that the tag only fires on the US (or UK, or French) site, if their website is global. ",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("tvsquared.action.v1.Tag", {
 			description: "If the client uses Promo codes to attribute data, the code can be added here.",
 			token: "promoCode",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-	/*SCRIPT*/
+	/*script*/
 	    var _paq = _paq || [];
 	    var that = this;
 	    (function () {
@@ -74,14 +80,14 @@ qubit.opentag.LibraryTag.define("tvsquared.action.v1.Tag", {
 	        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0]; g.type = 'text/javascript'; g.defer = true; g.async = true; g.src = u + 'piwik.js';
         	s.parentNode.insertBefore(g, s);
     	})();
-    /*SCRIPT*/
+    /*script*/
 	},
 	pre: function() {
-	/*PRE*/
-	/*~PRE*/
+	/*pre*/
+	/*~pre*/
 	},
 	post: function() {
-	/*POST*/
-	/*~POST*/
+	/*post*/
+	/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("buyat.conversiontagdeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag DEPRECATED",
 		async: true,
 		description: "",
@@ -32,19 +33,24 @@ qubit.opentag.LibraryTag.define("buyat.conversiontagdeprecated.v1.Tag", {
 			description: "Custom data specified by BuyAt",
 			token: "ppdata",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

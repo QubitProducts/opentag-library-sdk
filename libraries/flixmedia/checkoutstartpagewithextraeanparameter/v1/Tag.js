@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"flixmedia.checkoutstartpagewithextraeanparameter.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Checkout Start Page with extra EAN parameter",
 			async: true,
 			description: "This version also sends through the EAN or UPC of the product that is being checked out. Use this version only if the EAN product value is available.",
@@ -38,11 +39,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Array of Product Quantities",
 				token: "quants",
 				uv: "universal_variable.basket.line_items[#].quantity"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var products = [];
 			for (var i = 0; i < this.valueForToken("skus").length; i++)
 			{
@@ -61,14 +67,14 @@ qubit.opentag.LibraryTag.define(
 				"basket_id": "" + this.valueForToken("id"),
 				"basket": products
 			}); 
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

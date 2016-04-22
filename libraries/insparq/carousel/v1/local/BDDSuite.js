@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 //:include insparq/carousel/v1/Tag.js
 
 /*

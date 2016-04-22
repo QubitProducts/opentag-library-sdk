@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("radiumone.radiumonegenericimagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "RadiumOne - Generic image tag",
 		async: true,
 		description: "A generic RadiumOne image tag.",
@@ -17,22 +18,27 @@ qubit.opentag.LibraryTag.define("radiumone.radiumonegenericimagetag.v1.Tag", {
 			description: "",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = new Image();
 		img.src = "http://rs.gwallet.com/r1/pixel/x" + this.valueForToken("id") +
 			"r" + Math.round(Math.random() * 10000000);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

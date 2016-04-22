@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"marinsoftware.zzproductlevelconversiondeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "zz-Product Level Conversion [DEPRECATED]",
 			async: true,
 			description: "The Marin Conversion Tracking tag helps Marin advertisers measure their return on investment for media managed in the Marin Enterprise platform",
@@ -58,11 +59,16 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "marin_tracking_id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._mTrack = window._mTrack || [];
 
 			var items = [];
@@ -99,14 +105,14 @@ qubit.opentag.LibraryTag.define(
 			mt.src = mProto + mHost + '/tracker/async/' + mClientId + '.js';
 			var fscr = document.getElementsByTagName('script')[0];
 			fscr.parentNode.insertBefore(mt, fscr);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

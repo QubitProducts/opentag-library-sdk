@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"deprecatedtags.deprecatedgoogleremarketingconversiontagsynchronous.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "[Deprecated] Google Remarketing Conversion Tag - Synchronous",
 			async: true,
 			description: "",
@@ -38,15 +39,20 @@ qubit.opentag.LibraryTag.define(
 				description: "A conversion format provided in the script without quotes, e.g. 3",
 				token: "conversion_format",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.google_conversion_id = this.valueForToken("conversion_id");
 			window.google_conversion_language = "" + 
 					this.valueForToken("conversion_language");
@@ -54,10 +60,10 @@ qubit.opentag.LibraryTag.define(
 			window.google_conversion_label = "" + this.valueForToken("conversion_label");
 			window.google_conversion_format = "" + 
 					this.valueForToken("conversion_format");
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

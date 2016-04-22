@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("kissmetrics.kissmetrics.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Kiss Metrics",
 		async: true,
 		description: "KISSMetrics tracking tag - ASync",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("kissmetrics.kissmetrics.v1.Tag", {
 			description: "Your KISS metrics API key",
 			token: "API_KEY",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		window._kmq = window._kmq || [];
 		(function(w, d) {
@@ -47,14 +53,14 @@ qubit.opentag.LibraryTag.define("kissmetrics.kissmetrics.v1.Tag", {
 				w.attachEvent("onload", kmg);
 			}
 		}(window, document))
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

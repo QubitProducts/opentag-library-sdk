@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.brandpagedeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Brand Page DEPRECATED",
 		async: true,
 		description: "DO NOT USE. Peerius tag for the brand page",
@@ -22,25 +23,30 @@ qubit.opentag.LibraryTag.define("peerius.brandpagedeprecated.v1.Tag", {
 			description: "The brand relating to the current brand category",
 			token: "brand",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks.track = {
 			type: "brand",
 			lang: "" + this.valueForToken("lang"),
 			brand: "" + this.valueForToken("brand")
 		};
 
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

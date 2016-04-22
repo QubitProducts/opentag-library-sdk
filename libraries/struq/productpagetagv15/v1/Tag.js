@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.productpagetagv15.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page tag v1.5",
 		async: true,
 		description: "To be placed on the product page only",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("struq.productpagetagv15.v1.Tag", {
 			description: "",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._struqPI = window._struqPI || [];
 		_struqPI.push(['injectTrackingPixel', {
 			trackingPixelId: '' + this.valueForToken("id"),
@@ -44,14 +50,14 @@ qubit.opentag.LibraryTag.define("struq.productpagetagv15.v1.Tag", {
 		script.src =
 			"//media.struq.com/content/scripts/Struq_Pixel_Injector_min_v1-5.js";
 		document.body.appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("webtrends.webtrendsecommercetracking.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Webtrends - Ecommerce tracking",
 		async: true,
 		description: "To be placed on pages where you wish to pass back transactional data. Should be dependent on the main Webtrends tracking tag.",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsecommercetracking.v1.Tag", {
 			description: "",
 			token: "quantities",
 			uv: "universal_variable.transaction.line_items[#].quantity"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var now = new Date();
 		var day = now.getUTCDate() + "";
 		if (day.length === 1) day = "0" + day;
@@ -107,14 +113,14 @@ qubit.opentag.LibraryTag.define("webtrends.webtrendsecommercetracking.v1.Tag", {
 			"WT.dl": 1
 
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

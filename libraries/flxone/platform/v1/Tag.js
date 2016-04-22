@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("flxone.platform.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Platform",
 		async: true,
 		description: "Use iatDev=1 in your URL parameters, or cookies to enable debug mode.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("flxone.platform.v1.Tag", {
 			description: "The client ID given to you by FlxOne",
 			token: "client_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		(function(a) {
 			var d = document,
@@ -33,14 +39,14 @@ qubit.opentag.LibraryTag.define("flxone.platform.v1.Tag", {
 				iatDev ? "h" : "") + "j.flxpxl.com/" + _this.valueForToken("client_id") +
 			".js?r=" + Math.random() * 1e16 + (iatDev ? "&d=1" : "")))
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

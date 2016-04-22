@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("steelhouse.trackingpixelproductpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Tracking Pixel - Product Page",
 		async: true,
 		description: "The generic Steelhouse tracking pixel for product pages only.",
@@ -82,11 +83,16 @@ qubit.opentag.LibraryTag.define("steelhouse.trackingpixelproductpage.v1.Tag", {
 			description: "List of SKUs correlating to every product in the basket. Use a custom variable if UV is not present",
 			token: "basket_skus_list",
 			uv: "universal_variable.basket.line_items[#].product.sku_code"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 
 		function shaddslashes(e) {
@@ -215,14 +221,14 @@ qubit.opentag.LibraryTag.define("steelhouse.trackingpixelproductpage.v1.Tag", {
 			e.load()
 		})()
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

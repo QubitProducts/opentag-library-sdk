@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"webtrends.webtrendspageviewtrackingsimpleconfig.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Webtrends pageview tracking - simple config",
 			async: true,
 			description: "The main WebTrends tag with full configuration options. Should be place on every page. See http://help.webtrends.com/en/jstag/ for full details of the different parameters.",
@@ -33,15 +34,20 @@ qubit.opentag.LibraryTag.define(
 				description: "The id of the logged in user.",
 				token: "user_id",
 				uv: "universal_variable.user.user_id"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.webtrendsAsyncInit = function() {
 				var options = {
 					dcsid: "" + this.valueForToken("id"),
@@ -56,10 +62,10 @@ qubit.opentag.LibraryTag.define(
 				dcs.init(options);
 				dcs.track();
 			};
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

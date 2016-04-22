@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("smartfocus.confirmationpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page",
 		async: true,
 		description: "",
@@ -42,15 +43,20 @@ qubit.opentag.LibraryTag.define("smartfocus.confirmationpage.v1.Tag", {
 			description: "Order Currency",
 			token: "currency",
 			uv: "universal_variable.transaction.currency"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._advisorq = window._advisorq || [];
 
 		var skus = [];
@@ -80,10 +86,10 @@ qubit.opentag.LibraryTag.define("smartfocus.confirmationpage.v1.Tag", {
 				charges: this.valueForToken("total") - this.valueForToken("subtotal")
 			}
 		});
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

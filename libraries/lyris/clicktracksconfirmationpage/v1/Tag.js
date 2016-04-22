@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("lyris.clicktracksconfirmationpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Click Tracks Confirmation Page",
 		async: true,
 		description: "",
@@ -22,20 +23,25 @@ qubit.opentag.LibraryTag.define("lyris.clicktracksconfirmationpage.v1.Tag", {
 			description: "",
 			token: "order_total",
 			uv: "universal_variable.transaction.total"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Digital Media Agencies"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.CT_C_OrderTotal = '' + this.valueForToken("order_total");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

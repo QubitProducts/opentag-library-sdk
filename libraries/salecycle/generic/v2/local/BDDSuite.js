@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 //:include salecycle/generic/v2/Tag.js
 
 /*

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("microsoft.trackevent.v1.Tag", {
-    config: {
-      /*DATA*/
+    getDefaultConfig: function () {
+      return {
+      /*config*/
       name: "Track Event",
       async: false,
       description: "Track an event in Universal Event Tracking",
@@ -28,11 +29,16 @@ qubit.opentag.LibraryTag.define("microsoft.trackevent.v1.Tag", {
         name: "Event Value",
         description: "The value for the event",
         token: "ev"
-      }]
-      /*~DATA*/
+      }],
+		categories:[
+			"Web Analytics"
+		]
+
+      /*~config*/
+		};
     },
     script: function() {
-      /*SCRIPT*/
+      /*script*/
       window.uetq = window.uetq || [];
       window.uetq.push({
         'ec': this.valueForToken('ec') + '',
@@ -41,14 +47,14 @@ qubit.opentag.LibraryTag.define("microsoft.trackevent.v1.Tag", {
         'ev': this.valueForToken('ev') + ''
       });
 
-      /*~SCRIPT*/
+      /*~script*/
     },
     pre: function() {
-      /*PRE*/
-      /*~PRE*/
+      /*pre*/
+      /*~pre*/
 	},
 	post: function() {
-	/*POST*/
+	/*post*/
 	/* ~POST*/
 }
 });

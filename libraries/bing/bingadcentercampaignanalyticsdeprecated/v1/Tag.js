@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"bing.bingadcentercampaignanalyticsdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Bing AdCenter Campaign Analytics DEPRECATED",
 			async: true,
 			description: "Script to generate reports on the success of your advertising campaigns via Bing Search",
@@ -28,31 +29,36 @@ qubit.opentag.LibraryTag.define(
 				description: "The id unique to this tracking tag",
 				token: "action_id",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			if (!window.mstag) {
 				window.mstag = {
 					loadTag: function() {},
 					time: (new Date()).getTime()
 				};
 			}
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			window.mstag.loadTag("analytics", {
 				dedup: "1",
 				domainId: "" + this.valueForToken("domain_id"),
 				type: "1",
 				actionid: "" + this.valueForToken("action_id")
 			});
-			/*~POST*/
+			/*~post*/
 		}
 	});

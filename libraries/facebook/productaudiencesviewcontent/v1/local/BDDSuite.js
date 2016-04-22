@@ -1,5 +1,5 @@
 /**ignore at merge**/
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 //:include facebook/productaudiences/v1/Tag.js
 
 /*

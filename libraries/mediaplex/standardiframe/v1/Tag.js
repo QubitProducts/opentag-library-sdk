@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mediaplex.standardiframe.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Standard iframe",
 		async: true,
 		description: "The standard iframe can be used on any page which does not send back any parameters. It simply reports that a page has been visited. Example uses: Home page, help, contact us.",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("mediaplex.standardiframe.v1.Tag", {
 			description: "The name of the event triggered. Typically, this is a CamelCased version of the page name",
 			token: "event_name",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 
 		var frame = document.createElement("iframe");
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define("mediaplex.standardiframe.v1.Tag", {
 		frame.width = 1;
 		frame.frameborder = 0;
 		document.body.appendChild(frame);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

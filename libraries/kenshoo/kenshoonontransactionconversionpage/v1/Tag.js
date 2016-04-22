@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"kenshoo.kenshoonontransactionconversionpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Kenshoo Non-Transaction Conversion Page",
 			async: true,
 			description: "A pixel to enable tracking non-transaction conversions",
@@ -28,19 +29,24 @@ qubit.opentag.LibraryTag.define(
 				description: "The current currency",
 				token: "valueCurrency",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

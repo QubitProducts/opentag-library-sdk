@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.googleremarketingconversionasyncwithadditionalparametersdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Remarketing Conversion Async, with additional parameters [DEPRECATED]",
 			async: true,
 			description: "Contains additional parameters including color, language, and format.",
@@ -43,19 +44,24 @@ qubit.opentag.LibraryTag.define(
 				description: "The value associated with the conversion.",
 				token: "value",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			window.google_trackConversion({
 				google_conversion_id: this.valueForToken("conversion_id"),
 				google_conversion_label: "" + this.valueForToken("label"),
@@ -65,6 +71,6 @@ qubit.opentag.LibraryTag.define(
 				google_conversion_value: this.valueForToken("value"),
 				google_custom_params: window.google_tag_params || {}
 			});
-			/*~POST*/
+			/*~post*/
 		}
 	});

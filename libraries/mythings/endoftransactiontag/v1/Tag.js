@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mythings.endoftransactiontag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "End of Transaction Tag",
 		async: true,
 		description: "The tag should be placed on the end of transaction page.",
@@ -47,15 +48,20 @@ qubit.opentag.LibraryTag.define("mythings.endoftransactiontag.v1.Tag", {
 			description: "",
 			token: "total",
 			uv: "universal_variable.transaction.subtotal"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		var _this = this;
 		var products = [];
 		for (var i = 0; i < this.valueForToken("productIds").length; i++) {
@@ -81,10 +87,10 @@ qubit.opentag.LibraryTag.define("mythings.endoftransactiontag.v1.Tag", {
 			this.valueForToken("subdomain") : "http://" +
 			this.valueForToken("subdomain")) + ".mythings.com";
 		window.mtAdvertiserToken = "" + this.valueForToken("token");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

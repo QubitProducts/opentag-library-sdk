@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("connextra.datacapturetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Data Capture Tag",
 		async: true,
 		description: "The Data Capture feature will allow Connextra to locate content relating to the Account Name and the \namount bet or deposited from your website and store into Connextra stats for analytical purposes. For \ndata protection, you are required to encrypt any sensitive information about your customers.",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("connextra.datacapturetag.v1.Tag", {
 			description: "The Connextra address which holds your configuration data.",
 			token: "conf_server",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.cxt_conf = cxt_conf || {};
 		cxt_conf.clientId = cxt_conf.clientId || '' + this.valueForToken("client_id");
 		cxt_conf.pageType = cxt_conf.pageType || '' + this.valueForToken("page_type");
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define("connextra.datacapturetag.v1.Tag", {
 		};
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(ca, s);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

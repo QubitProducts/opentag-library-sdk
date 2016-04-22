@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("adgenie.conversiontracking.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tracking",
 		async: true,
 		description: "This should be called when a customer has successfully completed a transaction.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("adgenie.conversiontracking.v1.Tag", {
 			description: "The ID of the transaction",
 			token: "trans_id",
 			uv: "universal_variable.transaction.order_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = new Image(),
 			arr = [];
 
@@ -50,14 +56,14 @@ qubit.opentag.LibraryTag.define("adgenie.conversiontracking.v1.Tag", {
 			"&orderId=" + this.valueForToken("trans_id");
 
 		document.body.appendChild(img);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

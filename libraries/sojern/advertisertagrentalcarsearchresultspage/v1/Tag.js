@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.advertisertagrentalcarsearchresultspage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Advertiser Tag - Rental Car Search Results Page",
 			async: true,
 			description: "",
@@ -118,11 +119,16 @@ qubit.opentag.LibraryTag.define(
 				description: "\"Now\" or \"Later\" (Assign blank string if not available)",
 				token: "method",
 				uv: ""
-			}]
-			/*~DATA*/
-		},
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
+  },
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = "https://beacon.sojern.com/p/6?";
 			src += "et=" + this.valueForToken("event") + "&";
 			src += "ra1=" + this.valueForToken("pickup_nearest") + "&";
@@ -146,14 +152,14 @@ qubit.opentag.LibraryTag.define(
 			src += "rrate=" + this.valueForToken("base") + "&";
 			src += "rpnow=" + this.valueForToken("method");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"marinsoftware.zzserversidepixellandingpagetrackingdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "zz-Server Side Pixel - Landing Page Tracking [DEPRECATED]",
 			async: true,
 			description: "This is used to record incoming traffic from paid search.It  should be installed on any landing page URL used by your paid campaigns, and also any page which is indexed into the organic search results of a search engine. If in doubt, deploy the tag on every page of website.",
@@ -18,11 +19,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Your unique marin client id",
 				token: "clientId",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._ml = document.createElement("script");
 			_ml.src = "//tracker.marinsm.com/tracker/" + this.valueForToken("clientId") +
 				".js";
@@ -48,14 +54,14 @@ qubit.opentag.LibraryTag.define(
 				}
 			};
 			document.body.appendChild(_ml);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

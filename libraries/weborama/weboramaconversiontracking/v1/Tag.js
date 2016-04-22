@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("weborama.weboramaconversiontracking.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Weborama - Conversion Tracking",
 		async: true,
 		description: "Conversion tracking script",
@@ -67,19 +68,24 @@ qubit.opentag.LibraryTag.define("weborama.weboramaconversiontracking.v1.Tag", {
 			description: "Conversion Page type, numerical value",
 			token: "CONVERSION_PAGE",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		window.adperftrackobj = {
 			client: "" + this.valueForToken("CLIENT_ID"),
 			amount: "" + this.valueForToken("AMOUNT"),
@@ -99,6 +105,6 @@ qubit.opentag.LibraryTag.define("weborama.weboramaconversiontracking.v1.Tag", {
 		try {
 			adperfTracker.track(adperftrackobj);
 		} catch (err) {}
-		/*~POST*/
+		/*~post*/
 	}
 });

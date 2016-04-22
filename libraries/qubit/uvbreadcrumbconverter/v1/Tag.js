@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.uvbreadcrumbconverter.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "UV Breadcrumb Converter",
 		async: true,
 		description: "Converts UV page breadcrumbs to be in the new format.",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("qubit.uvbreadcrumbconverter.v1.Tag", {
 				description: "Ignore the first breadcrumb in the UV",
 				token: "skip_first",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+			/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 
 		function isArray(arr) {
@@ -115,14 +121,14 @@ qubit.opentag.LibraryTag.define("qubit.uvbreadcrumbconverter.v1.Tag", {
 		waitForUV();
 
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

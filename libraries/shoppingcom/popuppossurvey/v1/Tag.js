@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("shoppingcom.popuppossurvey.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Popup PoS Survey",
 		async: true,
 		description: "This will show a point of sale survey for customers to share their feedback about their shopping experience.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("shoppingcom.popuppossurvey.v1.Tag", {
 			description: "The merchant ID which represents your site.",
 			token: "merchant_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

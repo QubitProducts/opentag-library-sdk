@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("deprecatedtags.clicktalebalkandonotuse.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "ClickTale - balkan - donotuse",
 		async: true,
 		description: "do not use",
@@ -27,21 +28,26 @@ qubit.opentag.LibraryTag.define("deprecatedtags.clicktalebalkandonotuse.v1.Tag",
 			description: "Set this to the HTTP URL specified in the ClickTale implementation code",
 			token: "clicktale_http",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.WRInitTime = (new Date()).getTime();
 
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("pricerunner.pricerunnersalepixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Price Runner Sale Pixel",
 		async: true,
 		description: "",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("pricerunner.pricerunnersalepixel.v1.Tag", {
 			description: "",
 			token: "currency",
 			uv: "universal_variable.transaction.currency"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = document.createElement("img");
 		var src = [
 			"https://www.emjcd.com/u?",
@@ -73,14 +79,14 @@ qubit.opentag.LibraryTag.define("pricerunner.pricerunnersalepixel.v1.Tag", {
 		img.setAttribute("height", "1");
 		img.setAttribute("width", "20");
 		document.body.appendChild(img);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

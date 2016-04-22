@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagbasketpage.v2.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Basket Page",
 		async: true,
 		description: "The basket tag has to be integrated on the basket or checkout page.",
@@ -53,19 +54,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagbasketpage.v2.Tag", {
 			description: "Pass plain text e-mail to this parameter for X-Device. Criteo will hash it.",
 			token: "email",
 			uv: "universal_variable.user.email"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var products = [];
 
 		for (var i = 0; i < this.valueForToken("product_ids").length; i++) {
@@ -102,6 +108,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagbasketpage.v2.Tag", {
 			event: "viewBasket",
 			product: products
 		}, passedemail);
-		/*~POST*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.conversiontagv19us.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag v1.9 (US)",
 		async: true,
 		description: "",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("struq.conversiontagv19us.v1.Tag", {
 			description: "",
 			token: "products",
 			uv: "universal_variable.transaction.line_items[#].product.id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._struqPI = window._struqPI || [];
 		var productArr = [];
 		for (var i = 0, ii = this.valueForToken("products").length; i < ii; i++) {
@@ -73,14 +79,14 @@ qubit.opentag.LibraryTag.define("struq.conversiontagv19us.v1.Tag", {
 		struq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') +
 			'media.struq.com/content/scripts/Struq_Us_Pixel_Injector_min_v1-9.js';
 		document.getElementsByTagName('head')[0].appendChild(struq);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

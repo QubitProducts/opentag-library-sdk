@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("olapic.checkoutpixel.v1.Tag", {
-  config: {
-    /*DATA*/
+  getDefaultConfig: function () {
+      return {
+    /*config*/
     name: "Checkout Pixel",
     async: false,
     description: "",
@@ -56,11 +57,16 @@ qubit.opentag.LibraryTag.define("olapic.checkoutpixel.v1.Tag", {
       description: "The prices for the products purchased.",
       token: "productprices",
       uv: "universal_variable.transaction.line_items[#].product.unit_price"
-    }]
-    /*~DATA*/
+    }],
+		categories:[
+			"Personalisation Platform"
+		]
+
+    /*~config*/
+		};
   },
   script: function () {
-    /*SCRIPT*/
+    /*script*/
     var olapicProducts = [];
     var productIds = this.valueForToken("productids");
     var productPrices = this.valueForToken("productprices");
@@ -82,14 +88,14 @@ qubit.opentag.LibraryTag.define("olapic.checkoutpixel.v1.Tag", {
     olapicCheckout.setAttribute("olapicName", encodeURIComponent("" + this.valueForToken("username")));
     olapicCheckout.src = "//www.photorank.me/static/js/olapic.checkout.js";
     document.body.appendChild(olapicCheckout);
-    /*~SCRIPT*/
+    /*~script*/
   },
   pre: function () {
-    /*PRE*/
-    /*~PRE*/
+    /*pre*/
+    /*~pre*/
   },
   post: function () {
-    /*POST*/
-    /*~POST*/
+    /*post*/
+    /*~post*/
   }
 });

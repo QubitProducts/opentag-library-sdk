@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mythings.productpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Page Tag",
 		async: true,
 		description: "Only place the following tag on ALL products pages",
@@ -27,11 +28,16 @@ qubit.opentag.LibraryTag.define("mythings.productpagetag.v1.Tag", {
 			description: "",
 			token: "productId",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._mt_ready = function() {
 			if (typeof(MyThings) != "undefined") {
 				MyThings.Track({
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define("mythings.productpagetag.v1.Tag", {
 		window.mtAdvertiserToken = "" + this.valueForToken("token");
 		document.write(unescape("%3Cscript src='" + mtHost + "/c.aspx?atok=" +
 			mtAdvertiserToken + "' type='text/javascript'%3E%3C/script%3E"));
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

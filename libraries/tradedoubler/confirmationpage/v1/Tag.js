@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("tradedoubler.confirmationpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Confirmation Page",
 		async: true,
 		description: "Standard Version",
@@ -72,11 +73,16 @@ qubit.opentag.LibraryTag.define("tradedoubler.confirmationpage.v1.Tag", {
 			description: "",
 			token: "quantities",
 			uv: "universal_variable.transaction.line_items[#].quantity"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		function readCookie(name) {
 			var nameEQ = name + "=";
 			var ca = document.cookie.split(';');
@@ -120,14 +126,14 @@ qubit.opentag.LibraryTag.define("tradedoubler.confirmationpage.v1.Tag", {
 		var img = document.createElement("img");
 		img.setAttribute("src", src.join(""));
 		document.body.appendChild(img);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

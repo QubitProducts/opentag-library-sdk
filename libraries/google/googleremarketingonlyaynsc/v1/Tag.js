@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("google.googleremarketingonlyaynsc.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Google Remarketing Only Aynsc",
 		async: true,
 		description: "Remarkting Only Conversion tracking is a tool to help you measure conversions, and ultimately help you identify how effective your Ad Exchange ads are for you.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("google.googleremarketingonlyaynsc.v1.Tag", {
 			description: "",
 			token: "conversionid",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var _this = this;
 		var poll = function() {
 			if (window.google_trackConversion) {
@@ -43,6 +49,6 @@ qubit.opentag.LibraryTag.define("google.googleremarketingonlyaynsc.v1.Tag", {
 			}
 		};
 		poll();
-		/*~POST*/
+		/*~post*/
 	}
 });

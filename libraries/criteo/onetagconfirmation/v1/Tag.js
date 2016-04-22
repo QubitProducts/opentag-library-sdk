@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagconfirmation.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Confirmation",
 		async: true,
 		description: "This is a mandatory tag and must be executed on the confirmation page after user makes a payment.",
@@ -57,19 +58,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagconfirmation.v1.Tag", {
 			description: "List of quantities for each product in the user's order",
 			token: "product_quantities",
 			uv: "universal_variable.transaction.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var products = [];
 
 		for (var i = 0; i < this.valueForToken("product_ids").length; i++) {
@@ -113,6 +119,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagconfirmation.v1.Tag", {
 			deduplication: this.valueForToken("criteo_referral"),
 			product: products
 		});
-		/*~POST*/
+		/*~post*/
 	}
 });

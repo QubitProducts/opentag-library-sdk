@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mentionme.refereetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Referee Tag",
 		async: true,
 		description: "The implementation can be either as an embedded form where the customer enters the name of their referrer or an embedded link, both of which lead to a modal popup where the customer can register to get their reward. The 'implementation' parameter is one of 'link' or 'form' which respectively load a link or a form into the div <div id=\"mmWrapper\" style=\"height:60px;\"></div> which should be on the page. All parameters marked with * are optional (if not used populate with an empty hardcoded value, even if default is 'uses universal variable')",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("mentionme.refereetag.v1.Tag", {
 			description: "Optionally override the way the flow is implemented (one of: link, form)",
 			token: "implementation",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Social"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var baseUrl = "https://" + this.valueForToken("script_domain") +
 			"/api/v2/refereefind/" + this.valueForToken("partner_code") + "?";
 		var mmScript = document.createElement("script");
@@ -68,14 +74,14 @@ qubit.opentag.LibraryTag.define("mentionme.refereetag.v1.Tag", {
 
 		mmScript.src = baseUrl + paramArr.join("&");
 		document.body.appendChild(mmScript);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

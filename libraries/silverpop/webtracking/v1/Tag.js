@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("silverpop.webtracking.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Web Tracking",
 		async: true,
 		description: "Engage Web Tracking is a tool that tracks visits to your Web sites. You can link this data to individual contacts \nand then target communications to contacts based on their Web behaviors.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("silverpop.webtracking.v1.Tag", {
 			description: "The name for the page the tag is currently firing on",
 			token: "page_name",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		function downloadJSAtOnload1() {
 
 			var x = document.createElement("script");
@@ -64,14 +70,14 @@ qubit.opentag.LibraryTag.define("silverpop.webtracking.v1.Tag", {
 		}
 		else window.onload = downloadJSAtOnload1;
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("evidon.eusitenotice.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "EU Site Notice",
 		async: true,
 		description: "This tag handles the Site Notice functionality for EU sites, both for implied and explicit consent notices. Must be filtered to fire on page types corresponding to individual PIDs (which are available via Evidon).",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("evidon.eusitenotice.v1.Tag", {
 			description: "The unique identifier for the page this tag will be fired on",
 			token: "page_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var hn = document.createElement('script');
 		hn.type = 'text/javascript';
 		hn.async = true;
@@ -36,14 +42,14 @@ qubit.opentag.LibraryTag.define("evidon.eusitenotice.v1.Tag", {
 			'c.betrad.com/geo/h1.js';
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(hn, s);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

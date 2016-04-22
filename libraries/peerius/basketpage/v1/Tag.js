@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.basketpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Basket Page",
 		async: true,
 		description: "Peerius tag for the basket page",
@@ -42,15 +43,20 @@ qubit.opentag.LibraryTag.define("peerius.basketpage.v1.Tag", {
 			description: "A list of basket item quantities",
 			token: "item_quantities",
 			uv: "universal_variable.basket.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "basket",
@@ -69,10 +75,10 @@ qubit.opentag.LibraryTag.define("peerius.basketpage.v1.Tag", {
 				qty: this.valueForToken("item_quantities")[i]
 			});
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

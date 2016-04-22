@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"adobesitecatalyst.sitecatalystcustomtag.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "SiteCatalyst Custom Tag",
 			async: true,
 			description: "Generic script which can be configured to send up to 5 custom eVars and props. Any unused variables should be left blank. Advised only for advanced use.",
@@ -118,19 +119,24 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "evar5",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var s = window.s;
 
 			s.pageName = "" + this.valueForToken("page_name");
@@ -157,6 +163,6 @@ qubit.opentag.LibraryTag.define(
 			s.eVar5 = "" + this.valueForToken("evar5");
 
 			window.s_code = s.t();
-			/*~POST*/
+			/*~post*/
 		}
 	});

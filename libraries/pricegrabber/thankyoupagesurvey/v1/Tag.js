@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("pricegrabber.thankyoupagesurvey.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Thank You Page Survey",
 		async: true,
 		description: "Adjust the values of popup_pos_x, popup_pos_y to change the location of the popup layer on your confirmation page",
@@ -37,24 +38,29 @@ qubit.opentag.LibraryTag.define("pricegrabber.thankyoupagesurvey.v1.Tag", {
 			description: "",
 			token: "email",
 			uv: "universal_variable.user.email"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.popup_pos_x = Number("" + this.valueForToken("x"));
 		window.popup_pos_y = Number("" + this.valueForToken("y"));
 
 		window.popup_order_number = "" + this.valueForToken("order_id");
 		window.popup_email = "" + this.valueForToken("email");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("jquery.noconflictjquery.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Noconflict jQuery",
 		async: true,
 		description: "Load jQuery and set it as a specified variable name attached to a window variable, not populating window.$ or window.jQuery.",
@@ -22,20 +23,25 @@ qubit.opentag.LibraryTag.define("jquery.noconflictjquery.v1.Tag", {
 			description: "Save jQuery as a variable rather than as 'jQuery' or '$'",
 			token: "jquery_name",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		window[this.valueForToken("jquery_name")] = $.noConflict(true);
-		/*~POST*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("qubit.uvlistuserinformation.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "UV List - User Information",
 		async: true,
 		description: "Test Universal Variables regarding users",
@@ -52,11 +53,16 @@ qubit.opentag.LibraryTag.define("qubit.uvlistuserinformation.v1.Tag", {
 			description: "",
 			token: "h",
 			uv: "universal_variable.user.twitter_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		console.log("" + this.valueForToken("a"));
 		console.log("" + this.valueForToken("b"));
 		console.log("" + this.valueForToken("c"));
@@ -65,14 +71,14 @@ qubit.opentag.LibraryTag.define("qubit.uvlistuserinformation.v1.Tag", {
 		console.log("" + this.valueForToken("f"));
 		console.log("" + this.valueForToken("g"));
 		console.log("" + this.valueForToken("h"));
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("nextperformance.transactiontag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Transaction Tag",
 		async: true,
 		description: "Tag to be inserted on the order confirmation page, requires order ID, order number and amount excluding VAT.",
@@ -27,19 +28,24 @@ qubit.opentag.LibraryTag.define("nextperformance.transactiontag.v1.Tag", {
 			description: "",
 			token: "total",
 			uv: "universal_variable.transaction.total"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

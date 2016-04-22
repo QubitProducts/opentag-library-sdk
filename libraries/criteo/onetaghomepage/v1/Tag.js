@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetaghomepage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Home Page",
 		async: true,
 		description: "The home page tag has to be integrated on the home page of the advertiser website.",
@@ -27,19 +28,24 @@ qubit.opentag.LibraryTag.define("criteo.onetaghomepage.v1.Tag", {
 			description: "\"m\" for mobile or \"t\" for tablet or \"d\" for  desktop",
 			token: "site_type",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var user_id = "" + this.valueForToken("customer_id");
 		//Remove email if present.
 		if (user_id.indexOf("@") > -1) {
@@ -59,6 +65,6 @@ qubit.opentag.LibraryTag.define("criteo.onetaghomepage.v1.Tag", {
 		}, {
 			event: "viewHome"
 		});
-		/*~POST*/
+		/*~post*/
 	}
 });

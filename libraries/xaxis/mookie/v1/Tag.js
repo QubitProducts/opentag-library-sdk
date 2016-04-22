@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("xaxis.mookie.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Mookie",
 		async: true,
 		description: "Fires a pixel with transaction information and 5 custom parameters.",
@@ -67,11 +68,16 @@ qubit.opentag.LibraryTag.define("xaxis.mookie.v1.Tag", {
 			description: "Custom parameter. Leave blank if not used.",
 			token: "param5",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = new Image(0, 0),
 			arr = [],
 			obj = {
@@ -91,14 +97,14 @@ qubit.opentag.LibraryTag.define("xaxis.mookie.v1.Tag", {
 			arr.push(key + "=" + obj[key]);
 		}
 		img.src = "//t.mookie1.com/t/v1/event?" + arr.join("&");
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

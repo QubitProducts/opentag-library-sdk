@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.advertisertaghotelpurchaseconfirmationpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Advertiser Tag - Hotel Purchase Confirmation Page",
 			async: true,
 			description: "",
@@ -123,11 +124,16 @@ qubit.opentag.LibraryTag.define(
 				description: "blank if not available",
 				token: "name",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = "https://beacon.sojern.com/p/5?";
 			src += "et=" + this.valueForToken("event") + "&";
 			src += "t=" + this.valueForToken("travellers") + "&";
@@ -152,14 +158,14 @@ qubit.opentag.LibraryTag.define(
 			src += "hpr=" + this.valueForToken("property") + "&";
 			src += "hlt=" + this.valueForToken("tier");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

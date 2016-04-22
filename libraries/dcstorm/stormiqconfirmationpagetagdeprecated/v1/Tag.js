@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"dcstorm.stormiqconfirmationpagetagdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "StormIQ Confirmation Page Tag [Deprecated]",
 			async: true,
 			description: "To be placed on the confirmation page only",
@@ -63,22 +64,27 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "shipping",
 				uv: "universal_variable.transaction.shipping_cost"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			,"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.__stormJs = 't1.stormiq.com/dcv4/jslib/' + this.valueForToken(
 				"storm_id") + '.js';
 			window.__ch = '' + this.valueForToken("channel");
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var i = 0,
 				ii = this.valueForToken("ids").length;
 
@@ -101,6 +107,6 @@ qubit.opentag.LibraryTag.define(
 			saleTrack.curcode = '' + this.valueForToken("currency");
 			saleTrack.orderid = "" + this.valueForToken("order_id");
 			saleTrack.logSale(1);
-			/*~POST*/
+			/*~post*/
 		}
 	});

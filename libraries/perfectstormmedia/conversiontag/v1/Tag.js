@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("perfectstormmedia.conversiontag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Conversion Tag",
 		async: true,
 		description: "",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("perfectstormmedia.conversiontag.v1.Tag", {
 			description: "",
 			token: "product_list",
 			uv: "universal_variable.transaction.line_items[#].product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var img = document.createElement("img");
 		img.height = 1;
 		img.width = 1;
@@ -57,14 +63,14 @@ qubit.opentag.LibraryTag.define("perfectstormmedia.conversiontag.v1.Tag", {
 			product_ids;
 
 		document.body.appendChild(img);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

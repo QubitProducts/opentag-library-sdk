@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("merchenta.productlistingtag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product Listing Tag",
 		async: true,
 		description: "Place this tag on a search results page or on product listing pages to track the products visitors are viewing.",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("merchenta.productlistingtag.v1.Tag", {
 			description: "The SKU/ID of the products being viewed",
 			token: "Product_SKUs",
 			uv: "universal_variable.listing.items[#].sku_code"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var i, ii, d, p = document.getElementById("mc_data");
 		for (i = 0, ii = this.valueForToken("Product_SKUs").length; i < ii; i++) {
 			d = document.createElement("div");
@@ -46,14 +52,14 @@ qubit.opentag.LibraryTag.define("merchenta.productlistingtag.v1.Tag", {
 			script.src = "http://cdn.merchenta.com/track/t.js";
 		}
 		document.getElementsByTagName('head')[0].appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

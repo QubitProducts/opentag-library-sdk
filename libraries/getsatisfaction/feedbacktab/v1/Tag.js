@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("getsatisfaction.feedbacktab.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Feedback Tab",
 		async: true,
 		description: "Collect and prioritize product-specific customer feedback by adding a feedback tab to any (or every) page of your site.",
@@ -32,19 +33,24 @@ qubit.opentag.LibraryTag.define("getsatisfaction.feedbacktab.v1.Tag", {
 			description: "The default type that will be chosen",
 			token: "STYLE",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var feedback_widget_options = {};
 		feedback_widget_options.display = "overlay";
 		feedback_widget_options.company = "" + this.valueForToken("COMPANY");
@@ -53,6 +59,6 @@ qubit.opentag.LibraryTag.define("getsatisfaction.feedbacktab.v1.Tag", {
 		feedback_widget_options.color = "" + this.valueForToken("COLOR");
 		feedback_widget_options.style = "" + this.valueForToken("STYLE");
 		window.feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-		/*~POST*/
+		/*~post*/
 	}
 });

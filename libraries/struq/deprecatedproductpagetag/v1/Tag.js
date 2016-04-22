@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("struq.deprecatedproductpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "[Deprecated] Product Page Tag",
 		async: true,
 		description: "To be placed on the product page only",
@@ -17,15 +18,20 @@ qubit.opentag.LibraryTag.define("struq.deprecatedproductpagetag.v1.Tag", {
 			description: "ID for the product on the current page",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._struqPI = window._struqPI || [];
 		_struqPI.push(['injectTrackingPixel', {
 			trackingPixelId: 'PixelID',
@@ -39,10 +45,10 @@ qubit.opentag.LibraryTag.define("struq.deprecatedproductpagetag.v1.Tag", {
 				timeoutMs: 2000
 			}
 		}]);
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

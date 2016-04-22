@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("visualdna.transactionreport.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Transaction Report",
 		async: true,
 		description: "This tag should fire on the Transaction Confirmation page. The tag must have a dependency on the Visual DNA Page View Report tag.",
@@ -72,11 +73,16 @@ qubit.opentag.LibraryTag.define("visualdna.transactionreport.v1.Tag", {
 			description: "API Key",
 			token: "api_key",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.VDNA = window.VDNA || {};
 		window.VDNA.queue = window.VDNA.queue || [];
 		window.VDNA.queue.push({
@@ -108,14 +114,14 @@ qubit.opentag.LibraryTag.define("visualdna.transactionreport.v1.Tag", {
 				}]
 			});
 		}
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

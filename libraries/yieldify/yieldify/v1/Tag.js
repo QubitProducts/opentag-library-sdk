@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("yieldify.yieldify.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Yieldify",
 		async: true,
 		description: "Yieldify is a software solution which allows you to maximise your opt-in rates and revenue from visitors leaving your website.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("yieldify.yieldify.v1.Tag", {
 			description: "Your Yieldify ID",
 			token: "yieldifyid",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var _this = this;
 		(function(d) {
 			var e = d.createElement('script');
@@ -31,14 +37,14 @@ qubit.opentag.LibraryTag.define("yieldify.yieldify.v1.Tag", {
 			e.async = true;
 			d.getElementsByTagName("head")[0].appendChild(e);
 		}(document));
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

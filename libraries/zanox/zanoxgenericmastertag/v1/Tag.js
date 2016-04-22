@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("zanox.zanoxgenericmastertag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "zanox Generic MasterTag",
 		async: true,
 		description: "The MasterTag for all pages. Different IDs needed for each page type.",
@@ -17,11 +18,16 @@ qubit.opentag.LibraryTag.define("zanox.zanoxgenericmastertag.v1.Tag", {
 			description: "Unique ID for the page",
 			token: "zanoxPageId",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window._zx = window._zx || [];
 		window._zx.push({
 			"id": "" + this.valueForToken("zanoxPageId")
@@ -43,14 +49,14 @@ qubit.opentag.LibraryTag.define("zanox.zanoxgenericmastertag.v1.Tag", {
 			}
 		};
 		waitForZanoxDiv();
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

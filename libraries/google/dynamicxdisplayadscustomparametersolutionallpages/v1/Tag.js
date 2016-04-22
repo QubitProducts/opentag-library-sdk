@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.dynamicxdisplayadscustomparametersolutionallpages.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Dynamic X Display Ads (Custom Parameter Solution) - All Pages",
 			async: true,
 			description: "",
@@ -33,28 +34,33 @@ qubit.opentag.LibraryTag.define(
 				description: "Page Type",
 				token: "pagetype",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var _this = this;
 			var poll = function() {
 				if (window.google_trackConversion) {
 					window.google_trackConversion({
 						google_conversion_id: _this.valueForToken("id"),
 						google_custom_params: {
-							dynx_itemid:  '' + _this.valueForToken("itemid"),
-							dynx_locid:  '' + _this.valueForToken("itemlocationid"),
-							dynx_pagetype:  '' + _this.valueForToken("pagetype")
+							dynx_itemid: '' + _this.valueForToken("itemid"),
+							dynx_locid: '' + _this.valueForToken("itemlocationid"),
+							dynx_pagetype: '' + _this.valueForToken("pagetype")
 						},
 						google_remarketing_only: true
 					});
@@ -64,6 +70,6 @@ qubit.opentag.LibraryTag.define(
 			};
 
 			poll();
-			/*~POST*/
+			/*~post*/
 		}
 	});

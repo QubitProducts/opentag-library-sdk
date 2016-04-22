@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("cryptojs.sha1.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "SHA1",
 		async: true,
 		description: "CryptoJS SHA-1 Hashing",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("cryptojs.sha1.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Web Utilities / JavaScript Tools"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 
 		if (!(window.CryptoJS && typeof(window.CryptoJS.SHA1) === "function")) {
 			/*
@@ -263,14 +269,14 @@ code.google.com/p/crypto-js/wiki/License
 			e.HmacSHA1 = j._createHmacHelper(m)
 		}
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sociomantic.categorytag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Category Tag",
 		async: true,
 		description: "Information about what category page the user was interested in. Now includes optional user ID support. MUST be set as dependent on CryptoJS SHA1 (Web Utilities in the tag library)",
@@ -32,15 +33,20 @@ qubit.opentag.LibraryTag.define("sociomantic.categorytag.v1.Tag", {
 			description: "User's email - return false to safely exclude it - will be hashed before sending (no PII is sent)",
 			token: "user_email",
 			uv: "universal_variable.user.email"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.product = {
 			category: this.valueForToken("categories")
 		};
@@ -74,10 +80,10 @@ qubit.opentag.LibraryTag.define("sociomantic.categorytag.v1.Tag", {
 			var parts = document.cookie.split("qb_sm_uid=");
 			if (parts.length == 2) window.customer.identifier = parts.pop().split(";").shift();
 		}
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

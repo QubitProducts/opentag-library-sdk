@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("dcstorm.stormiqcustomtrackingscript.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "StormIQ Custom Tracking Script",
 		async: true,
 		description: "Extension of generic StormIQ tag that allows for a tracking script to be included after inclusion of StormIQ",
@@ -27,19 +28,24 @@ qubit.opentag.LibraryTag.define("dcstorm.stormiqcustomtrackingscript.v1.Tag", {
 			description: "Location of script containing tracking code for StormIQ",
 			token: "track_url",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

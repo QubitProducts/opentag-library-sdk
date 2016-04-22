@@ -21,7 +21,7 @@ TAG="current"
 TOOLS="shared"
 MM="shared/bin/lib/MiniMerge.jar"
 HTML="$TOOLS/bin/html"
-SRC_BASE="libraries,shared/js"
+SRC_BASE="libraries,shared/js/tagsdk-releases"
 EXCLUDE=".*/dist.*,.*/build.*"
 
 echo "================================================================================"

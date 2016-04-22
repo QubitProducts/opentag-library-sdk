@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("igodigital.igodigitalobservation.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "iGoDigital Observation",
 		async: true,
 		description: "Monitors the behavior of your website traffic, including user activity, intent, and outcome.",
@@ -87,11 +88,16 @@ qubit.opentag.LibraryTag.define("igodigital.igodigitalobservation.v1.Tag", {
 			description: "can be used together with rtaSpecial to store relevant information to the user’s personal profile.",
 			token: "rtaTags",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		// iGoDigital RTA Initialization
 		window.rtaRetailer = "" + this.valueForToken("rtaRetailer");
 		window.rtaProductSKU = "" + this.valueForToken("rtaProductSKU");
@@ -112,14 +118,14 @@ qubit.opentag.LibraryTag.define("igodigital.igodigitalobservation.v1.Tag", {
 		addLoadEvent(function() {
 			callRTA();
 		});
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sojern.advertisertagcruiseproductpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Advertiser Tag - Cruise Product Page",
 		async: true,
 		description: "",
@@ -17,21 +18,26 @@ qubit.opentag.LibraryTag.define("sojern.advertisertagcruiseproductpage.v1.Tag", 
 			description: "Product ID",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		(new Image()).src = "https://beacon.sojern.com/p/1?cpid=" +
 			this.valueForToken("id");
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

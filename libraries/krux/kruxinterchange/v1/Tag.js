@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("krux.kruxinterchange.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Krux Interchange",
 		async: true,
 		description: "Leverage data to inform first party targeting of advertising, content, or commerce on your own web properties",
@@ -32,15 +33,20 @@ qubit.opentag.LibraryTag.define("krux.kruxinterchange.v1.Tag", {
 			description: "The subsection of the site that is being shown",
 			token: "subsection",
 			uv: "universal_variable.page.subcategory"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Audience Management"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.KRUXSetup = {
 			pubid: "" + this.valueForToken("publisher_id"),
 			site: "" + this.valueForToken("site_url"),
@@ -48,10 +54,10 @@ qubit.opentag.LibraryTag.define("krux.kruxinterchange.v1.Tag", {
 			subSection: "" + this.valueForToken("subsection"),
 			async: true
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

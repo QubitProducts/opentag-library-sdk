@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("weborama.weboramafunneltag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Weborama - Funnel Tag",
 		async: true,
 		description: "This tag is typically placed on pages that will lead to a  conversion page. It is away to set measure the path which leads to a conversion.",
@@ -32,19 +33,24 @@ qubit.opentag.LibraryTag.define("weborama.weboramafunneltag.v1.Tag", {
 			description: "Enter funnel step Id here",
 			token: "CONVERSION_PAGE",
 			uv: ""
-		}]
-		/*~DATA*/
-	},
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+      };
+  },
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		window.adperftrackobj = {
 			funnel_id: this.valueForToken("FUNNEL_ID"),
 			fullhost: '' + this.valueForToken("FULL_HOST"),
@@ -54,6 +60,6 @@ qubit.opentag.LibraryTag.define("weborama.weboramafunneltag.v1.Tag", {
 		try {
 			adperfTracker.track(adperftrackobj);
 		} catch (err) {}
-		/*~POST*/
+		/*~post*/
 	}
 });

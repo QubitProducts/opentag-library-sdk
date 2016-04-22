@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("peerius.attributepagedeprecated.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Attribute Page DEPRECATED",
 		async: true,
 		description: "DO NOT USE. Peerius tag for the attribute page",
@@ -27,15 +28,20 @@ qubit.opentag.LibraryTag.define("peerius.attributepagedeprecated.v1.Tag", {
 			description: "The value of the Peerius category attribute name",
 			token: "value",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Personalisation Platform"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.PeeriusCallbacks = {
 			track: {
 				type: "attribute",
@@ -46,10 +52,10 @@ qubit.opentag.LibraryTag.define("peerius.attributepagedeprecated.v1.Tag", {
 				}
 			}
 		};
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

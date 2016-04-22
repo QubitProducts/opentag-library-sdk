@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"googleanalytics.localcurrencysettingdependency.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Local Currency Setting (Dependency)",
 			async: true,
 			description: "Allows setting of a currency for the current transaction, which Google will automatically convert to the account's currency using an estimated exchange rate for reports. If used, this tag MUST be set as a dependency for the associated ecommerce tag.",
@@ -18,21 +19,26 @@ qubit.opentag.LibraryTag.define(
 				description: "The currency code for the transaction's payment, eg 'GBP', 'EUR', or 'USD'",
 				token: "currency",
 				uv: "universal_variable.transaction.currency"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Web Analytics"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			window._gaq = window._gaq || [];
 			_gaq.push(['_set', 'currencyCode', '' + this.valueForToken("currency")]);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

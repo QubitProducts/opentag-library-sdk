@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("sizmek.genericpagetag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Generic Page Tag",
 		async: true,
 		description: "Tag to be placed on any unique page with an activity ID associated",
@@ -22,11 +23,16 @@ qubit.opentag.LibraryTag.define("sizmek.genericpagetag.v1.Tag", {
 			description: "An ID unique to each user's session - can be set blank",
 			token: "session_id",
 			uv: "universal_variable.user.user_id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		window.ebRand = Math.random() * 1000000;
 		window.ebSession = "" + this.valueForToken("session_id");
 
@@ -36,14 +42,14 @@ qubit.opentag.LibraryTag.define("sizmek.genericpagetag.v1.Tag", {
 			this.valueForToken("activity_id") + "&rnd=" + ebRand + "&Session=" +
 			ebSession;
 		document.getElementsByTagName("head")[0].appendChild(script);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

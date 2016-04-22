@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.googleadwordsconversionsynchronousdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google AdWords Conversion Synchronous (Deprecated)",
 			async: true,
 			description: "Tracks users that have converted who previously clicked through on an ad.",
@@ -43,25 +44,30 @@ qubit.opentag.LibraryTag.define(
 				description: "The value of the conversion. This should be a number, or 0 if there is no value to the conversion",
 				token: "value",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			window.google_conversion_id = this.valueForToken("conversion_id");
 			window.google_conversion_language = "" + this.valueForToken("language");
 			window.google_conversion_format = "" + this.valueForToken("format");
 			window.google_conversion_color = "" + this.valueForToken("conversion_color");
 			window.google_conversion_label = "" + this.valueForToken("label");
 			window.google_conversion_value = this.valueForToken("value");
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

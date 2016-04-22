@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"affiliatewindow.confirmationtagwithproductdetail.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Confirmation Tag with Product Detail",
 			async: true,
 			description: "Confirmation page script for pages that send product information with the same commission group for each product.",
@@ -78,15 +79,20 @@ qubit.opentag.LibraryTag.define(
 				description: "The category for each product purchased",
 				token: "productCategory",
 				uv: "universal_variable.transaction.line_items[#].product.category"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Affiliate Networks"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
+			/*pre*/
 			var awinImgSrc = [
 				"https://www.awin1.com/sread.img?tt=ns&tv=2&merchant=" +
 				this.valueForToken("merchant_id") + "&amount=",
@@ -142,10 +148,10 @@ qubit.opentag.LibraryTag.define(
 					}
 				}
 			};
-			/*~PRE*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

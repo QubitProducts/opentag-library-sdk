@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("calltrackingmetrics.trackingcode.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Tracking Code",
 		async: true,
 		description: "By assigning a tracking number to each campaign you want to track, you can link calls back to the campaign. Dynamic tracking code placed on your website will enable your business phone number to update to the correct tracking number based on how a visitor found your site.",
@@ -17,19 +18,24 @@ qubit.opentag.LibraryTag.define("calltrackingmetrics.trackingcode.v1.Tag", {
 			description: "The client ID given to you in your generated code from CallTrackingMetrics",
 			token: "client_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Utilities / JavaScript Tools"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

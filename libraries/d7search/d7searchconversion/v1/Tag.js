@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("d7search.d7searchconversion.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "7Search Conversion",
 		async: true,
 		description: "Conversion pixel for 7Search.com",
@@ -27,23 +28,28 @@ qubit.opentag.LibraryTag.define("d7search.d7searchconversion.v1.Tag", {
 			description: "",
 			token: "transaction_total",
 			uv: "universal_variable.transaction.total"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Search Engine"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._7search_conversion_advid = this.valueForToken("7search_advertiserid");
 		window._7search_conversion_urlid = this.valueForToken("7search_urlid");
 		window._7search_conversion_type = "purchase";
 		window._7search_conversion_value = this.valueForToken("transaction_total");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

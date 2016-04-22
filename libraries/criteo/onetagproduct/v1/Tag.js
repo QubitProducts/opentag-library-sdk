@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("criteo.onetagproduct.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "OneTag - Product",
 		async: true,
 		description: "This must be placed on all the advertiser product pages.",
@@ -32,19 +33,24 @@ qubit.opentag.LibraryTag.define("criteo.onetagproduct.v1.Tag", {
 			description: "The ID of the product currently being viewed",
 			token: "product_id",
 			uv: "universal_variable.product.id"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		var user_id = "" + this.valueForToken("customer_id");
 		//Remove email if present.
 		if (user_id.indexOf("@") > -1) {
@@ -65,6 +71,6 @@ qubit.opentag.LibraryTag.define("criteo.onetagproduct.v1.Tag", {
 			event: "viewItem",
 			product: "" + this.valueForToken("product_id")
 		});
-		/*~POST*/
+		/*~post*/
 	}
 });

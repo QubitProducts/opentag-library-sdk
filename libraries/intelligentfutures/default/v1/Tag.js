@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("intelligentfutures.default.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Default",
 		async: true,
 		description: ".",
@@ -14,11 +15,16 @@ qubit.opentag.LibraryTag.define("intelligentfutures.default.v1.Tag", {
 		upgradeable: true,
 		parameters: [
 
+		],
+		categories:[
+			"Re-Targeting"
 		]
-		/*~DATA*/
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		//script must be manually imported! empty parameters entries!
 		(function(a) {
 			var d = document,	c = d.createElement("script");
@@ -29,14 +35,14 @@ qubit.opentag.LibraryTag.define("intelligentfutures.default.v1.Tag", {
 				"//" + (window.location.protocol == "http:" && !iatDev ? "h" : "") +
 				"j.flxpxl.com/176554.js?r=" + Math.random() * 1e16 +
 				"&m=${}&a=${}" + (iatDev ? "&d=1" : "")))
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

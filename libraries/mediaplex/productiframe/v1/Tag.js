@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("mediaplex.productiframe.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Product iframe",
 		async: true,
 		description: "The product iframe passes a pageview, product SKU, and the category/subcategory the product belongs in.",
@@ -42,11 +43,16 @@ qubit.opentag.LibraryTag.define("mediaplex.productiframe.v1.Tag", {
 			description: "The SKU of the product the user is currently viewing",
 			token: "product_sku",
 			uv: "universal_variable.product.sku_code"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Re-Targeting"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var frame = document.createElement("iframe");
 		var src = (document.location.protocol === "https:") ? "https://secure." :
 			"http://";
@@ -63,14 +69,14 @@ qubit.opentag.LibraryTag.define("mediaplex.productiframe.v1.Tag", {
 		frame.frameborder = 0;
 		document.body.appendChild(frame);
 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

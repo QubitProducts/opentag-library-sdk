@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("intelliad.impressionpixel.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Impression Pixel",
 		async: true,
 		description: "With intelliAd’s impression pixel you have the possibility to measure all impressions of your custom channels.",
@@ -47,11 +48,16 @@ qubit.opentag.LibraryTag.define("intelliad.impressionpixel.v1.Tag", {
 			description: "Represents cost per impression in EUR - so 0.1 cent  is 0.0010 (leave blank if not required)",
 			token: "cost_per_impression",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var t = (new Date()).getTime();
 		var paramObj = {
 			cl: "" + this.valueForToken("client_id"),
@@ -75,14 +81,14 @@ qubit.opentag.LibraryTag.define("intelliad.impressionpixel.v1.Tag", {
 
 		var img = new Image();
 		img.src = src.slice(0, -1);
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

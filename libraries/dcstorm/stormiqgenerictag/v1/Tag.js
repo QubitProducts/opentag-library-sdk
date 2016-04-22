@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("dcstorm.stormiqgenerictag.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "StormIQ Generic Tag",
 		async: true,
 		description: "To be placed on all pages except confirmation",
@@ -22,22 +23,27 @@ qubit.opentag.LibraryTag.define("dcstorm.stormiqgenerictag.v1.Tag", {
 			description: "If this is not specified, leave blank",
 			token: "channel",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window.__stormJs = 't1.stormiq.com/dcv4/jslib/' +
 			this.valueForToken("storm_id") + '.js';
 		window.__ch = '' + this.valueForToken("channel");
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("flixmedia.checkoutstartpage.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Checkout Start Page",
 		async: true,
 		description: "To fire on the page that loads right after the user clicks on the checkout button.",
@@ -32,11 +33,16 @@ qubit.opentag.LibraryTag.define("flixmedia.checkoutstartpage.v1.Tag", {
 			description: "It should match with the Checkout End Page tag Unique Checkout ID",
 			token: "id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Web Analytics"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
+		/*script*/
 		var products = [];
      
     for (var i=0; i< this.valueForToken("skus").length; i++)
@@ -55,14 +61,14 @@ qubit.opentag.LibraryTag.define("flixmedia.checkoutstartpage.v1.Tag", {
        "basket_id" : "" + this.valueForToken("id"),
        "basket" : products 
     }); 
-		/*~SCRIPT*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

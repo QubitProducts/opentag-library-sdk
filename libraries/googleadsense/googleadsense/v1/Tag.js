@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("googleadsense.googleadsense.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "Google Adsense",
 		async: true,
 		description: "Deploy Google adsense asynchronously to a specific html element (by id).",
@@ -37,19 +38,24 @@ qubit.opentag.LibraryTag.define("googleadsense.googleadsense.v1.Tag", {
 			description: "The HTML element (by id) to add the ads to.",
 			token: "parent_id",
 			uv: ""
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Advertising Network"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
-		/*~PRE*/
+		/*pre*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
+		/*post*/
 		window.adsbygoogle = window.adsbygoogle || [];
 
 		var ins = document.createElement("ins");
@@ -66,6 +72,6 @@ qubit.opentag.LibraryTag.define("googleadsense.googleadsense.v1.Tag", {
 				.appendChild(ins);
 
 		window.adsbygoogle.push({});
-		/*~POST*/
+		/*~post*/
 	}
 });

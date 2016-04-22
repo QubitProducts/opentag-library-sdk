@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"sojern.advertisertagvacationpurchaseconfirmationpage.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Advertiser Tag - Vacation Purchase Confirmation Page",
 			async: true,
 			description: "",
@@ -68,11 +69,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Customer's First Name",
 				token: "name",
 				uv: ""
-			}]
-			/*~DATA*/
-		},
+			}],
+		categories:[
+			"Audience Management"
+		]
+
+			/*~config*/
+      };
+  },
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var src = "https://beacon.sojern.com/p/9?";
 			src += "et=" + this.valueForToken("event") + "&";
 			src += "va1=" + this.valueForToken("origin") + "&";
@@ -86,14 +92,14 @@ qubit.opentag.LibraryTag.define(
 			src += "n=" + this.valueForToken("name") + "&";
 			src += "vconfno=" + this.valueForToken("id");
 			(new Image()).src = src;
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

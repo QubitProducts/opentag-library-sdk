@@ -1,8 +1,9 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define("shoppingcom.roitracker.v1.Tag", {
-	config: {
-		/*DATA*/
+	getDefaultConfig: function () {
+      return {
+		/*config*/
 		name: "ROI Tracker",
 		async: true,
 		description: "A free campaign measurement tool available to all merchants enrolled in the Shopping.com Merchant \nProgram. Displays product and category – level performance data.",
@@ -57,15 +58,20 @@ qubit.opentag.LibraryTag.define("shoppingcom.roitracker.v1.Tag", {
 			description: "A list of item quantities for items in the basket",
 			token: "item_quantities",
 			uv: "universal_variable.transaction.line_items[#].quantity"
-		}]
-		/*~DATA*/
+		}],
+		categories:[
+			"Feed Management (Shopping Comparison)"
+		]
+
+		/*~config*/
+		};
 	},
 	script: function() {
-		/*SCRIPT*/
-		/*~SCRIPT*/
+		/*script*/
+		/*~script*/
 	},
 	pre: function() {
-		/*PRE*/
+		/*pre*/
 		window._roi = window._roi || [];
 
 		_roi.push(['_setMerchantId', this.valueForToken("client_id")]);
@@ -85,10 +91,10 @@ qubit.opentag.LibraryTag.define("shoppingcom.roitracker.v1.Tag", {
 		}
 
 		_roi.push(['_trackTrans']);
-		/*~PRE*/
+		/*~pre*/
 	},
 	post: function() {
-		/*POST*/
-		/*~POST*/
+		/*post*/
+		/*~post*/
 	}
 });

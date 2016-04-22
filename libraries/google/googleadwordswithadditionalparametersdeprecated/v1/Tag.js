@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"google.googleadwordswithadditionalparametersdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google AdWords with additional parameters DEPRECATED",
 			async: true,
 			description: "Tracks users that have converted who previously clicked through on an ad.",
@@ -43,19 +44,24 @@ qubit.opentag.LibraryTag.define(
 				description: "",
 				token: "conversion_value",
 				uv: "universal_variable.transaction.subtotal"
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			window.google_trackConversion({
 				google_conversion_id: this.valueForToken("conversion_id"),
 				google_conversion_label: "" + this.valueForToken("conversion_label"),
@@ -64,6 +70,6 @@ qubit.opentag.LibraryTag.define(
 				google_conversion_language: "" + this.valueForToken("conversion_language"),
 				google_conversion_value: this.valueForToken("conversion_value")
 			});
-			/*~POST*/
+			/*~post*/
 		}
 	});

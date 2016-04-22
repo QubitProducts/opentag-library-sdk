@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"visualwebsiteoptimizer.visualwebsiteoptimizer.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Visual Website Optimizer",
 			async: true,
 			description: "Visual Website Optimizer is an A/B testing tool that allows marketing professionals to create different versions of their websites and landing pages using a point-and-click editor (no HTML knowledge needed!) and then see which version produces maximum conversion rate or sales.",
@@ -33,11 +34,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Whether to use the version of jQuery already existing on the page",
 				token: "use_jquery",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"AB & Multi-Variate Testing"
+		]
+
+			/*~config*/
+      };
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var _this = this;
 			var _vwo_code = (function() {
 				var account_id = _this.valueForToken("accountid"),
@@ -92,14 +98,14 @@ qubit.opentag.LibraryTag.define(
 				};
 			}());
 			window._vwo_settings_timer = _vwo_code.init();
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

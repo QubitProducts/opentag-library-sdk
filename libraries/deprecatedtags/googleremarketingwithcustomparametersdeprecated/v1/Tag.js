@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"deprecatedtags.googleremarketingwithcustomparametersdeprecated.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Google Remarketing with custom parameters DEPRECATED",
 			async: true,
 			description: "The standard GA re-marketing tag, but allows for custom parameter as per the guide: http://bit.ly/14iZMqu. Return an object within an anonymous function to populate the parameters.",
@@ -28,19 +29,24 @@ qubit.opentag.LibraryTag.define(
 				description: "Use a JavaScript-based parameter to return an object within an anonymous function.",
 				token: "custom_parameters",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Re-Targeting"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
+			/*post*/
 			var options = {
 				google_conversion_id: "" + this.valueForToken("conversion_id"),
 				google_conversion_label: "" + this.valueForToken("label"),
@@ -50,6 +56,6 @@ qubit.opentag.LibraryTag.define(
 
 			window.google_trackConversion(options);
 
-			/*~POST*/
+			/*~post*/
 		}
 	});

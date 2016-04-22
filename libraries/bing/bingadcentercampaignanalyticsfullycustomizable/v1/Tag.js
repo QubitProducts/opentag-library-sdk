@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"bing.bingadcentercampaignanalyticsfullycustomizable.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Bing AdCenter Campaign Analytics - Fully Customizable",
 			async: true,
 			description: "Script to generate reports on the success of your advertising campaigns via Bing Search. Fully customizable.",
@@ -43,19 +44,24 @@ qubit.opentag.LibraryTag.define(
 				description: "Action Id. Eg 948565",
 				token: "ACTION_ID",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Search Engine"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
-			/*~SCRIPT*/
+			/*script*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});

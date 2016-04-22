@@ -1,9 +1,10 @@
-//:include tagsdk-current.js
+//:import sdk.releases.Current
 
 qubit.opentag.LibraryTag.define(
 	"cheetahmail.tracktopurchasewithitemtracking.v1.Tag", {
-		config: {
-			/*DATA*/
+		getDefaultConfig: function () {
+      return {
+			/*config*/
 			name: "Track-to-Purchase with Item Tracking",
 			async: true,
 			description: "Track-to-purchase reporting is typically used by clients that utilize e-commerce components to track conversions on their site resulting from an email campaign sent through CheetahMail. The Item Tracking feature, when enabled via CheetahMail, provides a method of tracking detailed information about the items that were purchased for each transaction.",
@@ -63,11 +64,16 @@ qubit.opentag.LibraryTag.define(
 				description: "Any client specific data to be associated with each transaction - numbers only",
 				token: "cust2",
 				uv: ""
-			}]
-			/*~DATA*/
+			}],
+		categories:[
+			"Email Service Provider (ESP)"
+		]
+
+			/*~config*/
+		};
 		},
 		script: function() {
-			/*SCRIPT*/
+			/*script*/
 			var items = [];
 
 			for (var i = 0; i < this.valueForToken("product_names").length; i++) {
@@ -85,14 +91,14 @@ qubit.opentag.LibraryTag.define(
 				"&c=" + items.join("|") + "&d=" + this.valueForToken("cust1") +
 				"&e=" + this.valueForToken("cust2");
 			document.getElementsByTagName("head")[0].appendChild(script);
-			/*~SCRIPT*/
+			/*~script*/
 		},
 		pre: function() {
-			/*PRE*/
-			/*~PRE*/
+			/*pre*/
+			/*~pre*/
 		},
 		post: function() {
-			/*POST*/
-			/*~POST*/
+			/*post*/
+			/*~post*/
 		}
 	});
