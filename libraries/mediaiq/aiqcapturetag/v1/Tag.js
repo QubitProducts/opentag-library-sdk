@@ -106,7 +106,7 @@ qubit.opentag.LibraryTag.define("mediaiq.aiqcapturetag.v1.Tag", {
 	      	      		}, {
 	      name: "u-value 17",
 			description: "As decided with your Media iQ contact",
-			token: "u7",
+			token: "u17",
 			uv: ""
 	      	      		}, {
 	      name: "u-value 18",
