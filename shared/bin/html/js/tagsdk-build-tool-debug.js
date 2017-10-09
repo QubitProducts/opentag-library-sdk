@@ -13145,22 +13145,12 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * @param {qubit.opentag.BaseTag} tag
    */
   Container.prototype.registerTag = function (tag) {
-    var exists = false;
-    var oc = tag.owningContainers;
-    
-    for (var i = 0; i < oc.length; i++) {
-      if (oc[i] === this) {
-        exists = true;
-        break;
-      }
-    }
-    
-    if (exists) {
+    if (Utils.existsInArray(tag.owningContainers, this)) {
       this.log.FINE(/*L*/
         "Tag `" + tag.config.name + "` is already registered!");/*L*/
     } else {
       this.tags.push(tag);
-      oc.push(this);
+      tag.owningContainers.push(this);
       tag.onAfter(this._tagLoadedHandler);
       try {
         this.onTagRegistered(tag);
