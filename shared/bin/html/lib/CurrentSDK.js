@@ -13123,6 +13123,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     if (Utils.existsInArray(tag.owningContainers, this)) {
       this.log.FINE(/*L*/
         "Tag `" + tag.config.name + "` is already registered!");/*L*/
+      return false;
     } else {
       this.tags.push(tag);
       tag.owningContainers.push(this);
@@ -13133,6 +13134,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
         this.log.ERROR("onTagRegistered exception: " + ex);/*L*/
       }
     }
+    return true;
   };
   
   /**
