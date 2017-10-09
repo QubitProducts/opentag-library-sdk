@@ -8755,6 +8755,13 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     this.namedVariables = {};
     
     /**
+     * @protected
+     * Tag runtime markers space.
+     * @property Object
+     */
+    this._runtimeMarkers = {};
+    
+    /**
      * Parameters array. Parasmeters are a plain objects containing:
      * 
      * `name` property, indicating parameter's name.
@@ -8795,26 +8802,6 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
      * @property Array of {qubit.opentag.Container}
      */
     this.owningContainers = [];
-    
-//    var ruid;
-//    
-//    /**
-//     * Function returns unique runtime unique ID for this tag - each time tag 
-//     * instance is created it will return different ID.
-//     * @returns String unique string ID for this tag instance
-//     */
-//    this.getRUID = function () {
-//      if (ruid) {
-//        return ruid;
-//      }
-//      
-//      if (isNaN(GLOBAL.___qubit_ot_ruid_t_cntr__)) {
-//        GLOBAL.___qubit_ot_ruid_t_cntr__ = 1;
-//      }
-//      
-//      return ruid = ((this.config.name + GLOBAL.___qubit_ot_ruid_t_cntr__++) +
-//        new Date().valueOf()) + Math.random();
-//    };
     
     /**
      * Idicates if tag stats has been submitted.
@@ -13054,7 +13041,8 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * Unregister method for container. useful for debugging.
    * See `Container.register()` for more details.
    * @param {qubit.opentag.Container} ref
-   * @param {Boolean} withTags
+   * @param {Boolean} withTags if specified tags will be unregistered too and 
+   *                  from ANY container.
    */
   Container.unregister = function (ref, withTags) {
     Utils.addToArrayIfNotExist(containers, ref);
@@ -13065,14 +13053,14 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     
     var index = Utils.removeFromArray(containers, ref);
     if (withTags) {
-      for (var i = 0; i < this.tags.length; i++) {
-        var tag = this.tags[i];
+      for (var i = 0; i < ref.tags.length; i++) {
+        var tag = ref.tags[i];
         tag.owningContainers = []; // unregister container from tag
         if (tag instanceof BaseTag) {
           tag.unregister();
         }
       }
-      this.tags = [];
+      ref.tags = [];
     }
     
     if (!index || index.length === 0) {
@@ -13125,7 +13113,6 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * Function registering tag instance with this class instance.
    * Registered tag will have validated and possibly injected extra 
    * configuration.
-   * Containers register tags **by their ID**.
    * Container will not allow registering tag if there is 
    * already a tag with same name in container (!) - there will not be any 
    * exception thrown but tag will not be added to container!
@@ -13387,8 +13374,8 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     
     // clear the marks
     for (var c = 0; c < orderedTags.length; c++) {
-      orderedTags[c][runtimeMark] = undefined;
-      delete orderedTags[c][runtimeMark];
+      orderedTags[c]._runtimeMarkers[runtimeMark] = undefined;
+      delete orderedTags[c]._runtimeMarkers[runtimeMark];
     }
   };
 
@@ -13431,8 +13418,8 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
                                               command,
                                               forceAsync,
                                               runtimeMark) {
-    if (!tag[runtimeMark]) {
-      tag[runtimeMark] = true;
+    if (!tag._runtimeMarkers[runtimeMark]) {
+      tag._runtimeMarkers[runtimeMark] = true;
     } else {
       return;
     }
