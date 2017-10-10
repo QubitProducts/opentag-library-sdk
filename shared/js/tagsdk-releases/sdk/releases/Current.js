@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.1.1-r1";
+var qversion = "3.1.3";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -536,6 +536,655 @@ var UNDEF;
   };
 
 })();
+
+
+
+/* jshint white: false */
+
+/*
+ * TagSDK, a tag development platform
+ * Copyright 2013-2016, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+ */
+
+(function () {
+  
+  var Define = qubit.Define;
+  var _console = null;
+  
+  /**
+   * @class qubit.opentag.Log
+   * 
+   * #Logging class
+   * 
+   * Logger class with ability of grouping messages at many levels, there is six
+   * possible logging levels:
+   * 
+   * Log.LEVEL_FINEST
+   * Log.LEVEL_FINE
+   * Log.LEVEL_INFO
+   * Log.LEVEL_WARN
+   * Log.LEVEL_ERROR
+   * Log.LEVEL_NONE
+   * 
+   * The list above is ordered from highest level to lowest - the highest 
+   * level is LEVEL_FINEST and lowest is LEVEL_NONE 
+   * (lowest level is equal to 0 and causes no logs being shown).
+   * 
+   * By default TagSDK sets loggin level to LEVEL_FINE while in debug mode,
+   * if TagSDK is not in debug mode - level is set to lowest value.
+   * 
+   * To adjust system logging output choose from Log.LEVEL_* properties.
+   * 
+   * Example:
+    
+         qubit.opentag.Log.setLevel(qubit.opentag.Log.LEVEL_FINEST);
+
+   * will enable all logs to 
+   * be at output.
+   
+         qubit.opentag.Log.setLevel(qubit.opentag.Log.LEVEL_NONE);
+  
+   * will disable any logs.
+   * 
+   * All log levels:
+    
+        Log.LEVEL_FINEST = 4;
+        Log.LEVEL_FINE = 3;
+        Log.LEVEL_INFO = 2;
+        Log.LEVEL_WARN = 1;
+        Log.LEVEL_ERROR = 0;
+        Log.LEVEL_NONE = -1;
+    
+    
+   * 
+   * It is recommended to use logger in single lines as lines containing logger 
+   * may be deleted by compression process in some cases.
+   * 
+   * Note that setting level does not change logs collection level, if logs are 
+   * not collected at certain level they will not be logged. to set collection 
+   * and logging at same level use `Log.setCollectAndLevel(level)` function.
+   * 
+   * Default logs collection level is set to LEVEL_FINE.
+   * 
+   * @param prefix {String} typical prefix to be used for each logger instance
+   * @param clazz {Object} class object or function returning special
+   * prefixed logging contents.
+   * @param collectLocally {Boolean} should collect logs locally
+   */
+  function Log(prefix, clazz, collectLocally) {
+    
+    this.collectLogs = !!Log.isCollecting();
+    this.collectLocally = collectLocally;
+    /**
+     * Collection of logging inputs:
+     * 
+     * [message, styling, ifPlain, type, level]
+     * 
+     * @property
+     * @type Array
+     */
+    this.collection = [];
+    
+    this.getPrefix = function () {
+      var clz = "";
+      if (clazz) {
+        if (typeof(clazz) === "function") {
+          clz = clazz(this.ref);
+        } else if (clazz.CLASS_NAME) {
+          clz = clazz.CLASS_NAME;
+        } else if (clazz.constructor && clazz.constructor.name) {
+          clz = clazz.constructor.name;
+        }
+        if (clz) {
+          clz += " -> ";
+        }
+      }
+      return (prefix || "") + clz;
+    };
+  }
+
+  Define.clazz("qubit.opentag.Log", Log);
+
+  /**
+   * Static property used to define finest level.
+   * @property {Number} [LEVEL_FINEST=4]
+   */
+  Log.LEVEL_FINEST = 4;
+  /**
+   * Static property used to define fine level.
+   * @property {Number} [LEVEL_FINE=3]
+   */
+  Log.LEVEL_FINE = 3;
+  /**
+   * Static property used to define informative level.
+   * @property {Number} [LEVEL_INFO=2]
+   */
+  Log.LEVEL_INFO = 2;
+  /**
+   * Static property used to define severe level.
+   * @property {Number} [LEVEL_WARN=1]
+   */
+  Log.LEVEL_WARN = 1;
+  /**
+   * Static property used to define severe level.
+   * @property {Number} [LEVEL_ERROR=0]
+   */
+  Log.LEVEL_ERROR = 0;
+  
+  /**
+   * @property {Number} [LEVEL_NONE=-1]
+   * Static property used to define no logging level.
+   */
+  Log.LEVEL_NONE = -1;
+  
+  /**
+   * @static
+   * @property {Number} [MAX_LOG_LEN=10000]
+   * Static property used to limit maximum amount of logs collected.
+   */
+  Log.MAX_LOG_LEN = 10000;
+  
+  /**
+   * @property {Number} [MAX_LOG_LEN=-1]
+   * Maximum log collection limit for this instance, 
+   * default is -1, which means no limit is set.
+   */
+  Log.prototype.MAX_LOG_LEN = -1;
+  
+  var LEVEL = Log.LEVEL_NONE;
+  LEVEL = Log.LEVEL_INFO;/*D*/ // line deleted during merge
+  
+  var COLLECT_LEVEL = Log.LEVEL_NONE;
+  COLLECT_LEVEL = Log.LEVEL_FINE; /*D*/
+  
+  var COLLECT = true;
+  
+  /**
+   * Function is called by default on each framework load to check if loggin 
+   * level is set in cookie.
+   */
+  Log.setLevelFromCookie = function () {
+    var cookieLevel = qubit.Cookie.get("qubit.opentag.Log.LEVEL");
+  
+    if (cookieLevel) {
+      cookieLevel = +cookieLevel;
+      if (!isNaN(cookieLevel)) {
+        if (cookieLevel > 0) {
+          var fine = Log.LEVEL_FINE;
+          Log.setCollectLevel((cookieLevel > fine) ? cookieLevel : fine);
+          Log.setLevel(+cookieLevel);
+        }
+      }
+    }
+  };
+  
+  /**
+   * Global setter to indicate if logs should be collected (memorised).
+   * Memorised logs can be print again with rePrint methods on logger instances
+   * or directly on global `Log.rePrintAll()` method.
+   * @param {Boolean} isCollecting if logs should be collected. Takes effect 
+   *  immediately.
+   */
+  Log.setCollecting = function (isCollecting) {
+    COLLECT = !!isCollecting;
+  };
+  
+  /**
+   * Getter that returns true if system is collecting logs.
+   * @returns {Boolean} true only if system is collecting logs.
+   */
+  Log.isCollecting = function () {
+    return COLLECT || Log.COLLECT;
+  };
+  
+  /**
+   * Global logger level setter.
+   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
+   */
+  Log.setLevel = function (level) {
+    LEVEL = +level;
+  };
+  
+  /**
+   * Global logger level setter.
+   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
+   */
+  Log.setCollectAndLevel = function (level) {
+    Log.setLevel(level);
+    Log.setCollectLevel(level);
+  };
+  
+  /**
+   * 
+   * `Log.getLevel()` getter/setter is used to controll globally current and 
+   * default logging levels.
+   * @returns {Number} current level, one of qubit.opentag.Log.LEVEL_* 
+   *   properties
+   */
+  Log.getLevel = function () {
+    return LEVEL;
+  };
+  
+  /**
+   * Collection level setter. One of qubit.opentag.Log.LEVEL_*.
+   * Collection level indicates which level should be used to memorise logs 
+   * so they can be printed again. See `rePrintAll()` for more details.
+   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
+   */
+  Log.setCollectLevel = function (level) {
+    COLLECT_LEVEL =  +level;
+  };
+  
+  /**
+   * Same as `gelLevel` but the level is set agains logs collected to be 
+   * memorised for later use. See `rePrintAll()` for more details.
+   * @returns {Number} level one of qubit.opentag.Log.LEVEL_* properties
+   */
+  Log.getCollectLevel = function () {
+    return COLLECT_LEVEL;
+  };
+  
+  var collection = [];
+  
+  /**
+   * Collection of logging inputs globally.
+   * Contents for each element:
+   * 
+   * [message, styling, ifPlain, type, level]
+   * 
+   * @static
+   * @property
+   * @type Array
+   */
+  Log.logsCollection = collection;
+  
+  /**
+   * @static
+   * 
+   * Function will cause re-printing all of the logs that were collected.
+   * Collection mechanism has it's own LEVEL configuration same
+   * as plain logging in console.
+   * @param {Number} level logging LEVEL value to use
+   * @param {Number} delay delay each message by delay ms value
+   * @param {Boolean} noclean if console should not be cleared
+   * @param {Array} array alternative array of logs to be reprinted, normally
+   *   you dont need to use it unless you implement custom logs history.
+   */
+  Log.rePrintAll = function (level, delay, noClean, array) {
+    var oldLevel = LEVEL;
+    
+    if (level !== undefined) {
+      LEVEL = level;
+    }
+    
+    try {
+      if (Log.isCollecting()) {
+        try {
+          if (!noClean) {
+            _console.clear();
+          }
+        } catch (ex) {
+          
+        }
+        var collection = array || Log.logsCollection;
+        var counter = 0;
+        for (var i = 0; i < collection.length; i++) {
+          (function (j) {
+            var log = collection[j];
+            var logLevel = log[3];
+            if (logLevel !== undefined && LEVEL >= logLevel) {
+              counter++;
+              if (!delay) {
+                Log.print.apply(Log, log);
+              } else {
+                qubit.opentag.Timed.setTimeout(function () {
+                  if (level !== undefined) {
+                    LEVEL = level;
+                  }
+                  try {
+                    Log.print.apply(Log, log);
+                  } finally {
+                    LEVEL = oldLevel;
+                  }
+                }, counter * delay);
+              }
+            }
+          })(i);
+        }
+      }
+    } catch (ex) {
+      // for sanity
+    } finally {
+      LEVEL = oldLevel;
+    }
+  };
+  
+  // check if webkit or mozilla is present, for styling loos choice is fine
+  var tmp = Define.global();
+  var isStylingSupported = 
+    !!(tmp.webkitMediaStream || tmp.webkitURL || tmp.mozContact);
+  /**
+   * Use styling by default.
+   * @returns {Boolean}
+   */
+  Log.isStyleSupported = function () {
+    return isStylingSupported;
+  };
+  
+  // dummy for now
+  var altConsole = {};
+  /**
+   * 
+   * Attach console object to controll logging print method.
+   * @param {Object} xconsole
+   * @returns {Object} console attached
+   */
+  Log.setConsole = function (xconsole) {
+    _console = xconsole || altConsole;
+    return _console;
+  };
+  
+  /**
+   * @static
+   * @property Runtime property, if higher that zero, it will be delay between
+   * each of logger messages. If there is to much logs being run, slowing down
+   * may be good idea. To do it, just set this property to any milisecond value
+   * you like.
+   * @type Array
+   */
+  Log.delayPrint = -1;
+  
+  var _last_run = new Date().valueOf();
+  /*
+   * @protected
+   * Print method.
+   * Override this method if you prefer different logging output.
+   * By default all messages are redirected to console.
+   * 
+   * This method is used by all logging methods as final output.
+   * @param {String} message
+   * @param {String} style CSS style
+   * @param {String} type console['type'] call
+   * @param {Number} level number
+   */
+  Log.prototype.printMessage = function (message, style, type, level) {
+    if (Log.delayPrint > 0) {
+      var delay = Log.delayPrint;
+      var ago = _last_run - new Date().valueOf();
+      if (ago > 0) {
+        // _count_close_msgs meassures how many times print was called in
+        // lower than default scale
+        delay += ago;
+      }
+      try { // try delayed option, if package exists
+        qubit.opentag.Timed.setTimeout(function () {
+          this.print(message, style, type, level);
+        }.bind(this), delay);
+      } catch (e) {
+        setTimeout(function () {
+          this.print(message, style, type, level);
+        }.bind(this), delay);
+      }
+      _last_run = new Date().valueOf() + delay;
+    } else {
+      this.print(message, style, type, level);
+    }
+  };
+  
+  /**
+   * Instance print method.
+   * @param {String} message
+   * @param {String} style CSS style
+   * @param {String} type console['type'] call
+   * @param {Number} level number
+   */
+  Log.prototype.print = function (message, style, type, level) {
+    Log.print(message, style, type, level);
+  };
+  
+  /**
+   * @static
+   * Static log print method.
+   * @param {String} message
+   * @param {String} style CSS style
+   * @param {String} type console[<type>] call
+   * @param {Number} level number
+   */
+  Log.print = function (message, style, type, level) {
+    // pre-eliminary step
+    if (level !== undefined && LEVEL < level) {
+      return;
+    }
+    try {
+      if (_console && _console.log) {
+        if (style && Log.isStyleSupported()){
+          if (type && _console[type]) {
+            _console[type]("%c" + message, style);
+          } else {
+            _console.log("%c" + message, style);
+          }
+        } else {
+          if (type && _console[type]) {
+            _console[type](message);
+          } else {
+            _console.log(message);
+          }
+        }
+      }
+    } catch (ex) {
+      // swollow...
+    }
+  };
+  
+  /**
+   * Collector function for log class.
+   * This function manages logs collection process.
+   * @protected
+   * @param {Array} toPrint array to print
+   * @param {Number} level
+   * @returns {Array}
+   */
+  Log.prototype.collect = function (toPrint, level) {
+    if (level === undefined) {
+      level = Log.getCollectLevel();
+    }
+    
+    var collected = false;
+    var collectingGlobally = (this.collectLogs && Log.isCollecting() &&
+      (Log.getCollectLevel() >= +level));
+    
+    if (collectingGlobally) {
+      collection.push(toPrint);
+      collected = true;
+    }
+    
+    if (this.collectLocally && collectingGlobally) {
+      this.collection.push(toPrint);
+      collected = true;
+    }
+    
+    if (Log.MAX_LOG_LEN > 0) {
+      if (collection.length > Log.MAX_LOG_LEN) {
+        collection.splice(0, collection.length - Log.MAX_LOG_LEN);
+      }
+    }
+    
+    if (Log.MAX_LOG_LEN > 0 || this.MAX_LOG_LEN > 0) {
+      var len = Log.MAX_LOG_LEN;
+      if (this.MAX_LOG_LEN > 0) {
+        len = this.MAX_LOG_LEN;
+      }
+      if (this.collection.length > len) {
+        this.collection.splice(0, this.collection.length - len);
+      }
+    }
+    
+    return collected ? toPrint : null;
+  };
+  
+  /**
+   * Clears console and the logs collection.
+   */
+  Log.clearAllLogs = function () {
+    try {
+      _console.clear();
+    } catch (e) {
+    } finally {
+      collection.splice(0, collection.length);
+    }
+  };
+  
+  /**
+   * @static
+   * Returns logs collection set filtered by level. Utility function.
+   * @param {Number} level One of Log.LEVEL_* values.
+   * @param {Array} altCollection alternatrie collection source
+   * @returns {Array}
+   */
+  Log.getCollectedByLevel = function (level, altCollection) {
+    altCollection = altCollection || collection;
+    var results = [];
+    for (var i = 0; i < altCollection.length; i++) {
+      var log = altCollection[i];
+      var msg = log[0];
+      var lvl = msg[4];
+      if (lvl === level) {
+        results.push(log);
+      }
+    }
+    return results;
+  };
+
+
+  /**
+   * Re-printing function for all instance log.
+   * @param {Number} level logging level to apply
+   * @param {Number} delay delay metween messages (in ms)
+   * @param {Boolean} clean Clear the console before re-print
+   */
+  Log.prototype.rePrint = function (level, delay, clean) {
+    Log.rePrintAll(level, delay, !clean, this.collection);
+  };
+
+  /**
+   * @private
+   * 
+   * Logger function, this is strictly private function that manages logging
+   * process.
+   * 
+   * @param {qubit.opentag.Log} log
+   * @param {String} prefix
+   * @param {String} type console[type]
+   * @param {String} message
+   * @param {Boolean} plain if just a plain output of console
+   * @param {Boolean} style optional styling
+   * @param {String} plainStyle CSS styling string
+   * @param {Number} level
+   */
+  function logger(log, prefix, type, message, plain, style, plainStyle, level) {
+    var toPrint;
+    var pass = LEVEL >= level;
+    if (Log.getCollectLevel() >= 0 || pass) {
+      if (plain) {
+        toPrint = [message, plainStyle, type];
+      } else {
+        toPrint = [
+          prefix + log.getPrefix() + message,
+          style,
+          type
+        ];
+      }
+      toPrint[3] = level;
+      log.collect(toPrint, level);
+      if (pass) {
+        log.printMessage.apply(log, toPrint);
+      }
+    }
+  }
+  
+  // it is important it is not in one line. New build will strip logs for release
+  /**
+   * @method
+   * Finest level logging function.
+   * 
+   * @param {String} message Message to be logged.
+   * @param {Boolean} plain If true, message object will be logged as plain as 
+   *    passed directly to console. It's usefull if your console supports JSON 
+   *    style browsing objects.
+   */
+  Log.prototype.
+    FINEST = function (message, plain) {
+      logger (this, "FINEST: ", false, message, plain, "color:#CCCCCC;", false,
+        Log.LEVEL_FINEST);
+    };
+    
+  /**
+   * @method
+   * Fine level logging function.
+   * 
+   * @param {String} message Message to be logged.
+   * @param {Boolean} plain If true, message object will be logged as plain as 
+   *    passed directly to console. It's usefull if your console supports JSON 
+   *    style browsing objects.
+   */
+  Log.prototype.
+    FINE = function (message, plain) {
+      logger (this, "FINE: ", false, message, plain, "color:#999999;", false,
+        Log.LEVEL_FINE);
+    };
+  
+  /**
+   * @method
+   * Information level logging function.
+   * 
+   * @param {String} message Message to be logged.
+   * @param {Boolean} plain If true, message object will be logged as plain as 
+   *    passed directly to console. It's usefull if your console supports JSON 
+   *    style browsing objects.
+   * @param style {String} CSS styling - inline.
+   */
+  Log.prototype.
+    INFO = function (message, plain, style) {
+      logger (this, "INFO: ", "info", message, plain, style, style,
+        Log.LEVEL_INFO);
+    };
+  
+  /**
+   * @method
+   * Severe/Error level logging function.
+   * 
+   * @param {String} message Message to be logged.
+   * @param {Boolean} plain If true, message object will be logged as plain as 
+   *    passed directly to console. It's usefull if your console supports JSON 
+   *    style browsing objects.
+   */
+  Log.prototype.
+    WARN = function (message, plain) {
+      logger (this, "WARN: ", "warn", message, plain, "color:#26A110;", false,
+        Log.LEVEL_WARN);
+    };
+    
+  /**
+   * @method
+   * Severe/Error level logging function.
+   * 
+   * @param {String} message Message to be logged.
+   * @param {Boolean} plain If true, message object will be logged as plain as 
+   *    passed directly to console. It's usefull if your console supports JSON 
+   *    style browsing objects.
+   */
+  Log.prototype.
+    ERROR = function (message, plain) {
+      logger(this, "ERROR: ", "error", message, plain, "color:red;", false,
+        Log.LEVEL_ERROR);
+    };
+    
+  Log.setConsole(Define.global().console);
+  Log.setLevelFromCookie();
+   
+}());
 
 
 
@@ -1205,7 +1854,7 @@ var UNDEF;
    * @returns {Number} objects position in array,
    *  if doesnt exist it will return -1. It means that object was appended at 
    *  the end of array.
-   * if exists it will return its popsition.
+   * if exists it will return its position.
    */
   Utils.addToArrayIfNotExist = function (array, obj, equals) {
     var i = 0, exists = false;
@@ -1235,16 +1884,26 @@ var UNDEF;
    * if exists it will return its popsition.
    */
   Utils.indexInArray = function (array, obj) {
-    var i = 0, exists = false;
-    for (; i < array.length; i++) {
+    for (var i = 0; i < array.length; i++) {
       if (array[i] === obj) {
-        exists = true;
-        break;
+        return i;
       }
     }
-    return exists ? i : -1;
+    return -1;
   };
-  
+
+  /**
+   * Function checks if obj exists in array.
+   */
+  Utils.existsInArray = function (array, obj) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i] === obj) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   /*
    * Local function taking as argument and array and a string that will be  
    * removed from the array if it equals (===) to any of array items.
@@ -1658,654 +2317,831 @@ var UNDEF;
   
   
 }());
-
-
-
-/* jshint white: false */
-
+/*EXCLUDE: JSON*/
 /*
- * TagSDK, a tag development platform
- * Copyright 2013-2016, Qubit Group
- * http://opentag.qubitproducts.com
- * Author: Peter Fronc <peter.fronc@qubitdigital.com>
- */
+    http://www.JSON.org/json2.js
+    2011-02-23
+
+    Public Domain.
+
+    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+
+    See http://www.JSON.org/js.html
+
+
+    This code should be minified before deployment.
+    See http://javascript.crockford.com/jsmin.html
+
+    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
+    NOT CONTROL.
+
+
+    This file creates a global JSON object containing two methods: stringify
+    and parse.
+
+        JSON.stringify(value, replacer, space)
+            value       any JavaScript value, usually an object or array.
+
+            replacer    an optional parameter that determines how object
+                        values are stringified for objects. It can be a
+                        function or an array of strings.
+
+            space       an optional parameter that specifies the indentation
+                        of nested structures. If it is omitted, the text will
+                        be packed without extra whitespace. If it is a number,
+                        it will specify the number of spaces to indent at each
+                        level. If it is a string (such as '\t' or '&nbsp;'),
+                        it contains the characters used to indent at each level.
+
+            This method produces a JSON text from a JavaScript value.
+
+            When an object value is found, if the object contains a toJSON
+            method, its toJSON method will be called and the result will be
+            stringified. A toJSON method does not serialize: it returns the
+            value represented by the name/value pair that should be serialized,
+            or undefined if nothing should be serialized. The toJSON method
+            will be passed the key associated with the value, and this will be
+            bound to the value
+
+            For example, this would serialize Dates as ISO strings.
+
+                Date.prototype.toJSON = function (key) {
+                    function f(n) {
+                        // Format integers to have at least two digits.
+                        return n < 10 ? '0' + n : n;
+                    }
+
+                    return this.getUTCFullYear()   + '-' +
+                         f(this.getUTCMonth() + 1) + '-' +
+                         f(this.getUTCDate())      + 'T' +
+                         f(this.getUTCHours())     + ':' +
+                         f(this.getUTCMinutes())   + ':' +
+                         f(this.getUTCSeconds())   + 'Z';
+                };
+
+            You can provide an optional replacer method. It will be passed the
+            key and value of each member, with this bound to the containing
+            object. The value that is returned from your method will be
+            serialized. If your method returns undefined, then the member will
+            be excluded from the serialization.
+
+            If the replacer parameter is an array of strings, then it will be
+            used to select the members to be serialized. It filters the results
+            such that only members with keys listed in the replacer array are
+            stringified.
+
+            Values that do not have JSON representations, such as undefined or
+            functions, will not be serialized. Such values in objects will be
+            dropped; in arrays they will be replaced with null. You can use
+            a replacer function to replace those with JSON values.
+            JSON.stringify(undefined) returns undefined.
+
+            The optional space parameter produces a stringification of the
+            value that is filled with line breaks and indentation to make it
+            easier to read.
+
+            If the space parameter is a non-empty string, then that string will
+            be used for indentation. If the space parameter is a number, then
+            the indentation will be that many spaces.
+
+            Example:
+
+            text = JSON.stringify(['e', {pluribus: 'unum'}]);
+            // text is '["e",{"pluribus":"unum"}]'
+
+
+            text = JSON.stringify(['e', {pluribus: 'unum'}], null, '\t');
+            // text is '[\n\t"e",\n\t{\n\t\t"pluribus": "unum"\n\t}\n]'
+
+            text = JSON.stringify([new Date()], function (key, value) {
+                return this[key] instanceof Date ?
+                    'Date(' + this[key] + ')' : value;
+            });
+            // text is '["Date(---current time---)"]'
+
+
+        JSON.parse(text, reviver)
+            This method parses a JSON text to produce an object or array.
+            It can throw a SyntaxError exception.
+
+            The optional reviver parameter is a function that can filter and
+            transform the results. It receives each of the keys and values,
+            and its return value is used instead of the original value.
+            If it returns what it received, then the structure is not modified.
+            If it returns undefined then the member is deleted.
+
+            Example:
+
+            // Parse the text. Values that look like ISO date strings will
+            // be converted to Date objects.
+
+            myData = JSON.parse(text, function (key, value) {
+                var a;
+                if (typeof value === 'string') {
+                    a =
+/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
+                    if (a) {
+                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
+                            +a[5], +a[6]));
+                    }
+                }
+                return value;
+            });
+
+            myData = JSON.parse('["Date(09/09/2001)"]', function (key, value) {
+                var d;
+                if (typeof value === 'string' &&
+                        value.slice(0, 5) === 'Date(' &&
+                        value.slice(-1) === ')') {
+                    d = new Date(value.slice(5, -1));
+                    if (d) {
+                        return d;
+                    }
+                }
+                return value;
+            });
+
+
+    This is a reference implementation. You are free to copy, modify, or
+    redistribute.
+*/
+
+/*jslint evil: true, strict: false, regexp: false */
+
+/*members "", "\b", "\t", "\n", "\f", "\r", "\"", JSON, "\\", apply,
+    call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,
+    getUTCMinutes, getUTCMonth, getUTCSeconds, hasOwnProperty, join,
+    lastIndex, length, parse, prototype, push, replace, slice, stringify,
+    test, toJSON, toString, valueOf
+*/
+
+
+// Create a JSON object only if one does not already exist. We create the
+// methods in a closure to avoid creating global variables.
+
+var JSON = {};
+// ALWAYS OVERWRITE JSON LOCALLY, ASSUME THIS FILE WILL ALWAYS BE IN CLOSURE
+// if (!JSON || window.forceJSONRewrite) {
+//     JSON = {};
+// }
 
 (function () {
-  
-  var Define = qubit.Define;
-  var _console = null;
-  
-  /**
-   * @class qubit.opentag.Log
-   * 
-   * #Logging class
-   * 
-   * Logger class with ability of grouping messages at many levels, there is six
-   * possible logging levels:
-   * 
-   * Log.LEVEL_FINEST
-   * Log.LEVEL_FINE
-   * Log.LEVEL_INFO
-   * Log.LEVEL_WARN
-   * Log.LEVEL_ERROR
-   * Log.LEVEL_NONE
-   * 
-   * The list above is ordered from highest level to lowest - the highest 
-   * level is LEVEL_FINEST and lowest is LEVEL_NONE 
-   * (lowest level is equal to 0 and causes no logs being shown).
-   * 
-   * By default TagSDK sets loggin level to LEVEL_FINE while in debug mode,
-   * if TagSDK is not in debug mode - level is set to lowest value.
-   * 
-   * To adjust system logging output choose from Log.LEVEL_* properties.
-   * 
-   * Example:
-    
-         qubit.opentag.Log.setLevel(qubit.opentag.Log.LEVEL_FINEST);
+    "use strict";
 
-   * will enable all logs to 
-   * be at output.
-   
-         qubit.opentag.Log.setLevel(qubit.opentag.Log.LEVEL_NONE);
-  
-   * will disable any logs.
-   * 
-   * All log levels:
-    
-        Log.LEVEL_FINEST = 4;
-        Log.LEVEL_FINE = 3;
-        Log.LEVEL_INFO = 2;
-        Log.LEVEL_WARN = 1;
-        Log.LEVEL_ERROR = 0;
-        Log.LEVEL_NONE = -1;
-    
-    
-   * 
-   * It is recommended to use logger in single lines as lines containing logger 
-   * may be deleted by compression process in some cases.
-   * 
-   * Note that setting level does not change logs collection level, if logs are 
-   * not collected at certain level they will not be logged. to set collection 
-   * and logging at same level use `Log.setCollectAndLevel(level)` function.
-   * 
-   * Default logs collection level is set to LEVEL_FINE.
-   * 
-   * @param prefix {String} typical prefix to be used for each logger instance
-   * @param clazz {Object} class object or function returning special
-   * prefixed logging contents.
-   * @param collectLocally {Boolean} should collect logs locally
-   */
-  function Log(prefix, clazz, collectLocally) {
-    
-    this.collectLogs = !!Log.isCollecting();
-    this.collectLocally = collectLocally;
-    /**
-     * Collection of logging inputs:
-     * 
-     * [message, styling, ifPlain, type, level]
-     * 
-     * @property
-     * @type Array
-     */
-    this.collection = [];
-    
-    this.getPrefix = function () {
-      var clz = "";
-      if (clazz) {
-        if (typeof(clazz) === "function") {
-          clz = clazz(this.ref);
-        } else if (clazz.CLASS_NAME) {
-          clz = clazz.CLASS_NAME;
-        } else if (clazz.constructor && clazz.constructor.name) {
-          clz = clazz.constructor.name;
-        }
-        if (clz) {
-          clz += " -> ";
-        }
-      }
-      return (prefix || "") + clz;
-    };
-  }
-
-  Define.clazz("qubit.opentag.Log", Log);
-
-  /**
-   * Static property used to define finest level.
-   * @property {Number} [LEVEL_FINEST=4]
-   */
-  Log.LEVEL_FINEST = 4;
-  /**
-   * Static property used to define fine level.
-   * @property {Number} [LEVEL_FINE=3]
-   */
-  Log.LEVEL_FINE = 3;
-  /**
-   * Static property used to define informative level.
-   * @property {Number} [LEVEL_INFO=2]
-   */
-  Log.LEVEL_INFO = 2;
-  /**
-   * Static property used to define severe level.
-   * @property {Number} [LEVEL_WARN=1]
-   */
-  Log.LEVEL_WARN = 1;
-  /**
-   * Static property used to define severe level.
-   * @property {Number} [LEVEL_ERROR=0]
-   */
-  Log.LEVEL_ERROR = 0;
-  
-  /**
-   * @property {Number} [LEVEL_NONE=-1]
-   * Static property used to define no logging level.
-   */
-  Log.LEVEL_NONE = -1;
-  
-  /**
-   * @static
-   * @property {Number} [MAX_LOG_LEN=10000]
-   * Static property used to limit maximum amount of logs collected.
-   */
-  Log.MAX_LOG_LEN = 10000;
-  
-  /**
-   * @property {Number} [MAX_LOG_LEN=-1]
-   * Maximum log collection limit for this instance, 
-   * default is -1, which means no limit is set.
-   */
-  Log.prototype.MAX_LOG_LEN = -1;
-  
-  var LEVEL = Log.LEVEL_NONE;
-  LEVEL = Log.LEVEL_INFO;/*D*/ // line deleted during merge
-  
-  var COLLECT_LEVEL = Log.LEVEL_NONE;
-  COLLECT_LEVEL = Log.LEVEL_FINE; /*D*/
-  
-  var COLLECT = true;
-  
-  /**
-   * Function is called by default on each framework load to check if loggin 
-   * level is set in cookie.
-   */
-  Log.setLevelFromCookie = function () {
-    var cookieLevel = qubit.Cookie.get("qubit.opentag.Log.LEVEL");
-  
-    if (cookieLevel) {
-      cookieLevel = +cookieLevel;
-      if (!isNaN(cookieLevel)) {
-        if (cookieLevel > 0) {
-          var fine = Log.LEVEL_FINE;
-          Log.setCollectLevel((cookieLevel > fine) ? cookieLevel : fine);
-          Log.setLevel(+cookieLevel);
-        }
-      }
+    function f(n) {
+        // Format integers to have at least two digits.
+        return n < 10 ? '0' + n : n;
     }
-  };
-  
-  /**
-   * Global setter to indicate if logs should be collected (memorised).
-   * Memorised logs can be print again with rePrint methods on logger instances
-   * or directly on global `Log.rePrintAll()` method.
-   * @param {Boolean} isCollecting if logs should be collected. Takes effect 
-   *  immediately.
-   */
-  Log.setCollecting = function (isCollecting) {
-    COLLECT = !!isCollecting;
-  };
-  
-  /**
-   * Getter that returns true if system is collecting logs.
-   * @returns {Boolean} true only if system is collecting logs.
-   */
-  Log.isCollecting = function () {
-    return COLLECT || Log.COLLECT;
-  };
-  
-  /**
-   * Global logger level setter.
-   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
-   */
-  Log.setLevel = function (level) {
-    LEVEL = +level;
-  };
-  
-  /**
-   * Global logger level setter.
-   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
-   */
-  Log.setCollectAndLevel = function (level) {
-    Log.setLevel(level);
-    Log.setCollectLevel(level);
-  };
-  
-  /**
-   * 
-   * `Log.getLevel()` getter/setter is used to controll globally current and 
-   * default logging levels.
-   * @returns {Number} current level, one of qubit.opentag.Log.LEVEL_* 
-   *   properties
-   */
-  Log.getLevel = function () {
-    return LEVEL;
-  };
-  
-  /**
-   * Collection level setter. One of qubit.opentag.Log.LEVEL_*.
-   * Collection level indicates which level should be used to memorise logs 
-   * so they can be printed again. See `rePrintAll()` for more details.
-   * @param {Number} level one of qubit.opentag.Log.LEVEL_* properties
-   */
-  Log.setCollectLevel = function (level) {
-    COLLECT_LEVEL =  +level;
-  };
-  
-  /**
-   * Same as `gelLevel` but the level is set agains logs collected to be 
-   * memorised for later use. See `rePrintAll()` for more details.
-   * @returns {Number} level one of qubit.opentag.Log.LEVEL_* properties
-   */
-  Log.getCollectLevel = function () {
-    return COLLECT_LEVEL;
-  };
-  
-  var collection = [];
-  
-  /**
-   * Collection of logging inputs globally.
-   * Contents for each element:
-   * 
-   * [message, styling, ifPlain, type, level]
-   * 
-   * @static
-   * @property
-   * @type Array
-   */
-  Log.logsCollection = collection;
-  
-  /**
-   * @static
-   * 
-   * Function will cause re-printing all of the logs that were collected.
-   * Collection mechanism has it's own LEVEL configuration same
-   * as plain logging in console.
-   * @param {Number} level logging LEVEL value to use
-   * @param {Number} delay delay each message by delay ms value
-   * @param {Boolean} noclean if console should not be cleared
-   * @param {Array} array alternative array of logs to be reprinted, normally
-   *   you dont need to use it unless you implement custom logs history.
-   */
-  Log.rePrintAll = function (level, delay, noClean, array) {
-    var oldLevel = LEVEL;
+
+    // PROTECTING AGAINST PROTOTYPE.JS
+    // don't rely on Date, Number, String and Boolean prototypes
     
-    if (level !== undefined) {
-      LEVEL = level;
+    // if (typeof Date.prototype.toJSON !== 'function') {
+
+    //     Date.prototype.toJSON = function (key) {
+
+    //         return isFinite(this.valueOf()) ?
+    //             this.getUTCFullYear()     + '-' +
+    //             f(this.getUTCMonth() + 1) + '-' +
+    //             f(this.getUTCDate())      + 'T' +
+    //             f(this.getUTCHours())     + ':' +
+    //             f(this.getUTCMinutes())   + ':' +
+    //             f(this.getUTCSeconds())   + 'Z' : null;
+    //     };
+
+    //     String.prototype.toJSON      =
+    //         Number.prototype.toJSON  =
+    //         Boolean.prototype.toJSON = function (key) {
+    //             return this.valueOf();
+    //         };
+    // }
+
+    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+        escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+        gap,
+        indent,
+        meta = {    // table of character substitutions
+            '\b': '\\b',
+            '\t': '\\t',
+            '\n': '\\n',
+            '\f': '\\f',
+            '\r': '\\r',
+            '"' : '\\"',
+            '\\': '\\\\'
+        },
+        rep;
+
+
+    function quote(string) {
+
+// If the string contains no control characters, no quote characters, and no
+// backslash characters, then we can safely slap some quotes around it.
+// Otherwise we must also replace the offending characters with safe escape
+// sequences.
+
+        escapable.lastIndex = 0;
+        return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
+            var c = meta[a];
+            return typeof c === 'string' ? c :
+                '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + '"' : '"' + string + '"';
     }
-    
-    try {
-      if (Log.isCollecting()) {
-        try {
-          if (!noClean) {
-            _console.clear();
-          }
-        } catch (ex) {
-          
+
+    // PROTECTION AGAINST PROTOTYPE.JS
+    // we'll use this function to stringify Date
+    function stringifyDate(key) {
+        return isFinite(key.valueOf()) ?
+            key.getUTCFullYear()     + '-' +
+            f(key.getUTCMonth() + 1) + '-' +
+            f(key.getUTCDate())      + 'T' +
+            f(key.getUTCHours())     + ':' +
+            f(key.getUTCMinutes())   + ':' +
+            f(key.getUTCSeconds())   + 'Z' : null;
+    }
+
+
+    function str(key, holder) {
+
+// Produce a string from holder[key].
+
+        var i,          // The loop counter.
+            k,          // The member key.
+            v,          // The member value.
+            length,
+            mind = gap,
+            partial,
+            value = holder[key];
+
+
+        // PROTECTION AGAINST PROTOTYPE.JS
+        // don't call value.toJSON, only specially treat Date, Number, String and Boolean
+
+// If the value has a toJSON method, call it to obtain a replacement value.
+
+        // if (value && typeof value === 'object' &&
+        //         typeof value.toJSON === 'function') {
+        //     value = value.toJSON(key);
+        // }
+
+        if (value instanceof Date) {
+            value = stringifyDate(value);
+        } else if ((value instanceof String) || (value instanceof Number) || (value instanceof Boolean)) {
+            value = value.valueOf();
         }
-        var collection = array || Log.logsCollection;
-        var counter = 0;
-        for (var i = 0; i < collection.length; i++) {
-          (function (j) {
-            var log = collection[j];
-            var logLevel = log[3];
-            if (logLevel !== undefined && LEVEL >= logLevel) {
-              counter++;
-              if (!delay) {
-                Log.print.apply(Log, log);
-              } else {
-                qubit.opentag.Timed.setTimeout(function () {
-                  if (level !== undefined) {
-                    LEVEL = level;
-                  }
-                  try {
-                    Log.print.apply(Log, log);
-                  } finally {
-                    LEVEL = oldLevel;
-                  }
-                }, counter * delay);
-              }
+
+// If we were called with a replacer function, then call the replacer to
+// obtain a replacement value.
+
+        if (typeof rep === 'function') {
+            value = rep.call(holder, key, value);
+        }
+
+// What happens next depends on the value's type.
+
+        switch (typeof value) {
+        case 'string':
+            return quote(value);
+
+        case 'number':
+
+// JSON numbers must be finite. Encode non-finite numbers as null.
+
+            return isFinite(value) ? String(value) : 'null';
+
+        case 'boolean':
+        case 'null':
+
+// If the value is a boolean or null, convert it to a string. Note:
+// typeof null does not produce 'null'. The case is included here in
+// the remote chance that this gets fixed someday.
+
+            return String(value);
+
+// If the type is 'object', we might be dealing with an object or an array or
+// null.
+
+        case 'object':
+
+// Due to a specification blunder in ECMAScript, typeof null is 'object',
+// so watch out for that case.
+
+            if (!value) {
+                return 'null';
             }
-          })(i);
+
+// Make an array to hold the partial results of stringifying this object value.
+
+            gap += indent;
+            partial = [];
+
+// Is the value an array?
+
+            if (Object.prototype.toString.apply(value) === '[object Array]') {
+
+// The value is an array. Stringify every element. Use null as a placeholder
+// for non-JSON values.
+
+                length = value.length;
+                for (i = 0; i < length; i += 1) {
+                    try {
+                      partial[i] = str(i, value) || 'null';
+                    } catch (stackExceeded) {
+                      partial[i] = "{\"stack_exceeded\": null}";
+                    }
+                }
+
+// Join all of the elements together, separated with commas, and wrap them in
+// brackets.
+
+                v = partial.length === 0 ? '[]' : gap ?
+                    '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']' :
+                    '[' + partial.join(',') + ']';
+                gap = mind;
+                return v;
+            }
+
+// If the replacer is an array, use it to select the members to be stringified.
+
+            if (rep && typeof rep === 'object') {
+                length = rep.length;
+                for (i = 0; i < length; i += 1) {
+                    if (typeof rep[i] === 'string') {
+                        k = rep[i];
+                        try {
+                          v = str(k, value);
+                        } catch (stackExceeded) {
+                          v = "{\"stack_exceeded\": null}";
+                        }
+                        if (v) {
+                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
+                        }
+                    }
+                }
+            } else {
+
+// Otherwise, iterate through all of the keys in the object.
+
+                for (k in value) {
+                    if (Object.prototype.hasOwnProperty.call(value, k)) {
+                        try{
+                          v = str(k, value);
+                        } catch (stackExceeded) {
+                          v = "{\"stack_exceeded\": null}";
+                        }
+                        if (v) {
+                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
+                        }
+                    }
+                }
+            }
+
+// Join all of the member texts together, separated with commas,
+// and wrap them in braces.
+
+            v = partial.length === 0 ? '{}' : gap ?
+                '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}' :
+                '{' + partial.join(',') + '}';
+            gap = mind;
+            return v;
         }
-      }
-    } catch (ex) {
-      // for sanity
-    } finally {
-      LEVEL = oldLevel;
     }
+
+// If the JSON object does not yet have a stringify method, give it one.
+
+    if (typeof JSON.stringify !== 'function') {
+        JSON.stringify = function (value, replacer, space) {
+
+// The stringify method takes a value and an optional replacer, and an optional
+// space parameter, and returns a JSON text. The replacer can be a function
+// that can replace values, or an array of strings that will select the keys.
+// A default replacer method can be provided. Use of the space parameter can
+// produce text that is more easily readable.
+
+            var i;
+            gap = '';
+            indent = '';
+
+// If the space parameter is a number, make an indent string containing that
+// many spaces.
+
+            if (typeof space === 'number') {
+                for (i = 0; i < space; i += 1) {
+                    indent += ' ';
+                }
+
+// If the space parameter is a string, it will be used as the indent string.
+
+            } else if (typeof space === 'string') {
+                indent = space;
+            }
+
+// If there is a replacer, it must be a function or an array.
+// Otherwise, throw an error.
+
+            rep = replacer;
+            if (replacer && typeof replacer !== 'function' &&
+                    (typeof replacer !== 'object' ||
+                    typeof replacer.length !== 'number')) {
+                throw new Error('JSON.stringify');
+            }
+
+// Make a fake root object containing our value under the key of ''.
+// Return the result of stringifying the value.
+
+            return str('', {'': value});
+        };
+    }
+
+
+// If the JSON object does not yet have a parse method, give it one.
+
+    if (typeof JSON.parse !== 'function') {
+        JSON.parse = function (text, reviver) {
+
+// The parse method takes a text and an optional reviver function, and returns
+// a JavaScript value if the text is a valid JSON text.
+
+            var j;
+
+            function walk(holder, key) {
+
+// The walk method is used to recursively walk the resulting structure so
+// that modifications can be made.
+
+                var k, v, value = holder[key];
+                if (value && typeof value === 'object') {
+                    for (k in value) {
+                        if (Object.prototype.hasOwnProperty.call(value, k)) {
+                            v = walk(value, k);
+                            if (v !== undefined) {
+                                value[k] = v;
+                            } else {
+                                delete value[k];
+                            }
+                        }
+                    }
+                }
+                return reviver.call(holder, key, value);
+            }
+
+
+// Parsing happens in four stages. In the first stage, we replace certain
+// Unicode characters with escape sequences. JavaScript handles many characters
+// incorrectly, either silently deleting them, or treating them as line endings.
+
+            text = String(text);
+            cx.lastIndex = 0;
+            if (cx.test(text)) {
+                text = text.replace(cx, function (a) {
+                    return '\\u' +
+                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+                });
+            }
+
+// In the second stage, we run the text against regular expressions that look
+// for non-JSON patterns. We are especially concerned with '()' and 'new'
+// because they can cause invocation, and '=' because it can cause mutation.
+// But just to be safe, we want to reject all unexpected forms.
+
+// We split the second stage into 4 regexp operations in order to work around
+// crippling inefficiencies in IE's and Safari's regexp engines. First we
+// replace the JSON backslash pairs with '@' (a non-JSON character). Second, we
+// replace all simple value tokens with ']' characters. Third, we delete all
+// open brackets that follow a colon or comma or that begin the text. Finally,
+// we look to see that the remaining characters are only whitespace or ']' or
+// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
+
+            if (/^[\],:{}\s]*$/
+                    .test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+                        .replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+// In the third stage we use the eval function to compile the text into a
+// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
+// in JavaScript: it can begin a block or an object literal. We wrap the text
+// in parens to eliminate the ambiguity.
+
+                j = eval('(' + text + ')');
+
+// In the optional fourth stage, we recursively walk the new structure, passing
+// each name/value pair to a reviver function for possible transformation.
+
+                return typeof reviver === 'function' ?
+                    walk({'': j}, '') : j;
+            }
+
+// If the text is not JSON parseable, then a SyntaxError is thrown.
+
+            throw new SyntaxError('JSON.parse');
+        };
+    }
+}());
+
+var q = {};
+
+
+q.html = q.html || {};
+/*UVListener package*/
+
+
+
+(function () {
+  function trim(text) {
+    return text.replace(/^\s+/, "").replace(/\s+$/, "");
+  }
+  
+  var UVListener = {
+      callbacks: {},
+      unfired_events: [],
+      early_callbacks: null,
+      currentUV: null
+    },
+    uv,
+    uvLocation = "universal_variable",
+    starterId = 0,
+    POLL_DELAY_MS = 500,
+    timer;
+
+  /*** INTERNAL FUNCTIONS ***/
+
+  UVListener._isArray = function (input) {
+    return (Object.prototype.toString.call(input) === "[object Array]");
   };
-  
-  // check if webkit or mozilla is present, for styling loos choice is fine
-  var tmp = Define.global();
-  var isStylingSupported = 
-    !!(tmp.webkitMediaStream || tmp.webkitURL || tmp.mozContact);
-  /**
-   * Use styling by default.
-   * @returns {Boolean}
-   */
-  Log.isStyleSupported = function () {
-    return isStylingSupported;
-  };
-  
-  // dummy for now
-  var altConsole = {};
-  /**
-   * 
-   * Attach console object to controll logging print method.
-   * @param {Object} xconsole
-   * @returns {Object} console attached
-   */
-  Log.setConsole = function (xconsole) {
-    _console = xconsole || altConsole;
-    return _console;
-  };
-  
-  /**
-   * @static
-   * @property Runtime property, if higher that zero, it will be delay between
-   * each of logger messages. If there is to much logs being run, slowing down
-   * may be good idea. To do it, just set this property to any milisecond value
-   * you like.
-   * @type Array
-   */
-  Log.delayPrint = -1;
-  
-  var _last_run = new Date().valueOf();
-  /*
-   * @protected
-   * Print method.
-   * Override this method if you prefer different logging output.
-   * By default all messages are redirected to console.
-   * 
-   * This method is used by all logging methods as final output.
-   * @param {String} message
-   * @param {String} style CSS style
-   * @param {String} type console['type'] call
-   * @param {Number} level number
-   */
-  Log.prototype.printMessage = function (message, style, type, level) {
-    if (Log.delayPrint > 0) {
-      var delay = Log.delayPrint;
-      var ago = _last_run - new Date().valueOf();
-      if (ago > 0) {
-        // _count_close_msgs meassures how many times print was called in
-        // lower than default scale
-        delay += ago;
+
+  // Determines if a given subelement (denoted by keyString) has changed
+  UVListener._targetChanged = function (keyString, old, newObject) {
+    var oldAsObject, oldTarget, newTarget;
+    if (newObject === null) {
+      if (old === "null") {
+        return false;
+      } else {
+        return true;
       }
-      try { // try delayed option, if package exists
-        qubit.opentag.Timed.setTimeout(function () {
-          this.print(message, style, type, level);
-        }.bind(this), delay);
-      } catch (e) {
-        setTimeout(function () {
-          this.print(message, style, type, level);
-        }.bind(this), delay);
+    } else if (newObject === undefined) {
+      if (old === newObject) {
+        return false;
+      } else {
+        return true;
       }
-      _last_run = new Date().valueOf() + delay;
     } else {
-      this.print(message, style, type, level);
+      oldAsObject = JSON.parse(old);
+      oldTarget = UVListener._getNested(oldAsObject, keyString);
+      newTarget = UVListener._getNested(newObject, keyString);
+      return !UVListener._jsonIsEqual(oldTarget, newTarget);
     }
   };
-  
-  /**
-   * Instance print method.
-   * @param {String} message
-   * @param {String} style CSS style
-   * @param {String} type console['type'] call
-   * @param {Number} level number
-   */
-  Log.prototype.print = function (message, style, type, level) {
-    Log.print(message, style, type, level);
+
+  // Go through all the things that have been pushed 
+  // before the API has loaded
+  UVListener._processCallbacks = function () {
+    var i;
+    if (UVListener.early_callbacks && UVListener.early_callbacks.length > 0) {
+      for (i = 0; i < UVListener.early_callbacks.length; i += 1) {
+        UVListener.push(UVListener.early_callbacks[i]);
+      }
+      UVListener.early_callbacks = null;
+    }
   };
-  
-  /**
-   * @static
-   * Static log print method.
-   * @param {String} message
-   * @param {String} style CSS style
-   * @param {String} type console[<type>] call
-   * @param {Number} level number
-   */
-  Log.print = function (message, style, type, level) {
-    // pre-eliminary step
-    if (level !== undefined && LEVEL < level) {
+
+  // Get all the keys out of a string in an array format
+  UVListener._keyStringToArr = function (keyString) {
+    keyString = trim(keyString);
+    if (keyString === "") {
+      return [];
+    } else {
+      // convert indexes to properties
+      keyString = keyString.replace(/\[(\w+)\]/g, ".$1");
+      // strip a leading dot
+      keyString = keyString.replace(/^\./, ""); 
+      return keyString.split(".");
+    }
+  };
+
+  // Get the value of a nested thing in an object.
+  // e.g. UVListener._getNested(universal_variable, "transaction.total")
+  UVListener._getNested = function (object, keyString) {
+    var arr = UVListener._keyStringToArr(keyString),
+      n;
+    while (arr.length > 0) {
+      n = arr.shift();
+      if (object.hasOwnProperty(n)) {
+        object = object[n];
+      } else {
+        return;
+      }
+    }
+    return object;
+  };
+
+  // Compare the two arguments using JSON.stringify
+  UVListener._jsonIsEqual = function (obj1, obj2) {
+    if (typeof obj1 !== "string") {
+      obj1 = JSON.stringify(obj1, UVListener._stripEvents);
+    }
+    if (typeof obj2 !== "string") {
+      obj2 = JSON.stringify(obj2, UVListener._stripEvents);
+    }
+    return obj1 === obj2;
+  };
+
+  // Causes JSON.stringify to skip the events object, if passed as the second
+  // argument: JSON.stringify(object, UVListener._stripEvents)
+  UVListener._stripEvents = function (key, value) {
+    if (key !== "events") {
+      return value;
+    } else {
+      return undefined;
+    }
+  };
+
+  UVListener._on = function (type, func) {
+    var typeArray, key;
+    // Separate type from keyString
+    typeArray = type.split(":");
+    type = typeArray[0];
+    key = typeArray[1];
+    UVListener.callbacks[type] = UVListener.callbacks[type] || [];
+    // Include keyString in the callback object (if specified)
+    if (key) {
+      UVListener.callbacks[type].push({
+        keyString: key,
+        func: func
+      });
+    } else {
+      UVListener.callbacks[type].push({
+        func: func
+      });
+    }
+  };
+
+  UVListener._trigger = function (type, data) {
+    var i, keyString;
+    // Are there any callbacks which might be relevant?
+    if (UVListener.callbacks[type]) {
+      // Loop through all potentially relevant callbacks
+      for (i = 0; i < UVListener.callbacks[type].length; i += 1) {
+        // Make sure the callback has a function we can use
+        if (typeof UVListener.callbacks[type][i].func === "function") {
+          // Determine if there's an associated keyString
+          keyString = UVListener.callbacks[type][i].keyString;
+          if (keyString) {
+            // Handle the keyString if we know how
+            if (type === "change" && 
+                UVListener._targetChanged(keyString, UVListener.currentUV, uv)) {
+              UVListener.callbacks[type][i].func(data);
+            } // Place logic for other types which use keyStrings here.
+          // If there's no keyString, just callback 
+          } else {
+            UVListener.callbacks[type][i].func(data);
+          }
+        } 
+      }
+    }
+  };
+
+  // Modified push function for uv.events array
+  UVListener._eventsPush = function (evt) {
+    var i, ii;
+    uv.events[uv.events.length] = evt;
+    evt.time = evt.time || (new Date()).getTime();
+    if (UVListener.callbacks.event) {
+      i = 0; ii = UVListener.callbacks.event.length;
+      for (i; i < ii; i += 1) {
+        UVListener.callbacks.event[i].func(evt);
+      }
+    }
+    evt.has_fired = true;
+  };
+
+  UVListener._getUnfiredEvents = function () {
+    var i = 0;
+    for (i = 0; i < uv.events.length; i += 1) {
+      if (!uv.events[i].has_fired) {
+        // Event hasn't fired, re-insert it now that push is redefined.
+        UVListener.unfired_events.push(uv.events.splice(i, 1)[0]);
+        i -= 1; // The remaining events have shifted backward.
+      }
+    }
+  };
+
+  UVListener._fireEvents = function () {
+    while (UVListener.unfired_events.length > 0) {
+      uv.events.push(UVListener.unfired_events.shift());
+    }
+  };
+
+  UVListener._resetEventsPush = function () {
+    uv.events = uv.events || [];
+    if (uv.events.push.toString().indexOf("[native code]") !== -1) {
+      uv.events.push = UVListener._eventsPush;
+      UVListener._getUnfiredEvents();
+      UVListener._fireEvents();
+    }
+  };
+
+  UVListener._checkForChanges = function () {
+    // Only check if we actually have some callbacks registered
+    if (UVListener.callbacks.change && UVListener.callbacks.change.length > 0) {
+      if (!UVListener._jsonIsEqual(UVListener.currentUV, uv)) {
+        // If UV changed, trigger "change" callbacks.
+        UVListener._trigger("change", uv);
+        // After triggering, log the new UV as current.
+        UVListener.currentUV = JSON.stringify(uv, UVListener._stripEvents);
+      }
+    }
+  };
+
+  UVListener._setUVLocation = function (newLoc) {
+    uvLocation = newLoc;
+    UVListener._initUV();
+  };
+
+  UVListener._initUV = function () {
+    window[uvLocation] = window[uvLocation] || {
+      events: []
+    };
+    uv = window[uvLocation];
+    if (!uv.events) {
+      uv.events = [];
+    }
+  };
+
+  /*** INTENDED API ***/
+
+  /* USAGE
+    Change listening:
+
+    Fire a callback function on any change to UV:
+      window.uv_listener.push(["on", "change", callback]);
+
+    Fire a callback function on any change to specific part of UV:
+      window.uv_listener.push(["on", "change:keyString", callback])
+    where "keyString" is a property path within the UV. For example:
+      "change:transaction" will fire if the transaction object is changed
+      "change:basket.line_items.length" will fire if products are added to ore
+        removed from the basket
+
+    Event listening:
+      window.uv_listener.push(["on", "event", callback])
+    Note that the callback is expected to take an argument (the event object)
+      and also do the processing to determine if the event is relevant.
+  */
+
+  UVListener.push = function (data) {
+    if (!UVListener._isArray(data)) {
       return;
     }
-    try {
-      if (_console && _console.log) {
-        if (style && Log.isStyleSupported()){
-          if (type && _console[type]) {
-            _console[type]("%c" + message, style);
-          } else {
-            _console.log("%c" + message, style);
-          }
-        } else {
-          if (type && _console[type]) {
-            _console[type](message);
-          } else {
-            _console.log(message);
-          }
-        }
-      }
-    } catch (ex) {
-      // swollow...
+    if (data[0] === "on") {
+      UVListener._on(data[1], data[2]);
+    } else if (data[0] === "trigger" && data[1]) {
+      UVListener._trigger(data[1]);
     }
-  };
-  
-  /**
-   * Collector function for log class.
-   * This function manages logs collection process.
-   * @protected
-   * @param {Array} toPrint array to print
-   * @param {Number} level
-   * @returns {Array}
-   */
-  Log.prototype.collect = function (toPrint, level) {
-    if (level === undefined) {
-      level = Log.getCollectLevel();
-    }
-    
-    var collected = false;
-    var collectingGlobally = (this.collectLogs && Log.isCollecting() &&
-      (Log.getCollectLevel() >= +level));
-    
-    if (collectingGlobally) {
-      collection.push(toPrint);
-      collected = true;
-    }
-    
-    if (this.collectLocally && collectingGlobally) {
-      this.collection.push(toPrint);
-      collected = true;
-    }
-    
-    if (Log.MAX_LOG_LEN > 0) {
-      if (collection.length > Log.MAX_LOG_LEN) {
-        collection.splice(0, collection.length - Log.MAX_LOG_LEN);
-      }
-    }
-    
-    if (Log.MAX_LOG_LEN > 0 || this.MAX_LOG_LEN > 0) {
-      var len = Log.MAX_LOG_LEN;
-      if (this.MAX_LOG_LEN > 0) {
-        len = this.MAX_LOG_LEN;
-      }
-      if (this.collection.length > len) {
-        this.collection.splice(0, this.collection.length - len);
-      }
-    }
-    
-    return collected ? toPrint : null;
-  };
-  
-  /**
-   * Clears console and the logs collection.
-   */
-  Log.clearAllLogs = function () {
-    try {
-      _console.clear();
-    } catch (e) {
-    } finally {
-      collection.splice(0, collection.length);
-    }
-  };
-  
-  /**
-   * @static
-   * Returns logs collection set filtered by level. Utility function.
-   * @param {Number} level One of Log.LEVEL_* values.
-   * @param {Array} altCollection alternatrie collection source
-   * @returns {Array}
-   */
-  Log.getCollectedByLevel = function (level, altCollection) {
-    altCollection = altCollection || collection;
-    var results = [];
-    for (var i = 0; i < altCollection.length; i++) {
-      var log = altCollection[i];
-      var msg = log[0];
-      var lvl = msg[4];
-      if (lvl === level) {
-        results.push(log);
-      }
-    }
-    return results;
   };
 
+  /*** INITIALIZATION ***/
 
-  /**
-   * Re-printing function for all instance log.
-   * @param {Number} level logging level to apply
-   * @param {Number} delay delay metween messages (in ms)
-   * @param {Boolean} clean Clear the console before re-print
-   */
-  Log.prototype.rePrint = function (level, delay, clean) {
-    Log.rePrintAll(level, delay, !clean, this.collection);
-  };
-
-  /**
-   * @private
-   * 
-   * Logger function, this is strictly private function that manages logging
-   * process.
-   * 
-   * @param {qubit.opentag.Log} log
-   * @param {String} prefix
-   * @param {String} type console[type]
-   * @param {String} message
-   * @param {Boolean} plain if just a plain output of console
-   * @param {Boolean} style optional styling
-   * @param {String} plainStyle CSS styling string
-   * @param {Number} level
-   */
-  function logger(log, prefix, type, message, plain, style, plainStyle, level) {
-    var toPrint;
-    var pass = LEVEL >= level;
-    if (Log.getCollectLevel() >= 0 || pass) {
-      if (plain) {
-        toPrint = [message, plainStyle, type];
-      } else {
-        toPrint = [
-          prefix + log.getPrefix() + message,
-          style,
-          type
-        ];
+  UVListener.init = function (testing, uvLoc) {
+    if (uvLoc) {
+      uvLocation = uvLoc;
+    }
+    UVListener._initUV();
+    // Hold onto anything pushed to uv_listener before initialization
+    // This is a little awkward now that the desired uv_listener is an object
+    if (!window.uv_listener || UVListener._isArray(window.uv_listener)) {
+      // Store the current uv_listener if the old is an array
+      UVListener.early_callbacks = window.uv_listener || null;
+      window.uv_listener = UVListener;
+      if (!testing) {
+        UVListener.start();
       }
-      toPrint[3] = level;
-      log.collect(toPrint, level);
-      if (pass) {
-        log.printMessage.apply(log, toPrint);
+    } else {
+      if (uvLoc) {
+        // If init is called with a specified location, ensure we're using that
+        // This is necessary because typically qTracker will come second,
+        // and it would not actually update window.UVListener, but it's also the
+        // place where we tend to set custom locations.
+        window.uv_listener._setUVLocation(uvLocation);
       }
     }
-  }
-  
-  // it is important it is not in one line. New build will strip logs for release
-  /**
-   * @method
-   * Finest level logging function.
-   * 
-   * @param {String} message Message to be logged.
-   * @param {Boolean} plain If true, message object will be logged as plain as 
-   *    passed directly to console. It's usefull if your console supports JSON 
-   *    style browsing objects.
-   */
-  Log.prototype.
-    FINEST = function (message, plain) {
-      logger (this, "FINEST: ", false, message, plain, "color:#CCCCCC;", false,
-        Log.LEVEL_FINEST);
-    };
     
-  /**
-   * @method
-   * Fine level logging function.
-   * 
-   * @param {String} message Message to be logged.
-   * @param {Boolean} plain If true, message object will be logged as plain as 
-   *    passed directly to console. It's usefull if your console supports JSON 
-   *    style browsing objects.
-   */
-  Log.prototype.
-    FINE = function (message, plain) {
-      logger (this, "FINE: ", false, message, plain, "color:#999999;", false,
-        Log.LEVEL_FINE);
-    };
-  
-  /**
-   * @method
-   * Information level logging function.
-   * 
-   * @param {String} message Message to be logged.
-   * @param {Boolean} plain If true, message object will be logged as plain as 
-   *    passed directly to console. It's usefull if your console supports JSON 
-   *    style browsing objects.
-   * @param style {String} CSS styling - inline.
-   */
-  Log.prototype.
-    INFO = function (message, plain, style) {
-      logger (this, "INFO: ", "info", message, plain, style, style,
-        Log.LEVEL_INFO);
-    };
-  
-  /**
-   * @method
-   * Severe/Error level logging function.
-   * 
-   * @param {String} message Message to be logged.
-   * @param {Boolean} plain If true, message object will be logged as plain as 
-   *    passed directly to console. It's usefull if your console supports JSON 
-   *    style browsing objects.
-   */
-  Log.prototype.
-    WARN = function (message, plain) {
-      logger (this, "WARN: ", "warn", message, plain, "color:#26A110;", false,
-        Log.LEVEL_WARN);
-    };
+  };
+
+  UVListener.start = function () {
+    // Store a dump of the current UV
+    UVListener.currentUV = JSON.stringify(uv, UVListener._stripEvents);
+
+    // Begin polling
+    timer = setInterval(function () {
+      UVListener._initUV();
+      UVListener._resetEventsPush();
+      UVListener._checkForChanges();
+    }, POLL_DELAY_MS);
     
-  /**
-   * @method
-   * Severe/Error level logging function.
-   * 
-   * @param {String} message Message to be logged.
-   * @param {Boolean} plain If true, message object will be logged as plain as 
-   *    passed directly to console. It's usefull if your console supports JSON 
-   *    style browsing objects.
-   */
-  Log.prototype.
-    ERROR = function (message, plain) {
-      logger(this, "ERROR: ", "error", message, plain, "color:red;", false,
-        Log.LEVEL_ERROR);
-    };
-    
-  Log.setConsole(Define.global().console);
-  Log.setLevelFromCookie();
-   
+    // Process things added before the API loads
+    UVListener._processCallbacks();
+  };
+
+  q.html.UVListener = UVListener;
 }());
 
 
@@ -2630,11 +3466,6 @@ var UNDEF;
   };
 
 })();
-
-var q = {};
-
-
-q.html = q.html || {};
 
 
 q.html.fileLoader = {};
@@ -4814,12 +5645,637 @@ q.html.HtmlInjector.getAttributes = function (node) {
     return val;
   };
 }());
+
+
+
+/*
+ * TagSDK, a tag development platform
+ * Copyright 2013-2016, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+ */
+
+(function () {
+
+  /**
+   * #UniversalVariable type variable class.
+   * 
+   * This class controlls how expression based page variables are executed
+   * and parsed. It will detect universal variable "arrays" objects with hash
+   * notation. It also provides all utilities to deal with expressions defined
+   * as a `uv` properties on parameter objects in tag configuration.
+   * In typical scenarion this class wil evaluate strings passed as values and
+   * return the value via `getValue`.
+   * 
+   * 
+   * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+   * 
+   * @class qubit.opentag.pagevariable.UniversalVariable
+   * @extends qubit.opentag.pagevariable.Expression
+   * @param config {Object} config object used to build instance
+   */
+  function UniversalVariable(config) {
+    UniversalVariable.SUPER.apply(this, arguments);
+  }
+  
+  qubit.Define.clazz(
+          "qubit.opentag.pagevariable.UniversalVariable",
+          UniversalVariable,
+          qubit.opentag.pagevariable.Expression);
+}());
+(function exportUv () {
+  /**
+   * Export the api to window.uv unless required as a commonjs module.
+   */
+  if (typeof module === 'object' && module.exports) {
+    module.exports = createUv
+  } else if (window && window.uv === undefined) {
+    window.uv = createUv()
+  }
+
+  function createUv () {
+    /**
+     * Used to prevent recursive event calling.
+     *
+     * @type {Array}
+     */
+    var eventQueue = []
+    var callingHandlers = 0
+
+    /**
+     * Simple log class
+     *
+     * @type {Object}
+     */
+    var log = {
+      info: function logInfo () {
+        if (log.level > logLevel.INFO) return
+        if (console && console.info) {
+          console.info.apply(console, arguments)
+        }
+      },
+      error: function logError () {
+        if (log.level > logLevel.ERROR) return
+        if (console && console.error) {
+          console.error.apply(console, arguments)
+        }
+      }
+    }
+
+    logLevel.ALL = 0
+    logLevel.INFO = 1
+    logLevel.ERROR = 2
+    logLevel.OFF = 3
+
+    logLevel(logLevel.ERROR)
+
+    /**
+     * Creates the uv object with empty
+     * events and listeners arrays.
+     *
+     * @type {Object}
+     */
+    var uv = {
+      on: on,
+      emit: emit,
+      once: once,
+      events: [],
+      listeners: [],
+      logLevel: logLevel
+    }
+
+    return uv
+
+    /**
+     * Sets the log level for the API.
+     *
+     * @param  {Number} level   Should be one of the constants
+     *                          set on the logLevel function.
+     */
+    function logLevel (level) {
+      log.level = level
+    }
+
+    /**
+     * Pushes an event to the events array and triggers any handlers for that event
+     * type, passing the data to that handler. Clones the data to prevent side effects.
+     *
+     * @param {String} type  The type of event.
+     * @param {Object} event The data associated with the event.
+     */
+    function emit (type, event) {
+      log.info(type, 'event emitted')
+
+      event = clone(event || {})
+      event.meta = event.meta || {}
+      event.meta.type = type
+
+      eventQueue.push(event)
+      processNextEvent()
+
+      /**
+       * Remove disposed listeners
+       * to prevent memory leak.
+       */
+      uv.listeners = filter(uv.listeners, function (l) {
+        return !l.disposed
+      })
+    }
+
+    /**
+     * Attaches an event handler to listen to the type of event specified.
+     *
+     * @param   {String|Regex} type         The type of event.
+     * @param   {Function}     callback     The callback called when the event occurs.
+     * @param   {Object}       context      The context that will be applied to the
+     *                                      callback (optional).
+     *
+     * @returns {Object}                    A subscription object that
+     *                                      returns a dispose method.
+     */
+    function on (type, callback, context) {
+      log.info('Attaching event handler for', type)
+
+      var listener = {
+        type: type,
+        callback: callback,
+        disposed: false,
+        context: context || window
+      }
+      uv.listeners.push(listener)
+
+      var subscription = {
+        replay: replay,
+        dispose: dispose
+      }
+      return subscription
+
+      function replay () {
+        log.info('Replaying events')
+        queueEmittedEvents(function () {
+          forEach(uv.events, function (event) {
+            if (listener.disposed) return
+            if (!matches(type, event.meta.type)) return
+            callback.call(context, event)
+          })
+        })
+        return subscription
+      }
+
+      function dispose () {
+        log.info('Disposing event handler')
+        listener.disposed = true
+        return subscription
+      }
+    }
+
+    /**
+     * Prevents emitted events from being
+     * processed until fn finishes.
+     *
+     * @param  {Function} fn
+     */
+    function queueEmittedEvents (fn) {
+      log.info('Calling event handlers')
+      callingHandlers++
+      try { fn() } catch (e) {
+        log.error('UV API Error', e.stack)
+      }
+      callingHandlers--
+      processNextEvent()
+    }
+
+    /**
+     * Processes the next event on the
+     * eventQueue.
+     */
+    function processNextEvent () {
+      if (eventQueue.length === 0) {
+        log.info('No more events to process')
+      }
+
+      if (eventQueue.length > 0 && callingHandlers > 0) {
+        log.info('Event will be processed later')
+      }
+
+      if (eventQueue.length > 0 && callingHandlers === 0) {
+        log.info('Processing event')
+
+        var event = eventQueue.shift()
+        uv.events.push(event)
+        queueEmittedEvents(function () {
+          forEach(uv.listeners, function (listener) {
+            if (listener.disposed) return
+            if (!matches(listener.type, event.meta.type)) return
+            try {
+              listener.callback.call(listener.context, event)
+            } catch (e) {
+              log.error('Error emitting UV event', e.stack)
+            }
+          })
+        })
+      }
+    }
+
+    /**
+     * Attaches an event handler to listen to the type of event specified.
+     * The handle will only be executed once.
+     *
+     * @param   {String|Regex} type     The type of event.
+     * @param   {Function}     callback The callback called when the event occurs.
+     * @param   {Object}       context  The context that will be applied
+     *                                  to the callback (optional).
+     *
+     * @returns {Object}                A subscription object which can off the
+     *                                  handler using the dispose method.
+     */
+    function once (type, callback, context) {
+      var subscription = uv.on(type, function () {
+        callback.apply(context || window, arguments)
+        subscription.dispose()
+      })
+      return subscription
+    }
+
+    /**
+     * Iterate over each item in an array.
+     *
+     * @param  {Array} list
+     * @param  {Function} iterator
+     */
+    function forEach (list, iterator) {
+      var length = list.length
+      for (var i = 0; i < length; i++) {
+        iterator(list[i], i)
+      }
+    }
+
+    /**
+     * Returns a shallow clone of the input
+     * object.
+     * @param  {Object} input
+     *
+     * @return {Object}
+     */
+    function clone (input) {
+      var output = {}
+      for (var key in input) {
+        if (input.hasOwnProperty(key)) {
+          output[key] = input[key]
+        }
+      }
+      return output
+    }
+
+    /**
+     * Returns true if the test string matches
+     * the subject or the test regex matches the subject.
+     * @param  {String|Regex} test
+     * @param  {String}       subject
+     *
+     * @return {Boolean}
+     */
+    function matches (test, subject) {
+      return typeof test === 'string' ? test === subject : test.test(subject)
+    }
+
+    /**
+     * Returns a new array containing the items in
+     * array for which predicate returns true.
+     * @param  {Array}   list
+     * @param  {Function} iterator
+     *
+     * @return {Array}
+     */
+    function filter (list, iterator) {
+      var l = list.length
+      var output = []
+      for (var i = 0; i < l; i++) {
+        if (iterator(list[i])) output.push(list[i])
+      }
+      return output
+    }
+  }
+}())
+/* global qubit */
+
+
+
+
+
+/*
+ * Opentag, a tag deployment platform.
+ * Copyright (C) 2011-2016, Qubit.com
+ * All rights reserved.
+ * 
+ * @author peter.fronc@qubit.com
+ */
+
+var allEventsByType = {};
+var unqueuedEvents = [];
+
+var inititated = false;
+var inititatedSuccessfully = false;
+
+var global = qubit.Define.global();
+
+function getUV() {
+  return global.uv;
+}
+
+function initiate() {
+  var uv = getUV();
+  
+  if (!uv || !uv.emit) {
+    return false;
+  }
+  
+  if (!inititated) {
+    inititated = true;
+    
+    // bring back any awaiting events
+    for (var i = 0; i < unqueuedEvents.length; i++) {
+      var tmp = unqueuedEvents[i];
+      if (tmp.on) {
+        uv.on.apply(uv, tmp.on);
+      } else if (tmp.emit) {
+        uv.emit.apply(uv, tmp.emit);
+      }
+    }
+    
+    uv.on(/.*/, function (event) {
+      var type = event.meta.type;
+      var obj = allEventsByType[type];
+
+      if (!obj) {
+        allEventsByType[type] = {current: event, history: [event]};
+      } else {
+        obj.current = event;
+        obj.history.push(event);
+      }
+    }).replay();
+    
+    inititatedSuccessfully = true;
+  }
+  
+  return true;
+}
+
+var PubSub = {
+  
+  allEventsByType: allEventsByType,
+  
+  
+  subscribe: function (eventName, callback) {
+    if (inititatedSuccessfully) {
+      var uv = getUV();
+      uv.on(eventName, callback);
+    } else {
+      unqueuedEvents.push({on: [eventName, callback]});
+    }
+  },
+  
+  getEventHistory: function (name) {
+    return this.allEventsByType[name];
+  },
+  
+  /**
+   * QProtocol event emmiter wrapper for opentag.
+   * 
+   * Always use this API to emit qprotocol events if you use opentag and not
+   * uv-api directly.
+   * 
+   * @param {String} eventName event.meta.type used in qprotocol.
+   * @param {Object} event Obect that will be dispatched.
+   */
+  publish: function (eventName, event) {
+    if (inititatedSuccessfully) {
+      var uv = getUV();
+      uv.emit(eventName, event);
+    } else {
+      unqueuedEvents.push({emit: [eventName, event]});
+    }
+  },
+  
+  /**
+   * 
+   * This is the function that enables the QProtocol wiring for opentag.
+   * It is run immediately after this class declaration.
+   */
+  connect: function () {
+    initiate();
+  }
+};
+
+// initialize the PubSub, later on the uv-api may not be added into opentag
+// and therefore excluded
+PubSub.connect();
+
+qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
+
+
+
+
+
+
+
+/*
+ * TagSDK, a tag development platform
+ * Copyright 2013-2016, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+ */
+
+(function () {
+  
+  var PubSub = qubit.qprotocol.PubSub;
+  var Utils = qubit.opentag.Utils;
+  var DELIMITER = ":";
+
+  /**
+   * #QProtocolVariable type variable class.
+   * 
+   * This is a page variable that makes it easy to read and listen to incoming
+   * qprotocol events. 
+   * 
+   * QProtocol does support value changed event handlers and handlers can be 
+   * added using `this.onValueChanged(callback)` function. 
+   * Callback will receive oldValue and variable instance reference as 
+   * parameters.
+   * 
+   * Example:
+   * 
+   * 
+   *     varRef.onValueChanged(function(oldValue, variableRef){
+   *       console.log(variableRef.getValue() !== oldValue); // true
+   *     });
+   * 
+   * 
+   * 
+   * See properties to check on configuration options.
+   * 
+   * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+   * 
+   * @class qubit.opentag.pagevariable.QProtocolVariable
+   * @extends qubit.opentag.pagevariable.BaseVariable
+   * @param config {Object} config object used to build instance
+   */
+  function QProtocolVariable(config) {
+    QProtocolVariable.SUPER.apply(this, arguments);
+  }
+  
+  qubit.Define.clazz(
+          "qubit.opentag.pagevariable.QProtocolVariable",
+          QProtocolVariable,
+          qubit.opentag.pagevariable.BaseVariable);
+  
+  /**
+   * Init function is called by `getValue()`
+   */
+  QProtocolVariable.prototype.init = function () {
+    if (this.initialized) {
+      return false;
+    } else {
+      // mark first use
+      this.initialized = new Date().valueOf();
+    }
+    
+    this.callHandlersOnRead = true;
+    
+    /**
+     * Event name that this variable listens to. 
+     * Its the `meta.type` property in qprotocol event object.
+     * 
+     * Value can also contain optional object path that will be accessed.
+     * 
+     * Path property indicates which event object child should be
+     * used as this variable output value (normally event object is).
+     * 
+     * It may be usefult to not to have to check long object paths when
+     * accessing directly event (eq. code like: `a && a.b && a.b.c && a.b.c.d` to
+     * access `a.b.c.d` only).
+     * 
+     * Example: 
+     * 
+     * uv.variable.in.event@my.event.name
+     * 
+     * reference.     * 
+     * @property {String} value - event name (event.meta.type)
+     */
+    
+    if (!this.handlerAttached) {
+      var _this = this;
+      
+      var result = this.getValueAndPath(this.value);
+      
+      this.eventName = result[0];
+      this.objectPath = result[1];
+      
+      this.updateValue();
+      
+      PubSub.subscribe(this.eventName, function (event) {
+        _this.updateValue(event);
+      });
+      
+      this.handlerAttached = new Date().valueOf();
+    }
+  };
+  
+  QProtocolVariable.prototype.getValueAndPath = function (value) {
+    var eventName = value;
+    var opath;
+
+    if (eventName) {
+      var idx = value.indexOf(DELIMITER);
+      if (idx !== -1) {
+        eventName = value.substring(0, idx);
+        opath = value.substring(idx + 1);
+      }
+    }
+
+    return [eventName, opath];
+  };
+  
+  QProtocolVariable.prototype.getValue = function () {
+    this.init();
+    return this.currentValue;
+  };
+  
+  /**
+   * Function returns event hitory object that contains following properties:
+   * - `current` property, pointing to most recent qprotocol event that this 
+   *    page variable listens to.
+   * - `history` property that points to array containing all events that 
+   *    were published.
+   * 
+   * In general:
+   * ```
+   *     this.getEventsHistory().current === this.getEventsHistory().history[0]
+   * ```
+   * 
+   * @returns {Object} event history object.
+   */
+  QProtocolVariable.prototype.getEventsHistory = function () {
+    return PubSub.getEventHistory(this.eventName);
+  };
+  
+  /**
+   * Function is a worker used to update current variable state.
+   * 
+   * It is possible to overload/reimplement this method where necessary.
+   * 
+   * Normaqlly it updates current value when new event is incoming 
+   * from uv-api.
+   * 
+   * This function is used directly by
+   * @param {Object} event optional event.
+   * @returns {Object} the current value.
+   */
+  QProtocolVariable.prototype.updateValue = function (event) {
+    if (!event) {
+      var history = this.getEventsHistory();
+      if (history) {
+        event = history.current;
+      }
+    }
+    
+    var newValue;
+    var opath = this.objectPath;
+    
+    if (event && opath) {
+      newValue = Utils.getObjectUsingPath(opath, event);
+    } else {
+      newValue = event;
+    }
+
+    this._updateCurrentValue(newValue);
+    
+    return newValue;
+  };
+  
+  /**
+   * Disabled for QProtocol - qprotocol handles event by itself.
+   */
+  QProtocolVariable.prototype.startObservingForChanges = function () {
+    // this variable manages itself all updates
+  };
+  
+  /**
+   * Disabled for QProtocol - qprotocol handles event by itself.
+   */
+  QProtocolVariable.prototype.stopObservingForChanges = function () {
+    // this variable manages itself all updates
+  };
+  
+}());
 /*
  * TagSDK, a tag development platform
  * Copyright 2013-2016, Qubit Group
  * http://opentag.qubitproducts.com
  * @author Piotr (Peter) Fronc <peter.fronc@qubitproducts.com>
  */
+
+
 
 
 
@@ -7141,6 +8597,9 @@ q.html.HtmlInjector.getAttributes = function (node) {
 
 
 
+
+/* global GLOBAL, EMPTY_FUN */
+
 /*
  * TagSDK, a tag development platform
  * Copyright 2013-2016, Qubit Group
@@ -7296,6 +8755,13 @@ q.html.HtmlInjector.getAttributes = function (node) {
     this.namedVariables = {};
     
     /**
+     * @protected
+     * Tag runtime markers space.
+     * @property Object
+     */
+    this._runtimeMarkers = {};
+    
+    /**
      * Parameters array. Parasmeters are a plain objects containing:
      * 
      * `name` property, indicating parameter's name.
@@ -7326,6 +8792,16 @@ q.html.HtmlInjector.getAttributes = function (node) {
      * @property {qubit.opentag.Session}
      */
     this.session = null;
+    
+    /**
+     * @readonly
+     * Array of containers owning this tag. Its very unusual for this 
+     * array to be larger than 1. Normally tag is registered with one container 
+     * only. This array is managed by container instance and should never been 
+     * changed directly. To unregister tag from container - use container api.
+     * @property Array of {qubit.opentag.Container}
+     */
+    this.owningContainers = [];
     
     /**
      * Idicates if tag stats has been submitted.
@@ -7971,6 +9447,7 @@ q.html.HtmlInjector.getAttributes = function (node) {
    * Function adding variables map with namespace provided - worker function.
    * 
    * @param {type} map
+   * @param {type} ns
    * @returns {undefined}
    */
   BaseTag.prototype._addVariablesMap = function (map, ns) {
@@ -8862,6 +10339,390 @@ q.html.HtmlInjector.getAttributes = function (node) {
 
 
 
+/*
+ * TagSDK, a tag development platform
+ * Copyright 2013-2016, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+ */
+
+(function () {
+  var Utils = qubit.opentag.Utils;
+  var Define = qubit.Define;
+  
+  /**
+   * #Library tag instance class.
+   * This class is ment to be extended and used as a Tag Library base 
+   * class.
+   * 
+   * Please see [Start Guide](#!/guide/getting_started)
+   * and [Creating Library (Advanced)](#!/guide/creating_library)
+   *
+   * Please see 
+   *  
+   * @class qubit.opentag.LibraryTag
+   * @extends qubit.opentag.BaseTag
+   * @param config {Object} config object used to build instance
+   */
+  function LibraryTag(config) {
+    
+    Utils.setIfUnset(config, LibraryTag.defaultConfig);
+    
+    if (this.singleton) {
+      var path = this.PACKAGE_NAME  + "." + this.CLASS_NAME;
+      var zuper = qubit.opentag.Utils.getObjectUsingPath(path, PKG_ROOT);
+      if (zuper.__instance) {
+        zuper.__instance.log.FINEST("Returning singleton instance.");/*L*/
+        return zuper.__instance;
+      }
+      zuper.__instance = this;
+    }
+    
+    LibraryTag.SUPER.call(this, config); 
+  }
+  
+  qubit.Define.clazz(
+          "qubit.opentag.LibraryTag",
+          LibraryTag,
+          qubit.opentag.BaseTag);
+  
+  /**
+   * @static
+   * Default configuration object.
+   * @property {Object}
+   */
+  LibraryTag.defaultConfig = {
+    /*DATA*/
+    /**
+     * Optional, vendor's name.
+     * @cfg {String} [vendor=null]
+     */
+    vendor: null,
+    /**
+     * Optional, image URL for library tag this.log. icon.
+     * Image should be an 64x64 pixel sized.
+     * @cfg {String} [imageUrl=null]
+     */
+    imageUrl: null,
+    /**
+     * Library description..
+     * @cfg {String} [description="Provide description."]
+     */
+    description: "",
+    /**
+     * Is library asynchoronous?
+     * @cfg {String} [async=true]
+     */
+    async: false,
+    /**
+     * Is this a private library? Not published.
+     * @cfg {Boolean} [isPrivate=false]
+     */
+    isPrivate: false,
+    /**
+     * Library can be notified for version upgrades.
+     * @cfg {Boolean} [upgradeable=true]
+     */
+    upgradeable: true,
+    /**
+     * HTML content to be appended to the page body
+     * @cfg {String} [html=null]
+     */
+    html: "",
+    /**
+     * Parameters object.
+     * @cfg {String} [parameters=null]
+     */
+    parameters: [
+    ],
+    /**
+     * @protected
+     * Compatibility property used internally. It causes running pre post bodies
+     * in a window scope - it is recommended to always run them in normal scope.
+     * This property is mostly used with old tags that were run in window scope.
+     * @cfg {Boolean} [prePostWindowScope=false]
+     */
+    prePostWindowScope: false
+  };
+  
+  /**
+   * @event 
+   */
+  LibraryTag.prototype.pre = function () {
+    this.log.FINEST("emtpy pre called");/*L*/
+  };
+  
+  /**
+   * 
+   * @event
+   */
+  LibraryTag.prototype.post = function () {
+    this.log.FINEST("emtpy post called");/*L*/
+  };
+  
+  function extractAndEvalFunctionBody(fun, tag) {
+    var expr = fun.toString();
+    expr = expr.replace(/\s*function\s*\([\w\s,_\d\$]*\)\s*\{/, "");
+    expr = expr.substring(0, expr.lastIndexOf("}"));
+    
+    // ""+_this.val...'
+    expr = expr.replace(
+      /(["']\s*\+\s*)\s*_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'\s*\)/g,
+      "$1\"${$2}\"");
+    expr = expr.replace(
+      /\s*_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'\s*\)(\s*\+\s*["'])/g,
+      "\"${$1}\"$2");
+    
+    // ""+_this.val..."
+    expr = expr.replace(
+      /(["']\s*\+\s*)\s*_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"\s*\)/g,
+      "$1\"${$2}\"");
+    expr = expr.replace(
+      /\s*_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"\s*\)(\s*\+\s*["'])/g,
+      "\"${$1}\"$2");
+    
+    // _this.val..."'
+    expr = expr.replace(
+      /(\s*)_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'(\s*)\)/g,
+      "$1${$2}$3");
+    expr = expr.replace(
+      /(\s*)_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"(\s*)\)/g,
+      "$1${$2}$3");
+    
+    expr = tag.replaceTokensWithValues(expr);
+    Utils.geval(expr);
+  }
+  
+  /**
+   * Callback triggered always before loading tag.
+   * Can be called only once, any repeated calls will have no effect.
+   */
+  LibraryTag.prototype.before = function () {
+    LibraryTag.SUPER.prototype.before.call(this);
+    
+//    if (this.getHtml() || this.config.script) {
+//      this.log.FINE("html or config.script is set while using pre." +/*L*/
+//              " Cancelling running pre.");/*L*/
+//      return false;// continue normally
+//    }
+    
+    this.log.INFO("Running PRE script execution...");/*L*/
+    try {
+      var cfg = this.config;
+      if (cfg && cfg.pre) {
+        if (typeof(cfg.pre) === "function") {
+          this.pre = cfg.pre;
+        } else {
+          var expr = this.replaceTokensWithValues(String(cfg.pre));
+          this.pre = Utils.expressionToFunction(expr).bind(this);
+        }
+      }
+      if (this.config.prePostWindowScope && 
+              this.pre !== LibraryTag.prototype.pre &&
+              this.pre.toString) {
+        extractAndEvalFunctionBody(this.pre, this);
+      } else {
+        this.pre();
+      }
+    } catch (ex) {
+      this.log.ERROR(/*L*/
+        this.config.name + " exception while running pre: " + ex);/*L*/
+      return true;// cancel running 
+    }
+    return false;
+  };
+  
+  /**
+   * Callback triggered always before loading tag.
+   * Can be called only once, any repeated calls will have no effect.
+   * @param success if tag execution was successful
+   */
+  LibraryTag.prototype.after = function (success) {
+    LibraryTag.SUPER.prototype.after.call(this, success);
+//    if (this.getHtml() || this.config.script) {
+//      this.log.WARN("html or config.script is set while using post." +/*L*/
+//              " Cancelling running post.");/*L*/
+//      return;
+//    }
+    
+    this.log.INFO("Running POST script execution...");/*L*/
+    try {
+      var cfg = this.config;
+      if (cfg && cfg.post) {
+        if (typeof(cfg.post) === "function") {
+          this.post = cfg.post;
+        } else {
+          var expr = this.replaceTokensWithValues(String(cfg.post));
+          this.post = Utils.expressionToFunction(expr).bind(this);
+        }
+      }
+      if (this.config.prePostWindowScope && 
+                this.post !== LibraryTag.prototype.post &&
+                  this.post.toString) {
+        extractAndEvalFunctionBody(this.post, this);
+      } else {
+        this.post(success);
+      }
+    } catch (ex) {
+      this.log.ERROR(/*L*/
+        this.config.name + " exception while running post: " + ex);/*L*/
+    }
+  };
+  
+  /**
+   * Utils.defineWrapperClass wrapper for LibraryTag.
+   * 
+   * This method is used to easy define a tag library class. Tag Library class 
+   * is any class that extends qubit.opentag.LibraryTag class.
+   * 
+   * All of the properties passed via `libConfig` object will be put at 
+   * new library class proptotype with exception of:
+   * 
+   * - CONSTRUCTOR This object is a property used to pass a constructor into 
+   * the library class. It is unlikely one will need it and its recommended to 
+   * be used by advanced users. Constructor is called AFTER `super()` call and 
+   * has one argument which is standard configuration object.
+   * 
+   * This function also supports `singlerton` option, pass `singleton` property
+   * to the libConfig to make the library a singleton.
+   * 
+   * Singleton libraries can be instantiated only once, each repeated 
+   * `new` call will return existing instance.
+   * 
+   * @static
+   * @param {String} namespace full class name (with package) 
+   * @param {String} libConfig prototype config
+   * @return {Function} reference to extended class
+   */
+  LibraryTag.define = function (namespace, libConfig) {
+    namespace = namespace.replace(/^[\.]+/g, "")
+      .replace(/[\.]+$/g, "")
+      .replace(/\.+/g, ".");
+    
+    namespace = qubit.Define.vendorsSpaceClasspath(namespace);
+    
+    // config must be set in runtime - for each instance
+    var libraryDefaultConfig = {};
+    
+    if (libConfig.getDefaultConfig) {
+      libraryDefaultConfig = libConfig.getDefaultConfig();
+    }
+    
+    var constr = libConfig.CONSTRUCTOR;
+    
+    // prepare new config that does not override .config object in Library class
+    var prototypeTemplate = {};
+   
+    for (var prop in libConfig) {
+      if (prop !== "config") {
+        prototypeTemplate[prop] = libConfig[prop];
+      }
+    }
+    
+    // add new constructor
+    var constructor = function (cfg) {
+      // update instance properties for new defaults
+      cfg = cfg || {};
+      cfg = Utils.overrideFromLeftToRight(libraryDefaultConfig, cfg);
+      
+      // --- standard ---
+      // run library standard constructor
+      var ret = qubit.opentag.LibraryTag.call(this, cfg);
+      
+      // any additional constructor? run it.
+      if (constr) {
+        constr.call(this, cfg);
+      }
+      
+      if (ret) {
+        return ret;
+      }
+    };
+    
+    var ret = qubit.opentag.Utils.defineWrappedClass(
+      namespace, LibraryTag, prototypeTemplate, GLOBAL, constructor);
+    
+    var ns = Define.STANDARD_VS_NS + ".";
+    // make sure standard ns is always set
+    if (namespace.indexOf(ns) !== 0) {//
+      Utils.namespace(ns + namespace, ret);
+    }
+    
+    return ret;
+  };
+  
+  LibraryTag.getLibraryByClasspath = function (namespace) {
+    return Utils.getObjectUsingPath(namespace, qubit.Define.getVendorSpace());
+  };
+  
+}());
+
+
+
+
+/*
+ * TagSDK, a tag development platform
+ * Copyright 2013-2016, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
+ */
+
+(function () {
+  var Utils = qubit.opentag.Utils;
+  
+  /**
+   * #Class representing custom tag type of a Tag. 
+   * It inherits all default behaviour from LibraryTag.
+   * 
+   * This tag is typically used to run custom configuration tags in Opentag, 
+   * it extends LibraryTag implementation and redefines it's default configuration.
+   * 
+   * Example of simple tag run as direct instance:
+   *
+        var tag = new qubit.opentag.CustomTag({
+          name: "Custom Tag A"
+        });
+        
+        tag.script = function () {
+          alert("Hello World!");
+        };
+        
+        tag.run();
+
+   *  
+   * See config properties for more details on configuration.
+   * 
+   * 
+   * @class qubit.opentag.CustomTag
+   * @extends qubit.opentag.BaseTag
+   * @param config {Object} config object used to build instance
+   */
+  function CustomTag(config) {
+    var defaults = {
+      url: null,
+      html: "",
+      locationPlaceHolder: "NOT_END",
+      locationObject: "BODY",
+      async: true
+    };
+    
+    Utils.setIfUnset(config, defaults);
+    
+    CustomTag.SUPER.call(this, config);
+  }
+  
+  qubit.Define.clazz(
+          "qubit.opentag.CustomTag",
+          CustomTag,
+          qubit.opentag.LibraryTag);
+}());
+
+
+
+
+
+
+
 
 (function () {
   var log = new qubit.opentag.Log("Tags -> ");/*L*/
@@ -9434,66 +11295,6 @@ q.html.PostData = function (url, data, type, contentType) {
   qubit.Define.clazz("qubit.opentag.Ping", Ping);
   
   /**
-   * Function sends ping information to the servers.
-   * @param {Object} container Container reference
-   * @param loadTimes {Array} Array of load time elements [time, BaseTag]
-   */
-  Ping.prototype.oldSend = function (container, loadTimes) {
-    var config = container.config;
-    var pingString = 
-            "c=" + config.clientId + "&" +
-            "p=" + container.getContainerId() + "&" +
-            "l=" + config.tellLoadTimesProbability + "&" +
-            "pv=" + q.cookie.PageView.update() + "&" +
-            "d=";
-            
-    var pingStrings = [];
-    
-    for (var i = 0; i < loadTimes.length; i++) {
-      var tag = loadTimes[i].tag;
-      var loadTime = loadTimes[i].loadTime;
-      
-      if (loadTime === null || isNaN(loadTime)) {
-        // ignore unset load time entries.
-        continue;
-      }
-      
-      var loaderId = Ping.getPingID(tag);
-      
-      if (!tag.oldPingSent && loaderId && loadTime !== null) {
-        if (loaderId !== undefined) {
-          pingStrings.push('"' + loaderId + '":' + loadTime);
-          tag.oldPingSent = true;
-        } else {
-          log.WARN("send: tag `" + tag.config.name +/*L*/
-                  "` has no ID assigned! Time load will not be sent.");/*L*/
-        }
-      } else if (tag.oldPingSent) {
-        log.FINEST("send: ping already sent for `" + tag.config.name +/*L*/
-                "`, ignoring.");/*L*/
-      } else if (loadTime === null) {
-        log.FINEST("send: null load times for `" +/*L*/
-                tag.config.name + "`, ignoring (ping not sent).");/*L*/
-      }
-    }
-        
-    // sending part
-    if (config.pingServerUrl && pingStrings.length > 0) {
-      pingString += encodeURIComponent("{" + pingStrings.join(',') + "}");
-      var url = "//" + config.pingServerUrl + "/tag2?" + pingString;
-      log.FINE("send: sending pings " + url);/*L*/
-      q.html.PostData(url, null, "GET");
-    } else {
-      if (!pingStrings.length) {
-        log.FINE("send: no pings to sent");/*L*/
-      }
-      if (!config.pingServerUrl) {
-        log.WARN("send: config.pingServerUrl is unset!");/*L*/
-      }
-    }
-  };
-  
-  /**
    * Disabled. Function sends error information to servers.
    * @private
    * @param {Object} container
@@ -9506,49 +11307,6 @@ q.html.PostData = function (url, data, type, contentType) {
   };
 
   /*session*/
-
-  /**
-   * Function send deduplicated information ping to servers.
-   * @param {Object} container
-   * @param {Object} tags
-   */
-  Ping.prototype.oldSendDedupe = function (container, tags) {
-    var config = container.config;
-    var pingString = "c=" + config.clientId + "&" +
-      "p=" + container.getContainerId() + "&" +
-      "l=" + (config.tellLoadTimesProbability) + "&" +
-      "pv=" + q.cookie.PageView.update() + "&" +
-      "dd=";
-
-    var pingStrings = [];
-
-    for (var i = 0; i < tags.length; i++) {
-      var tag = tags[i];
-      var loaderId = Ping.getPingID(tag);
-
-      if (loaderId === undefined) {
-        log.WARN("sendDedupe: tag `" + tag.config.name +/*L*/
-                "` has no ID assigned! Deduplicaton time load " +/*L*/
-                "will not be sent.");/*L*/
-      } else if (!tag.oldDedupePingSent) {
-        pingStrings.push(loaderId);
-        tag.oldDedupePingSent = true;
-      }
-    }
-
-    if (pingStrings.length > 0 && config.pingServerUrl) {
-      pingString += encodeURIComponent("[" + pingStrings.join(',') + "]");
-      q.html.PostData("//" + config.pingServerUrl + 
-        "/tag2?" + pingString, null, "GET");
-    } else {
-      if (!pingStrings.length) {
-        log.FINE("sendDedupe: no dedupe pings to sent");/*L*/
-      }
-      if (!config.pingServerUrl) {
-        log.WARN("sendDedupe: config.pingServerUrl is unset!");/*L*/
-      }
-    }
-  };
   
   Ping.getPingID = function (tag) {
     if (tag.config.id) {
@@ -9587,21 +11345,12 @@ q.html.PostData = function (url, data, type, contentType) {
     return msgObject;
   }
 
-  Ping.prototype.send = function (container, loadTimes) {
-    var pingURL = container.config.pingServerUrl;
-    if (pingURL && pingURL.indexOf("opentag-stats") !== -1) {
-      this.newSend(container, loadTimes);
-    } else {
-      this.oldSend(container, loadTimes);
-    }
-  };
-
   /**
    * Function sends ping information to the servers.
    * @param {Object} container Container reference
    * @param loadTimes {Array} Array of load time elements [time, BaseTag]
    */
-  Ping.prototype.newSend = function (container, loadTimes) {
+  Ping.prototype.send = function (container, loadTimes) {
     var config = container.config;
     var msgObject = prepareContainerMsg(container, config);
     var tagLogs = msgObject.tags;
@@ -9654,23 +11403,13 @@ q.html.PostData = function (url, data, type, contentType) {
       }
     }
   };
-
-  Ping.prototype.sendDedupe = function (container, tags) {
-    var pingURL = container.config.pingServerUrl;
-    if (pingURL && pingURL.indexOf("opentag-stats") !== -1) {
-      // temporal switch
-      this.newSendDedupe(container, tags);
-    } else {
-      this.oldSendDedupe(container, tags);
-    }
-  };
   
   /**
    * Function send deduplicated information ping to servers.
    * @param {Object} container
    * @param {Object} tags
    */
-  Ping.prototype.newSendDedupe = function (container, tags) {
+  Ping.prototype.sendDedupe = function (container, tags) {
     var config = container.config;
     var msgObject = prepareContainerMsg(container, config);
     var pingURL = config.pingServerUrl;
@@ -9709,7 +11448,6 @@ q.html.PostData = function (url, data, type, contentType) {
     }
   };
   
-  
   /*~session*/
 }());
 /*EXCLUDE: SESSION*/
@@ -9737,525 +11475,6 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     new Date().getTime().toString(), null, domain);
   return c;
 };
-/*EXCLUDE: JSON*/
-/*
-    http://www.JSON.org/json2.js
-    2011-02-23
-
-    Public Domain.
-
-    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
-
-    See http://www.JSON.org/js.html
-
-
-    This code should be minified before deployment.
-    See http://javascript.crockford.com/jsmin.html
-
-    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-    NOT CONTROL.
-
-
-    This file creates a global JSON object containing two methods: stringify
-    and parse.
-
-        JSON.stringify(value, replacer, space)
-            value       any JavaScript value, usually an object or array.
-
-            replacer    an optional parameter that determines how object
-                        values are stringified for objects. It can be a
-                        function or an array of strings.
-
-            space       an optional parameter that specifies the indentation
-                        of nested structures. If it is omitted, the text will
-                        be packed without extra whitespace. If it is a number,
-                        it will specify the number of spaces to indent at each
-                        level. If it is a string (such as '\t' or '&nbsp;'),
-                        it contains the characters used to indent at each level.
-
-            This method produces a JSON text from a JavaScript value.
-
-            When an object value is found, if the object contains a toJSON
-            method, its toJSON method will be called and the result will be
-            stringified. A toJSON method does not serialize: it returns the
-            value represented by the name/value pair that should be serialized,
-            or undefined if nothing should be serialized. The toJSON method
-            will be passed the key associated with the value, and this will be
-            bound to the value
-
-            For example, this would serialize Dates as ISO strings.
-
-                Date.prototype.toJSON = function (key) {
-                    function f(n) {
-                        // Format integers to have at least two digits.
-                        return n < 10 ? '0' + n : n;
-                    }
-
-                    return this.getUTCFullYear()   + '-' +
-                         f(this.getUTCMonth() + 1) + '-' +
-                         f(this.getUTCDate())      + 'T' +
-                         f(this.getUTCHours())     + ':' +
-                         f(this.getUTCMinutes())   + ':' +
-                         f(this.getUTCSeconds())   + 'Z';
-                };
-
-            You can provide an optional replacer method. It will be passed the
-            key and value of each member, with this bound to the containing
-            object. The value that is returned from your method will be
-            serialized. If your method returns undefined, then the member will
-            be excluded from the serialization.
-
-            If the replacer parameter is an array of strings, then it will be
-            used to select the members to be serialized. It filters the results
-            such that only members with keys listed in the replacer array are
-            stringified.
-
-            Values that do not have JSON representations, such as undefined or
-            functions, will not be serialized. Such values in objects will be
-            dropped; in arrays they will be replaced with null. You can use
-            a replacer function to replace those with JSON values.
-            JSON.stringify(undefined) returns undefined.
-
-            The optional space parameter produces a stringification of the
-            value that is filled with line breaks and indentation to make it
-            easier to read.
-
-            If the space parameter is a non-empty string, then that string will
-            be used for indentation. If the space parameter is a number, then
-            the indentation will be that many spaces.
-
-            Example:
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}]);
-            // text is '["e",{"pluribus":"unum"}]'
-
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}], null, '\t');
-            // text is '[\n\t"e",\n\t{\n\t\t"pluribus": "unum"\n\t}\n]'
-
-            text = JSON.stringify([new Date()], function (key, value) {
-                return this[key] instanceof Date ?
-                    'Date(' + this[key] + ')' : value;
-            });
-            // text is '["Date(---current time---)"]'
-
-
-        JSON.parse(text, reviver)
-            This method parses a JSON text to produce an object or array.
-            It can throw a SyntaxError exception.
-
-            The optional reviver parameter is a function that can filter and
-            transform the results. It receives each of the keys and values,
-            and its return value is used instead of the original value.
-            If it returns what it received, then the structure is not modified.
-            If it returns undefined then the member is deleted.
-
-            Example:
-
-            // Parse the text. Values that look like ISO date strings will
-            // be converted to Date objects.
-
-            myData = JSON.parse(text, function (key, value) {
-                var a;
-                if (typeof value === 'string') {
-                    a =
-/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
-                    if (a) {
-                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
-                            +a[5], +a[6]));
-                    }
-                }
-                return value;
-            });
-
-            myData = JSON.parse('["Date(09/09/2001)"]', function (key, value) {
-                var d;
-                if (typeof value === 'string' &&
-                        value.slice(0, 5) === 'Date(' &&
-                        value.slice(-1) === ')') {
-                    d = new Date(value.slice(5, -1));
-                    if (d) {
-                        return d;
-                    }
-                }
-                return value;
-            });
-
-
-    This is a reference implementation. You are free to copy, modify, or
-    redistribute.
-*/
-
-/*jslint evil: true, strict: false, regexp: false */
-
-/*members "", "\b", "\t", "\n", "\f", "\r", "\"", JSON, "\\", apply,
-    call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,
-    getUTCMinutes, getUTCMonth, getUTCSeconds, hasOwnProperty, join,
-    lastIndex, length, parse, prototype, push, replace, slice, stringify,
-    test, toJSON, toString, valueOf
-*/
-
-
-// Create a JSON object only if one does not already exist. We create the
-// methods in a closure to avoid creating global variables.
-
-var JSON = {};
-// ALWAYS OVERWRITE JSON LOCALLY, ASSUME THIS FILE WILL ALWAYS BE IN CLOSURE
-// if (!JSON || window.forceJSONRewrite) {
-//     JSON = {};
-// }
-
-(function () {
-    "use strict";
-
-    function f(n) {
-        // Format integers to have at least two digits.
-        return n < 10 ? '0' + n : n;
-    }
-
-    // PROTECTING AGAINST PROTOTYPE.JS
-    // don't rely on Date, Number, String and Boolean prototypes
-    
-    // if (typeof Date.prototype.toJSON !== 'function') {
-
-    //     Date.prototype.toJSON = function (key) {
-
-    //         return isFinite(this.valueOf()) ?
-    //             this.getUTCFullYear()     + '-' +
-    //             f(this.getUTCMonth() + 1) + '-' +
-    //             f(this.getUTCDate())      + 'T' +
-    //             f(this.getUTCHours())     + ':' +
-    //             f(this.getUTCMinutes())   + ':' +
-    //             f(this.getUTCSeconds())   + 'Z' : null;
-    //     };
-
-    //     String.prototype.toJSON      =
-    //         Number.prototype.toJSON  =
-    //         Boolean.prototype.toJSON = function (key) {
-    //             return this.valueOf();
-    //         };
-    // }
-
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        gap,
-        indent,
-        meta = {    // table of character substitutions
-            '\b': '\\b',
-            '\t': '\\t',
-            '\n': '\\n',
-            '\f': '\\f',
-            '\r': '\\r',
-            '"' : '\\"',
-            '\\': '\\\\'
-        },
-        rep;
-
-
-    function quote(string) {
-
-// If the string contains no control characters, no quote characters, and no
-// backslash characters, then we can safely slap some quotes around it.
-// Otherwise we must also replace the offending characters with safe escape
-// sequences.
-
-        escapable.lastIndex = 0;
-        return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
-            var c = meta[a];
-            return typeof c === 'string' ? c :
-                '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-        }) + '"' : '"' + string + '"';
-    }
-
-    // PROTECTION AGAINST PROTOTYPE.JS
-    // we'll use this function to stringify Date
-    function stringifyDate(key) {
-        return isFinite(key.valueOf()) ?
-            key.getUTCFullYear()     + '-' +
-            f(key.getUTCMonth() + 1) + '-' +
-            f(key.getUTCDate())      + 'T' +
-            f(key.getUTCHours())     + ':' +
-            f(key.getUTCMinutes())   + ':' +
-            f(key.getUTCSeconds())   + 'Z' : null;
-    }
-
-
-    function str(key, holder) {
-
-// Produce a string from holder[key].
-
-        var i,          // The loop counter.
-            k,          // The member key.
-            v,          // The member value.
-            length,
-            mind = gap,
-            partial,
-            value = holder[key];
-
-
-        // PROTECTION AGAINST PROTOTYPE.JS
-        // don't call value.toJSON, only specially treat Date, Number, String and Boolean
-
-// If the value has a toJSON method, call it to obtain a replacement value.
-
-        // if (value && typeof value === 'object' &&
-        //         typeof value.toJSON === 'function') {
-        //     value = value.toJSON(key);
-        // }
-
-        if (value instanceof Date) {
-            value = stringifyDate(value);
-        } else if ((value instanceof String) || (value instanceof Number) || (value instanceof Boolean)) {
-            value = value.valueOf();
-        }
-
-// If we were called with a replacer function, then call the replacer to
-// obtain a replacement value.
-
-        if (typeof rep === 'function') {
-            value = rep.call(holder, key, value);
-        }
-
-// What happens next depends on the value's type.
-
-        switch (typeof value) {
-        case 'string':
-            return quote(value);
-
-        case 'number':
-
-// JSON numbers must be finite. Encode non-finite numbers as null.
-
-            return isFinite(value) ? String(value) : 'null';
-
-        case 'boolean':
-        case 'null':
-
-// If the value is a boolean or null, convert it to a string. Note:
-// typeof null does not produce 'null'. The case is included here in
-// the remote chance that this gets fixed someday.
-
-            return String(value);
-
-// If the type is 'object', we might be dealing with an object or an array or
-// null.
-
-        case 'object':
-
-// Due to a specification blunder in ECMAScript, typeof null is 'object',
-// so watch out for that case.
-
-            if (!value) {
-                return 'null';
-            }
-
-// Make an array to hold the partial results of stringifying this object value.
-
-            gap += indent;
-            partial = [];
-
-// Is the value an array?
-
-            if (Object.prototype.toString.apply(value) === '[object Array]') {
-
-// The value is an array. Stringify every element. Use null as a placeholder
-// for non-JSON values.
-
-                length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    try {
-                      partial[i] = str(i, value) || 'null';
-                    } catch (stackExceeded) {
-                      partial[i] = "{\"stack_exceeded\": null}";
-                    }
-                }
-
-// Join all of the elements together, separated with commas, and wrap them in
-// brackets.
-
-                v = partial.length === 0 ? '[]' : gap ?
-                    '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']' :
-                    '[' + partial.join(',') + ']';
-                gap = mind;
-                return v;
-            }
-
-// If the replacer is an array, use it to select the members to be stringified.
-
-            if (rep && typeof rep === 'object') {
-                length = rep.length;
-                for (i = 0; i < length; i += 1) {
-                    if (typeof rep[i] === 'string') {
-                        k = rep[i];
-                        try {
-                          v = str(k, value);
-                        } catch (stackExceeded) {
-                          v = "{\"stack_exceeded\": null}";
-                        }
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            } else {
-
-// Otherwise, iterate through all of the keys in the object.
-
-                for (k in value) {
-                    if (Object.prototype.hasOwnProperty.call(value, k)) {
-                        try{
-                          v = str(k, value);
-                        } catch (stackExceeded) {
-                          v = "{\"stack_exceeded\": null}";
-                        }
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            }
-
-// Join all of the member texts together, separated with commas,
-// and wrap them in braces.
-
-            v = partial.length === 0 ? '{}' : gap ?
-                '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}' :
-                '{' + partial.join(',') + '}';
-            gap = mind;
-            return v;
-        }
-    }
-
-// If the JSON object does not yet have a stringify method, give it one.
-
-    if (typeof JSON.stringify !== 'function') {
-        JSON.stringify = function (value, replacer, space) {
-
-// The stringify method takes a value and an optional replacer, and an optional
-// space parameter, and returns a JSON text. The replacer can be a function
-// that can replace values, or an array of strings that will select the keys.
-// A default replacer method can be provided. Use of the space parameter can
-// produce text that is more easily readable.
-
-            var i;
-            gap = '';
-            indent = '';
-
-// If the space parameter is a number, make an indent string containing that
-// many spaces.
-
-            if (typeof space === 'number') {
-                for (i = 0; i < space; i += 1) {
-                    indent += ' ';
-                }
-
-// If the space parameter is a string, it will be used as the indent string.
-
-            } else if (typeof space === 'string') {
-                indent = space;
-            }
-
-// If there is a replacer, it must be a function or an array.
-// Otherwise, throw an error.
-
-            rep = replacer;
-            if (replacer && typeof replacer !== 'function' &&
-                    (typeof replacer !== 'object' ||
-                    typeof replacer.length !== 'number')) {
-                throw new Error('JSON.stringify');
-            }
-
-// Make a fake root object containing our value under the key of ''.
-// Return the result of stringifying the value.
-
-            return str('', {'': value});
-        };
-    }
-
-
-// If the JSON object does not yet have a parse method, give it one.
-
-    if (typeof JSON.parse !== 'function') {
-        JSON.parse = function (text, reviver) {
-
-// The parse method takes a text and an optional reviver function, and returns
-// a JavaScript value if the text is a valid JSON text.
-
-            var j;
-
-            function walk(holder, key) {
-
-// The walk method is used to recursively walk the resulting structure so
-// that modifications can be made.
-
-                var k, v, value = holder[key];
-                if (value && typeof value === 'object') {
-                    for (k in value) {
-                        if (Object.prototype.hasOwnProperty.call(value, k)) {
-                            v = walk(value, k);
-                            if (v !== undefined) {
-                                value[k] = v;
-                            } else {
-                                delete value[k];
-                            }
-                        }
-                    }
-                }
-                return reviver.call(holder, key, value);
-            }
-
-
-// Parsing happens in four stages. In the first stage, we replace certain
-// Unicode characters with escape sequences. JavaScript handles many characters
-// incorrectly, either silently deleting them, or treating them as line endings.
-
-            text = String(text);
-            cx.lastIndex = 0;
-            if (cx.test(text)) {
-                text = text.replace(cx, function (a) {
-                    return '\\u' +
-                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-                });
-            }
-
-// In the second stage, we run the text against regular expressions that look
-// for non-JSON patterns. We are especially concerned with '()' and 'new'
-// because they can cause invocation, and '=' because it can cause mutation.
-// But just to be safe, we want to reject all unexpected forms.
-
-// We split the second stage into 4 regexp operations in order to work around
-// crippling inefficiencies in IE's and Safari's regexp engines. First we
-// replace the JSON backslash pairs with '@' (a non-JSON character). Second, we
-// replace all simple value tokens with ']' characters. Third, we delete all
-// open brackets that follow a colon or comma or that begin the text. Finally,
-// we look to see that the remaining characters are only whitespace or ']' or
-// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
-            if (/^[\],:{}\s]*$/
-                    .test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
-                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-                        .replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-// In the third stage we use the eval function to compile the text into a
-// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
-// in JavaScript: it can begin a block or an object literal. We wrap the text
-// in parens to eliminate the ambiguity.
-
-                j = eval('(' + text + ')');
-
-// In the optional fourth stage, we recursively walk the new structure, passing
-// each name/value pair to a reviver function for possible transformation.
-
-                return typeof reviver === 'function' ?
-                    walk({'': j}, '') : j;
-            }
-
-// If the text is not JSON parseable, then a SyntaxError is thrown.
-
-            throw new SyntaxError('JSON.parse');
-        };
-    }
-}());
 
 
 // Author Peter Fronc
@@ -11429,328 +12648,6 @@ var JSON = {};
 
 
 
-
-
-/*
- * TagSDK, a tag development platform
- * Copyright 2013-2016, Qubit Group
- * http://opentag.qubitproducts.com
- * Author: Peter Fronc <peter.fronc@qubitdigital.com>
- */
-
-(function () {
-  var Utils = qubit.opentag.Utils;
-  var Define = qubit.Define;
-  
-  /**
-   * #Library tag instance class.
-   * This class is ment to be extended and used as a Tag Library base 
-   * class.
-   * 
-   * Please see [Start Guide](#!/guide/getting_started)
-   * and [Creating Library (Advanced)](#!/guide/creating_library)
-   *
-   * Please see 
-   *  
-   * @class qubit.opentag.LibraryTag
-   * @extends qubit.opentag.BaseTag
-   * @param config {Object} config object used to build instance
-   */
-  function LibraryTag(config) {
-    
-    Utils.setIfUnset(config, LibraryTag.defaultConfig);
-    
-    if (this.singleton) {
-      var path = this.PACKAGE_NAME  + "." + this.CLASS_NAME;
-      var zuper = qubit.opentag.Utils.getObjectUsingPath(path, PKG_ROOT);
-      if (zuper.__instance) {
-        zuper.__instance.log.FINEST("Returning singleton instance.");/*L*/
-        return zuper.__instance;
-      }
-      zuper.__instance = this;
-    }
-    
-    LibraryTag.SUPER.call(this, config); 
-  }
-  
-  qubit.Define.clazz(
-          "qubit.opentag.LibraryTag",
-          LibraryTag,
-          qubit.opentag.BaseTag);
-  
-  /**
-   * @static
-   * Default configuration object.
-   * @property {Object}
-   */
-  LibraryTag.defaultConfig = {
-    /*DATA*/
-    /**
-     * Optional, vendor's name.
-     * @cfg {String} [vendor=null]
-     */
-    vendor: null,
-    /**
-     * Optional, image URL for library tag this.log. icon.
-     * Image should be an 64x64 pixel sized.
-     * @cfg {String} [imageUrl=null]
-     */
-    imageUrl: null,
-    /**
-     * Library description..
-     * @cfg {String} [description="Provide description."]
-     */
-    description: "",
-    /**
-     * Is library asynchoronous?
-     * @cfg {String} [async=true]
-     */
-    async: false,
-    /**
-     * Is this a private library? Not published.
-     * @cfg {Boolean} [isPrivate=false]
-     */
-    isPrivate: false,
-    /**
-     * Library can be notified for version upgrades.
-     * @cfg {Boolean} [upgradeable=true]
-     */
-    upgradeable: true,
-    /**
-     * HTML content to be appended to the page body
-     * @cfg {String} [html=null]
-     */
-    html: "",
-    /**
-     * Parameters object.
-     * @cfg {String} [parameters=null]
-     */
-    parameters: [
-    ],
-    /**
-     * @protected
-     * Compatibility property used internally. It causes running pre post bodies
-     * in a window scope - it is recommended to always run them in normal scope.
-     * This property is mostly used with old tags that were run in window scope.
-     * @cfg {Boolean} [prePostWindowScope=false]
-     */
-    prePostWindowScope: false
-  };
-  
-  /**
-   * @event 
-   */
-  LibraryTag.prototype.pre = function () {
-    this.log.FINEST("emtpy pre called");/*L*/
-  };
-  
-  /**
-   * 
-   * @event
-   */
-  LibraryTag.prototype.post = function () {
-    this.log.FINEST("emtpy post called");/*L*/
-  };
-  
-  function extractAndEvalFunctionBody(fun, tag) {
-    var expr = fun.toString();
-    expr = expr.replace(/\s*function\s*\([\w\s,_\d\$]*\)\s*\{/, "");
-    expr = expr.substring(0, expr.lastIndexOf("}"));
-    
-    // ""+_this.val...'
-    expr = expr.replace(
-      /(["']\s*\+\s*)\s*_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'\s*\)/g,
-      "$1\"${$2}\"");
-    expr = expr.replace(
-      /\s*_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'\s*\)(\s*\+\s*["'])/g,
-      "\"${$1}\"$2");
-    
-    // ""+_this.val..."
-    expr = expr.replace(
-      /(["']\s*\+\s*)\s*_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"\s*\)/g,
-      "$1\"${$2}\"");
-    expr = expr.replace(
-      /\s*_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"\s*\)(\s*\+\s*["'])/g,
-      "\"${$1}\"$2");
-    
-    // _this.val..."'
-    expr = expr.replace(
-      /(\s*)_*\w+\s*\.\s*valueForToken\s*\(\s*'([^']*)'(\s*)\)/g,
-      "$1${$2}$3");
-    expr = expr.replace(
-      /(\s*)_*\w+\s*\.\s*valueForToken\s*\(\s*"([^"]*)"(\s*)\)/g,
-      "$1${$2}$3");
-    
-    expr = tag.replaceTokensWithValues(expr);
-    Utils.geval(expr);
-  }
-  
-  /**
-   * Callback triggered always before loading tag.
-   * Can be called only once, any repeated calls will have no effect.
-   */
-  LibraryTag.prototype.before = function () {
-    LibraryTag.SUPER.prototype.before.call(this);
-    
-//    if (this.getHtml() || this.config.script) {
-//      this.log.FINE("html or config.script is set while using pre." +/*L*/
-//              " Cancelling running pre.");/*L*/
-//      return false;// continue normally
-//    }
-    
-    this.log.INFO("Running PRE script execution...");/*L*/
-    try {
-      var cfg = this.config;
-      if (cfg && cfg.pre) {
-        if (typeof(cfg.pre) === "function") {
-          this.pre = cfg.pre;
-        } else {
-          var expr = this.replaceTokensWithValues(String(cfg.pre));
-          this.pre = Utils.expressionToFunction(expr).bind(this);
-        }
-      }
-      if (this.config.prePostWindowScope && 
-              this.pre !== LibraryTag.prototype.pre &&
-              this.pre.toString) {
-        extractAndEvalFunctionBody(this.pre, this);
-      } else {
-        this.pre();
-      }
-    } catch (ex) {
-      this.log.ERROR(/*L*/
-        this.config.name + " exception while running pre: " + ex);/*L*/
-      return true;// cancel running 
-    }
-    return false;
-  };
-  
-  /**
-   * Callback triggered always before loading tag.
-   * Can be called only once, any repeated calls will have no effect.
-   * @param success if tag execution was successful
-   */
-  LibraryTag.prototype.after = function (success) {
-    LibraryTag.SUPER.prototype.after.call(this, success);
-//    if (this.getHtml() || this.config.script) {
-//      this.log.WARN("html or config.script is set while using post." +/*L*/
-//              " Cancelling running post.");/*L*/
-//      return;
-//    }
-    
-    this.log.INFO("Running POST script execution...");/*L*/
-    try {
-      var cfg = this.config;
-      if (cfg && cfg.post) {
-        if (typeof(cfg.post) === "function") {
-          this.post = cfg.post;
-        } else {
-          var expr = this.replaceTokensWithValues(String(cfg.post));
-          this.post = Utils.expressionToFunction(expr).bind(this);
-        }
-      }
-      if (this.config.prePostWindowScope && 
-                this.post !== LibraryTag.prototype.post &&
-                  this.post.toString) {
-        extractAndEvalFunctionBody(this.post, this);
-      } else {
-        this.post(success);
-      }
-    } catch (ex) {
-      this.log.ERROR(/*L*/
-        this.config.name + " exception while running post: " + ex);/*L*/
-    }
-  };
-  
-  /**
-   * Utils.defineWrapperClass wrapper for LibraryTag.
-   * 
-   * This method is used to easy define a tag library class. Tag Library class 
-   * is any class that extends qubit.opentag.LibraryTag class.
-   * 
-   * All of the properties passed via `libConfig` object will be put at 
-   * new library class proptotype with exception of:
-   * 
-   * - CONSTRUCTOR This object is a property used to pass a constructor into 
-   * the library class. It is unlikely one will need it and its recommended to 
-   * be used by advanced users. Constructor is called AFTER `super()` call and 
-   * has one argument which is standard configuration object.
-   * 
-   * This function also supports `singlerton` option, pass `singleton` property
-   * to the libConfig to make the library a singleton.
-   * 
-   * Singleton libraries can be instantiated only once, each repeated 
-   * `new` call will return existing instance.
-   * 
-   * @static
-   * @param {String} namespace full class name (with package) 
-   * @param {String} libConfig prototype config
-   * @return {Function} reference to extended class
-   */
-  LibraryTag.define = function (namespace, libConfig) {
-    namespace = namespace.replace(/^[\.]+/g, "")
-      .replace(/[\.]+$/g, "")
-      .replace(/\.+/g, ".");
-    
-    namespace = qubit.Define.vendorsSpaceClasspath(namespace);
-    
-    // config must be set in runtime - for each instance
-    var libraryDefaultConfig = {};
-    
-    if (libConfig.getDefaultConfig) {
-      libraryDefaultConfig = libConfig.getDefaultConfig();
-    }
-    
-    var constr = libConfig.CONSTRUCTOR;
-    
-    // prepare new config that does not override .config object in Library class
-    var prototypeTemplate = {};
-   
-    for (var prop in libConfig) {
-      if (prop !== "config") {
-        prototypeTemplate[prop] = libConfig[prop];
-      }
-    }
-    
-    // add new constructor
-    var constructor = function (cfg) {
-      // update instance properties for new defaults
-      cfg = cfg || {};
-      cfg = Utils.overrideFromLeftToRight(libraryDefaultConfig, cfg);
-      
-      // --- standard ---
-      // run library standard constructor
-      var ret = qubit.opentag.LibraryTag.call(this, cfg);
-      
-      // any additional constructor? run it.
-      if (constr) {
-        constr.call(this, cfg);
-      }
-      
-      if (ret) {
-        return ret;
-      }
-    };
-    
-    var ret = qubit.opentag.Utils.defineWrappedClass(
-      namespace, LibraryTag, prototypeTemplate, GLOBAL, constructor);
-    
-    var ns = Define.STANDARD_VS_NS + ".";
-    // make sure standard ns is always set
-    if (namespace.indexOf(ns) !== 0) {//
-      Utils.namespace(ns + namespace, ret);
-    }
-    
-    return ret;
-  };
-  
-  LibraryTag.getLibraryByClasspath = function (namespace) {
-    return Utils.getObjectUsingPath(namespace, qubit.Define.getVendorSpace());
-  };
-  
-}());
-
-
-
 /*
  * Opentag, a tag deployment platform
  * Copyright 2013-2016, Qubit Group
@@ -11896,9 +12793,9 @@ var JSON = {};
     
     /**
      * Tags that are bound to this container.
-     * @property {Object} tags Map of qubit.opentag.BaseTag
+     * @property {Array} tags Array of qubit.opentag.BaseTag objects
      */
-    this.tags = {};
+    this.tags = [];
 
     this.config = {/*CFG*/
       /**
@@ -12078,16 +12975,17 @@ var JSON = {};
   Container.prototype.destroy = function (withTags) {
     this.destroyed = true;
     this.unregister();
-    if (withTags) {
-      for (var prop in this.tags) {
-        var tag = this.tags[prop];
-        if (tag instanceof BaseTag) {
-          tag.destroy();
-          this.tags[prop] = null;
-          delete this.tags[prop];
-        }
+    
+    for (var i = 0; i < this.tags.length; i++) {
+      var tag = this.tags[i];
+      tag.owningContainers = []; // unregister container from tag
+      if (withTags && tag instanceof BaseTag) {
+        tag.destroy();
       }
     }
+    
+    this.tags = []; // unregister all tags from container
+
     var name = this.PACKAGE_NAME.split(".");
     name = name[name.length - 1];
     
@@ -12143,7 +13041,8 @@ var JSON = {};
    * Unregister method for container. useful for debugging.
    * See `Container.register()` for more details.
    * @param {qubit.opentag.Container} ref
-   * @param {Boolean} withTags
+   * @param {Boolean} withTags if specified tags will be unregistered too and 
+   *                  from ANY container.
    */
   Container.unregister = function (ref, withTags) {
     Utils.addToArrayIfNotExist(containers, ref);
@@ -12154,14 +13053,14 @@ var JSON = {};
     
     var index = Utils.removeFromArray(containers, ref);
     if (withTags) {
-      for (var prop in this.tags) {
-        var tag = this.tags[prop];
+      for (var i = 0; i < ref.tags.length; i++) {
+        var tag = ref.tags[i];
+        tag.owningContainers = []; // unregister container from tag
         if (tag instanceof BaseTag) {
           tag.unregister();
-          this.tags[prop] = null;
-          delete this.tags[prop];
         }
       }
+      ref.tags = [];
     }
     
     if (!index || index.length === 0) {
@@ -12214,8 +13113,6 @@ var JSON = {};
    * Function registering tag instance with this class instance.
    * Registered tag will have validated and possibly injected extra 
    * configuration.
-   * Containers register tags **by their name**, and all Container's tags must 
-   * have different name.
    * Container will not allow registering tag if there is 
    * already a tag with same name in container (!) - there will not be any 
    * exception thrown but tag will not be added to container!
@@ -12223,11 +13120,13 @@ var JSON = {};
    * @param {qubit.opentag.BaseTag} tag
    */
   Container.prototype.registerTag = function (tag) {
-    var name = tag.config.name;
-    if (this.tags[name]) {
-      this.log.FINE("Tag with name `" + name + "` already is registered!");/*L*/
+    if (Utils.existsInArray(tag.owningContainers, this)) {
+      this.log.FINE(/*L*/
+        "Tag `" + tag.config.name + "` is already registered!");/*L*/
+      return false;
     } else {
-      this.tags[name] = tag;
+      this.tags.push(tag);
+      tag.owningContainers.push(this);
       tag.onAfter(this._tagLoadedHandler);
       try {
         this.onTagRegistered(tag);
@@ -12235,7 +13134,35 @@ var JSON = {};
         this.log.ERROR("onTagRegistered exception: " + ex);/*L*/
       }
     }
+    return true;
   };
+  
+  /**
+   * Function used to unregister tag from container.
+   * @param {type} tag
+   * @returns {undefined}
+   */
+  Container.prototype.unregisterTag = function (tag) {
+    var oc = tag.owningContainers;
+    var i;
+    
+    for (i = 0; i < oc.length;) {
+      if (oc[i] === this) {
+        oc.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+    
+    for (i = 0; i < this.tags.length;) {
+      if (this.tags[i] === tag) {
+        this.tags.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+  };
+  
   /**
    * Function registering tag instance.
    * It does same job like `registerTag` but the input is an array.
@@ -12290,16 +13217,6 @@ var JSON = {};
   };
 
   /**
-   * Function that will find tag by using it's name and return it if found.
-   * @param {String} name
-   * @returns {qubit.opentag.BaseTag} tag with specified name,
-   *  undefined otherwise.
-   */
-  Container.prototype.getTagByname = function (name) {
-    return this.tags[name];
-  };
-  
-  /**
    * Function detecting if TagSDK was loaded synchronously or not.
    * @returns {Boolean}
    */
@@ -12330,22 +13247,19 @@ var JSON = {};
     // @TODO add maybe better session condition here(much better...)  
     var trackSession = this.config.trackSession;
     if (trackSession !== true && trackSession !== false) {
-      var tags = this.tags;
-      for (var name in tags) {
-        if (tags.hasOwnProperty(name)) {
-          var tmpTag = tags[name];
-          tmpTag.resolveAllDynamicData();
-          var filters = tmpTag.getFilters();
-          for (var i = 0; i < filters.length; i++) {
-            var filter = filters[i];
-            if (filter instanceof Filter && filter.isSession()) {
-              this.trackSession = true;
-              break;
-            }
-          }
-          if (this.trackSession) {
+      for (var j = 0; j < this.tags.length; j++) {
+        var tmpTag = this.tags[j];
+        tmpTag.resolveAllDynamicData();
+        var filters = tmpTag.getFilters();
+        for (var i = 0; i < filters.length; i++) {
+          var filter = filters[i];
+          if (filter instanceof Filter && filter.isSession()) {
+            this.trackSession = true;
             break;
           }
+        }
+        if (this.trackSession) {
+          break;
         }
       }
     } else {
@@ -12366,6 +13280,8 @@ var JSON = {};
     }
     /*~session*/
   };
+  
+  Container.runtimeCounter = Container.runtimeCounter || 1;
   
   /**
    * Function calling tags to start execution.
@@ -12413,7 +13329,6 @@ var JSON = {};
      */
     this.runningStarted = new Date().valueOf();
     this.log.FINE("triggering runningStarted at " + this.runningStarted);/*L*/
-    var firedTagsMap = {};
     
     if (this.config.scanTags) {
       if (!this._scanned) {
@@ -12428,33 +13343,17 @@ var JSON = {};
     // lets add priority option for tags
     // @todo review if ordering does make any sense
     var orderedTags = this.getTagsInOrder();
+    var runtimeMark = "___otctnmk" + (Container.runtimeCounter++);
     
     for (var z = 0; z < orderedTags.length; z++) {
       try {
         var tag = orderedTags[z];
-        var name = tag.config.name;
         // ignore tag state or check if clean and unstarted
         if (this.includedToRun(tag)) {
-          // if dependencies are defined, and they are in the container, 
-          // try to run them rather now instead of later! (reordering)
-          var deps = tag.resolveDependencies();
-          if (deps.length > 0) {
-            for (var i = 0; i < deps.length; i++) {
-              var dependency = deps[i];
-              var depName = dependency.config.name;
-              if (!firedTagsMap[depName] && this.tags[depName]) {
-                firedTagsMap[depName] = dependency;
-                this._tagRunner(dependency, command, forceAsync);
-              }
-            }
-          }
-          if (!firedTagsMap[name]) {
-            firedTagsMap[name] = tag;
-            this._tagRunner(tag, command, forceAsync);
-          }
+          this._checkAndRun(tag, command, forceAsync, runtimeMark);
         }
       } catch (ex) {
-        this.log.ERROR("Error while preparing tag '" + name +/*L*/
+        this.log.ERROR("Error while preparing tag '" + tag.CLASSPATH +/*L*/
                 "' to run.\n Error: " + ex);/*L*/
       }
     }
@@ -12464,6 +13363,12 @@ var JSON = {};
     }.bind(this), 3100);
     
     this.waitForAllTagsToFinish();
+    
+    // clear the marks
+    for (var c = 0; c < orderedTags.length; c++) {
+      orderedTags[c]._runtimeMarkers[runtimeMark] = undefined;
+      delete orderedTags[c]._runtimeMarkers[runtimeMark];
+    }
   };
 
   /**
@@ -12472,8 +13377,8 @@ var JSON = {};
    */
   Container.prototype.getTagsInOrder = function () {
     var tagsOrdered = [];
-    for (var name in this.tags) {
-      var tmpTag = this.tags[name];
+    for (var i = 0; i < this.tags.length; i++) {
+      var tmpTag = this.tags[i];
       var priority = tmpTag.config.priority;
       
       if ((+priority) > 0) {
@@ -12498,6 +13403,27 @@ var JSON = {};
       }
     }
     return tagsOrdered;
+  };
+  
+  // add circural tests!
+  Container.prototype._checkAndRun = function (tag,
+                                              command,
+                                              forceAsync,
+                                              runtimeMark) {
+    if (!tag._runtimeMarkers[runtimeMark]) {
+      tag._runtimeMarkers[runtimeMark] = true;
+    } else {
+      return;
+    }
+    
+    var deps = tag.resolveDependencies();
+    if (deps.length > 0) {
+      for (var i = 0; i < deps.length; i++) {
+        this._checkAndRun(deps[i], command, forceAsync, runtimeMark);
+      }
+    }
+    
+    this._tagRunner(tag, command, forceAsync);
   };
   
   /**
@@ -12585,13 +13511,13 @@ var JSON = {};
    * Function will scan for Tags in Container package and register new results 
    * as its tags base.
    * @param {type} clean
-   * @param {type} pkg optonal startWith string for classpath or object to 
+   * @param {type} pkg optional prefix for classpath or object to
    *                search in.
    * @returns {Array}
    */
   Container.prototype.scanForTags = function (clean, pkg) {
     if (clean) {
-      this.tags = {};
+      this.tags = [];
     }
     
     var tags;
@@ -12791,13 +13717,11 @@ var JSON = {};
    */
   Container.prototype.resetAllTags = function (skipFilters) {
     this.log.WARN("reseting all tags!");/*L*/
-    for (var prop in this.tags) {
-      if (this.tags.hasOwnProperty(prop)) {
-        var tag = this.tags[prop];
-        tag.reset();
-        if (!skipFilters) {
-          tag.resetFilters();
-        }
+    for (var i = 0; i < this.tags.length; i++) {
+      var tag = this.tags[i];
+      tag.reset();
+      if (!skipFilters) {
+        tag.resetFilters();
       }
     }
   };
@@ -12847,7 +13771,6 @@ var JSON = {};
 //      locked: locked, (to be NOT sent)
 //      other: other filterReady, (to be set with callback)
       var results = this.getAllTagsByState();
-      var _this = this;
       var loadTimes = [];
       
       if (results.run) {
@@ -12903,6 +13826,8 @@ var JSON = {};
         }
       }
       /*~session*/
+    } else {
+      this.ping.send(this, []);
     }
   };
   /*~no-send*/
@@ -12933,32 +13858,32 @@ var JSON = {};
   Container.getAllTagsByState = function (tags) {
     var runScripts = null, other = null, filterReady = null, failed = null,
             consent = null, locked = null;
-
+    var steps = {};
     var LOWEST_FAIL_STATE = BaseTag.prototype.STATE.EXECUTED_WITH_ERRORS;
-    for (var prop in tags) {
-      var tag = tags[prop];
+    for (var i = 0; i < tags.length; i++) {
+      var tag = tags[i];
       if (tag instanceof BaseTag) {
         var name = tag.config.name;
         if (tag.scriptExecuted > 0) {
           runScripts = runScripts || {};
-          attachRenamedIfExist(runScripts, tag, name);
+          attachRenamedIfExist(runScripts, tag, name, steps);
         } else if (tag.locked) {
           locked = locked || {};
-          attachRenamedIfExist(locked, tag, name);
+          attachRenamedIfExist(locked, tag, name, steps);
         } else if (tag.scriptExecuted < 0 || (tag.state >= LOWEST_FAIL_STATE)) {
           failed = failed || {};
           attachRenamedIfExist(failed, tag, name);
         } else if (tag.filtersState() === BaseFilter.state.SESSION ||
                 tag.filtersState() > 0) {
           filterReady = filterReady || {};
-          attachRenamedIfExist(filterReady, tag, name);
+          attachRenamedIfExist(filterReady, tag, name, steps);
         } else if (tag.config.needsConsent) {
           // consent needing unloaded
           consent = consent || {};
-          attachRenamedIfExist(consent, tag, name);
+          attachRenamedIfExist(consent, tag, name, steps);
         } else {
           other = other || {};
-          attachRenamedIfExist(other, tag, name);
+          attachRenamedIfExist(other, tag, name, steps);
         }
       }
     }
@@ -12973,13 +13898,11 @@ var JSON = {};
       other: other
     };
   };
-  
-  var steps = {};
-  function attachRenamedIfExist(obj, src, name) {
+
+  function attachRenamedIfExist(obj, src, name, steps) {
     if (obj[name]) {
-      steps[name] = steps[name] || 1;
+      steps[name] = (steps[name] + 1) || 1;
       name += "(" + steps[name] + ")";
-      steps[name]++;
     }
     obj[name] = src;
   }
@@ -12992,25 +13915,23 @@ var JSON = {};
    * @returns {Boolean}
    */
   Container.prototype.allTagsFinished = function () {
-    for (var prop in this.tags) {
-      if (this.tags.hasOwnProperty(prop)) {
-        var tag = this.tags[prop];
-        if (tag instanceof qubit.opentag.BaseTag) {
-          // tag.filtersState() < 0 === filters are passed
-          // tag.locked is not locked
-          // === 0 FAILED
-          // > 0 filter is awaiting
-          var state = tag.filtersState();
-          if (!tag.config.disabled) {
-            var notFailedAndUnlocked = tag.filtersState() < 0 && !tag.locked;
-            var tagNotFinishedOrNotRunner = 
-                    !(tag.finished() || (tag.config.runner && !tag.isRunning));
-            if (notFailedAndUnlocked && tagNotFinishedOrNotRunner) {
-              var isNotSession = (state !== BaseFilter.state.SESSION);
-              var doesWaitForDeps = +tag.awaitingDependencies > 0;
-              if (isNotSession && !doesWaitForDeps) {
-                return false;
-              }
+    for (var i = 0; i < this.tags.length; i++) {
+      var tag = this.tags[i];
+      if (tag instanceof qubit.opentag.BaseTag) {
+        // tag.filtersState() < 0 === filters are passed
+        // tag.locked is not locked
+        // === 0 FAILED
+        // > 0 filter is awaiting
+        var state = tag.filtersState();
+        if (!tag.config.disabled) {
+          var notFailedAndUnlocked = tag.filtersState() < 0 && !tag.locked;
+          var tagNotFinishedOrNotRunner =
+                  !(tag.finished() || (tag.config.runner && !tag.isRunning));
+          if (notFailedAndUnlocked && tagNotFinishedOrNotRunner) {
+            var isNotSession = (state !== BaseFilter.state.SESSION);
+            var doesWaitForDeps = +tag.awaitingDependencies > 0;
+            if (isNotSession && !doesWaitForDeps) {
+              return false;
             }
           }
         }
@@ -13027,13 +13948,11 @@ var JSON = {};
    */
   Container.prototype.getPageVariables = function () {
     var vars = [];
-    for (var prop in this.tags) {
-      if (this.tags.hasOwnProperty(prop)) {
-        var tVars = this.tags[prop].getPageVariables();
-        for (var i = 0; i < tVars.length; i++) {
-          // for each parameter, get variable instance if not added already
-          Utils.addToArrayIfNotExist(vars, tVars[i]);
-        }
+    for (var j = 0; j < this.tags.length; j++) {
+      var tVars = this.tags[j].getPageVariables();
+      for (var i = 0; i < tVars.length; i++) {
+        // for each parameter, get variable instance if not added already
+        Utils.addToArrayIfNotExist(vars, tVars[i]);
       }
     }
     return vars;
@@ -13116,368 +14035,8 @@ var JSON = {};
     Cookie.rm(forceCookiePrefix);
   };
 })();
-
-
-
-
-/*
- * TagSDK, a tag development platform
- * Copyright 2013-2016, Qubit Group
- * http://opentag.qubitproducts.com
- * Author: Peter Fronc <peter.fronc@qubitdigital.com>
- */
-
-(function () {
-  var Utils = qubit.opentag.Utils;
-  
-  /**
-   * #Class representing custom tag type of a Tag. 
-   * It inherits all default behaviour from LibraryTag.
-   * 
-   * This tag is typically used to run custom configuration tags in Opentag, 
-   * it extends LibraryTag implementation and redefines it's default configuration.
-   * 
-   * Example of simple tag run as direct instance:
-   *
-        var tag = new qubit.opentag.CustomTag({
-          name: "Custom Tag A"
-        });
-        
-        tag.script = function () {
-          alert("Hello World!");
-        };
-        
-        tag.run();
-
-   *  
-   * See config properties for more details on configuration.
-   * 
-   * 
-   * @class qubit.opentag.CustomTag
-   * @extends qubit.opentag.BaseTag
-   * @param config {Object} config object used to build instance
-   */
-  function CustomTag(config) {
-    var defaults = {
-      url: null,
-      html: "",
-      locationPlaceHolder: "NOT_END",
-      locationObject: "BODY",
-      async: true
-    };
-    
-    Utils.setIfUnset(config, defaults);
-    
-    CustomTag.SUPER.call(this, config);
-  }
-  
-  qubit.Define.clazz(
-          "qubit.opentag.CustomTag",
-          CustomTag,
-          qubit.opentag.LibraryTag);
-}());
-/*UVListener package*/
-
-
-(function () {
-  function trim(text) {
-    return text.replace(/^\s+/, "").replace(/\s+$/, "");
-  }
-  
-  var UVListener = {
-      callbacks: {},
-      unfired_events: [],
-      early_callbacks: null,
-      currentUV: null
-    },
-    uv,
-    uvLocation = "universal_variable",
-    starterId = 0,
-    POLL_DELAY_MS = 500,
-    timer;
-
-  /*** INTERNAL FUNCTIONS ***/
-
-  UVListener._isArray = function (input) {
-    return (Object.prototype.toString.call(input) === "[object Array]");
-  };
-
-  // Determines if a given subelement (denoted by keyString) has changed
-  UVListener._targetChanged = function (keyString, old, newObject) {
-    var oldAsObject, oldTarget, newTarget;
-    if (newObject === null) {
-      if (old === "null") {
-        return false;
-      } else {
-        return true;
-      }
-    } else if (newObject === undefined) {
-      if (old === newObject) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      oldAsObject = JSON.parse(old);
-      oldTarget = UVListener._getNested(oldAsObject, keyString);
-      newTarget = UVListener._getNested(newObject, keyString);
-      return !UVListener._jsonIsEqual(oldTarget, newTarget);
-    }
-  };
-
-  // Go through all the things that have been pushed 
-  // before the API has loaded
-  UVListener._processCallbacks = function () {
-    var i;
-    if (UVListener.early_callbacks && UVListener.early_callbacks.length > 0) {
-      for (i = 0; i < UVListener.early_callbacks.length; i += 1) {
-        UVListener.push(UVListener.early_callbacks[i]);
-      }
-      UVListener.early_callbacks = null;
-    }
-  };
-
-  // Get all the keys out of a string in an array format
-  UVListener._keyStringToArr = function (keyString) {
-    keyString = trim(keyString);
-    if (keyString === "") {
-      return [];
-    } else {
-      // convert indexes to properties
-      keyString = keyString.replace(/\[(\w+)\]/g, ".$1");
-      // strip a leading dot
-      keyString = keyString.replace(/^\./, ""); 
-      return keyString.split(".");
-    }
-  };
-
-  // Get the value of a nested thing in an object.
-  // e.g. UVListener._getNested(universal_variable, "transaction.total")
-  UVListener._getNested = function (object, keyString) {
-    var arr = UVListener._keyStringToArr(keyString),
-      n;
-    while (arr.length > 0) {
-      n = arr.shift();
-      if (object.hasOwnProperty(n)) {
-        object = object[n];
-      } else {
-        return;
-      }
-    }
-    return object;
-  };
-
-  // Compare the two arguments using JSON.stringify
-  UVListener._jsonIsEqual = function (obj1, obj2) {
-    if (typeof obj1 !== "string") {
-      obj1 = JSON.stringify(obj1, UVListener._stripEvents);
-    }
-    if (typeof obj2 !== "string") {
-      obj2 = JSON.stringify(obj2, UVListener._stripEvents);
-    }
-    return obj1 === obj2;
-  };
-
-  // Causes JSON.stringify to skip the events object, if passed as the second
-  // argument: JSON.stringify(object, UVListener._stripEvents)
-  UVListener._stripEvents = function (key, value) {
-    if (key !== "events") {
-      return value;
-    } else {
-      return undefined;
-    }
-  };
-
-  UVListener._on = function (type, func) {
-    var typeArray, key;
-    // Separate type from keyString
-    typeArray = type.split(":");
-    type = typeArray[0];
-    key = typeArray[1];
-    UVListener.callbacks[type] = UVListener.callbacks[type] || [];
-    // Include keyString in the callback object (if specified)
-    if (key) {
-      UVListener.callbacks[type].push({
-        keyString: key,
-        func: func
-      });
-    } else {
-      UVListener.callbacks[type].push({
-        func: func
-      });
-    }
-  };
-
-  UVListener._trigger = function (type, data) {
-    var i, keyString;
-    // Are there any callbacks which might be relevant?
-    if (UVListener.callbacks[type]) {
-      // Loop through all potentially relevant callbacks
-      for (i = 0; i < UVListener.callbacks[type].length; i += 1) {
-        // Make sure the callback has a function we can use
-        if (typeof UVListener.callbacks[type][i].func === "function") {
-          // Determine if there's an associated keyString
-          keyString = UVListener.callbacks[type][i].keyString;
-          if (keyString) {
-            // Handle the keyString if we know how
-            if (type === "change" && 
-                UVListener._targetChanged(keyString, UVListener.currentUV, uv)) {
-              UVListener.callbacks[type][i].func(data);
-            } // Place logic for other types which use keyStrings here.
-          // If there's no keyString, just callback 
-          } else {
-            UVListener.callbacks[type][i].func(data);
-          }
-        } 
-      }
-    }
-  };
-
-  // Modified push function for uv.events array
-  UVListener._eventsPush = function (evt) {
-    var i, ii;
-    uv.events[uv.events.length] = evt;
-    evt.time = evt.time || (new Date()).getTime();
-    if (UVListener.callbacks.event) {
-      i = 0; ii = UVListener.callbacks.event.length;
-      for (i; i < ii; i += 1) {
-        UVListener.callbacks.event[i].func(evt);
-      }
-    }
-    evt.has_fired = true;
-  };
-
-  UVListener._getUnfiredEvents = function () {
-    var i = 0;
-    for (i = 0; i < uv.events.length; i += 1) {
-      if (!uv.events[i].has_fired) {
-        // Event hasn't fired, re-insert it now that push is redefined.
-        UVListener.unfired_events.push(uv.events.splice(i, 1)[0]);
-        i -= 1; // The remaining events have shifted backward.
-      }
-    }
-  };
-
-  UVListener._fireEvents = function () {
-    while (UVListener.unfired_events.length > 0) {
-      uv.events.push(UVListener.unfired_events.shift());
-    }
-  };
-
-  UVListener._resetEventsPush = function () {
-    uv.events = uv.events || [];
-    if (uv.events.push.toString().indexOf("[native code]") !== -1) {
-      uv.events.push = UVListener._eventsPush;
-      UVListener._getUnfiredEvents();
-      UVListener._fireEvents();
-    }
-  };
-
-  UVListener._checkForChanges = function () {
-    // Only check if we actually have some callbacks registered
-    if (UVListener.callbacks.change && UVListener.callbacks.change.length > 0) {
-      if (!UVListener._jsonIsEqual(UVListener.currentUV, uv)) {
-        // If UV changed, trigger "change" callbacks.
-        UVListener._trigger("change", uv);
-        // After triggering, log the new UV as current.
-        UVListener.currentUV = JSON.stringify(uv, UVListener._stripEvents);
-      }
-    }
-  };
-
-  UVListener._setUVLocation = function (newLoc) {
-    uvLocation = newLoc;
-    UVListener._initUV();
-  };
-
-  UVListener._initUV = function () {
-    window[uvLocation] = window[uvLocation] || {
-      events: []
-    };
-    uv = window[uvLocation];
-    if (!uv.events) {
-      uv.events = [];
-    }
-  };
-
-  /*** INTENDED API ***/
-
-  /* USAGE
-    Change listening:
-
-    Fire a callback function on any change to UV:
-      window.uv_listener.push(["on", "change", callback]);
-
-    Fire a callback function on any change to specific part of UV:
-      window.uv_listener.push(["on", "change:keyString", callback])
-    where "keyString" is a property path within the UV. For example:
-      "change:transaction" will fire if the transaction object is changed
-      "change:basket.line_items.length" will fire if products are added to ore
-        removed from the basket
-
-    Event listening:
-      window.uv_listener.push(["on", "event", callback])
-    Note that the callback is expected to take an argument (the event object)
-      and also do the processing to determine if the event is relevant.
-  */
-
-  UVListener.push = function (data) {
-    if (!UVListener._isArray(data)) {
-      return;
-    }
-    if (data[0] === "on") {
-      UVListener._on(data[1], data[2]);
-    } else if (data[0] === "trigger" && data[1]) {
-      UVListener._trigger(data[1]);
-    }
-  };
-
-  /*** INITIALIZATION ***/
-
-  UVListener.init = function (testing, uvLoc) {
-    if (uvLoc) {
-      uvLocation = uvLoc;
-    }
-    UVListener._initUV();
-    // Hold onto anything pushed to uv_listener before initialization
-    // This is a little awkward now that the desired uv_listener is an object
-    if (!window.uv_listener || UVListener._isArray(window.uv_listener)) {
-      // Store the current uv_listener if the old is an array
-      UVListener.early_callbacks = window.uv_listener || null;
-      window.uv_listener = UVListener;
-      if (!testing) {
-        UVListener.start();
-      }
-    } else {
-      if (uvLoc) {
-        // If init is called with a specified location, ensure we're using that
-        // This is necessary because typically qTracker will come second,
-        // and it would not actually update window.UVListener, but it's also the
-        // place where we tend to set custom locations.
-        window.uv_listener._setUVLocation(uvLocation);
-      }
-    }
-    
-  };
-
-  UVListener.start = function () {
-    // Store a dump of the current UV
-    UVListener.currentUV = JSON.stringify(uv, UVListener._stripEvents);
-
-    // Begin polling
-    timer = setInterval(function () {
-      UVListener._initUV();
-      UVListener._resetEventsPush();
-      UVListener._checkForChanges();
-    }, POLL_DELAY_MS);
-    
-    // Process things added before the API loads
-    UVListener._processCallbacks();
-  };
-
-  q.html.UVListener = UVListener;
-}());
 /* global qubit, GLOBAL, q */
+
 
 
 
@@ -13714,628 +14273,5 @@ var JSON = {};
   };
 
   qubit.Define.namespace("qubit.opentag.Main", Main);
-}());
-(function exportUv () {
-  /**
-   * Export the api to window.uv unless required as a commonjs module.
-   */
-  if (typeof module === 'object' && module.exports) {
-    module.exports = createUv
-  } else if (window && window.uv === undefined) {
-    window.uv = createUv()
-  }
-
-  function createUv () {
-    /**
-     * Used to prevent recursive event calling.
-     *
-     * @type {Array}
-     */
-    var eventQueue = []
-    var callingHandlers = 0
-
-    /**
-     * Simple log class
-     *
-     * @type {Object}
-     */
-    var log = {
-      info: function logInfo () {
-        if (log.level > logLevel.INFO) return
-        if (console && console.info) {
-          console.info.apply(console, arguments)
-        }
-      },
-      error: function logError () {
-        if (log.level > logLevel.ERROR) return
-        if (console && console.error) {
-          console.error.apply(console, arguments)
-        }
-      }
-    }
-
-    logLevel.ALL = 0
-    logLevel.INFO = 1
-    logLevel.ERROR = 2
-    logLevel.OFF = 3
-
-    logLevel(logLevel.ERROR)
-
-    /**
-     * Creates the uv object with empty
-     * events and listeners arrays.
-     *
-     * @type {Object}
-     */
-    var uv = {
-      on: on,
-      emit: emit,
-      once: once,
-      events: [],
-      listeners: [],
-      logLevel: logLevel
-    }
-
-    return uv
-
-    /**
-     * Sets the log level for the API.
-     *
-     * @param  {Number} level   Should be one of the constants
-     *                          set on the logLevel function.
-     */
-    function logLevel (level) {
-      log.level = level
-    }
-
-    /**
-     * Pushes an event to the events array and triggers any handlers for that event
-     * type, passing the data to that handler. Clones the data to prevent side effects.
-     *
-     * @param {String} type  The type of event.
-     * @param {Object} event The data associated with the event.
-     */
-    function emit (type, event) {
-      log.info(type, 'event emitted')
-
-      event = clone(event || {})
-      event.meta = event.meta || {}
-      event.meta.type = type
-
-      eventQueue.push(event)
-      processNextEvent()
-
-      /**
-       * Remove disposed listeners
-       * to prevent memory leak.
-       */
-      uv.listeners = filter(uv.listeners, function (l) {
-        return !l.disposed
-      })
-    }
-
-    /**
-     * Attaches an event handler to listen to the type of event specified.
-     *
-     * @param   {String|Regex} type         The type of event.
-     * @param   {Function}     callback     The callback called when the event occurs.
-     * @param   {Object}       context      The context that will be applied to the
-     *                                      callback (optional).
-     *
-     * @returns {Object}                    A subscription object that
-     *                                      returns a dispose method.
-     */
-    function on (type, callback, context) {
-      log.info('Attaching event handler for', type)
-
-      var listener = {
-        type: type,
-        callback: callback,
-        disposed: false,
-        context: context || window
-      }
-      uv.listeners.push(listener)
-
-      var subscription = {
-        replay: replay,
-        dispose: dispose
-      }
-      return subscription
-
-      function replay () {
-        log.info('Replaying events')
-        queueEmittedEvents(function () {
-          forEach(uv.events, function (event) {
-            if (listener.disposed) return
-            if (!matches(type, event.meta.type)) return
-            callback.call(context, event)
-          })
-        })
-        return subscription
-      }
-
-      function dispose () {
-        log.info('Disposing event handler')
-        listener.disposed = true
-        return subscription
-      }
-    }
-
-    /**
-     * Prevents emitted events from being
-     * processed until fn finishes.
-     *
-     * @param  {Function} fn
-     */
-    function queueEmittedEvents (fn) {
-      log.info('Calling event handlers')
-      callingHandlers++
-      try { fn() } catch (e) {
-        log.error('UV API Error', e.stack)
-      }
-      callingHandlers--
-      processNextEvent()
-    }
-
-    /**
-     * Processes the next event on the
-     * eventQueue.
-     */
-    function processNextEvent () {
-      if (eventQueue.length === 0) {
-        log.info('No more events to process')
-      }
-
-      if (eventQueue.length > 0 && callingHandlers > 0) {
-        log.info('Event will be processed later')
-      }
-
-      if (eventQueue.length > 0 && callingHandlers === 0) {
-        log.info('Processing event')
-
-        var event = eventQueue.shift()
-        uv.events.push(event)
-        queueEmittedEvents(function () {
-          forEach(uv.listeners, function (listener) {
-            if (listener.disposed) return
-            if (!matches(listener.type, event.meta.type)) return
-            try {
-              listener.callback.call(listener.context, event)
-            } catch (e) {
-              log.error('Error emitting UV event', e.stack)
-            }
-          })
-        })
-      }
-    }
-
-    /**
-     * Attaches an event handler to listen to the type of event specified.
-     * The handle will only be executed once.
-     *
-     * @param   {String|Regex} type     The type of event.
-     * @param   {Function}     callback The callback called when the event occurs.
-     * @param   {Object}       context  The context that will be applied
-     *                                  to the callback (optional).
-     *
-     * @returns {Object}                A subscription object which can off the
-     *                                  handler using the dispose method.
-     */
-    function once (type, callback, context) {
-      var subscription = uv.on(type, function () {
-        callback.apply(context || window, arguments)
-        subscription.dispose()
-      })
-      return subscription
-    }
-
-    /**
-     * Iterate over each item in an array.
-     *
-     * @param  {Array} list
-     * @param  {Function} iterator
-     */
-    function forEach (list, iterator) {
-      var length = list.length
-      for (var i = 0; i < length; i++) {
-        iterator(list[i], i)
-      }
-    }
-
-    /**
-     * Returns a shallow clone of the input
-     * object.
-     * @param  {Object} input
-     *
-     * @return {Object}
-     */
-    function clone (input) {
-      var output = {}
-      for (var key in input) {
-        if (input.hasOwnProperty(key)) {
-          output[key] = input[key]
-        }
-      }
-      return output
-    }
-
-    /**
-     * Returns true if the test string matches
-     * the subject or the test regex matches the subject.
-     * @param  {String|Regex} test
-     * @param  {String}       subject
-     *
-     * @return {Boolean}
-     */
-    function matches (test, subject) {
-      return typeof test === 'string' ? test === subject : test.test(subject)
-    }
-
-    /**
-     * Returns a new array containing the items in
-     * array for which predicate returns true.
-     * @param  {Array}   list
-     * @param  {Function} iterator
-     *
-     * @return {Array}
-     */
-    function filter (list, iterator) {
-      var l = list.length
-      var output = []
-      for (var i = 0; i < l; i++) {
-        if (iterator(list[i])) output.push(list[i])
-      }
-      return output
-    }
-  }
-}())
-/* global qubit */
-
-
-
-
-
-/*
- * Opentag, a tag deployment platform.
- * Copyright (C) 2011-2016, Qubit.com
- * All rights reserved.
- * 
- * @author peter.fronc@qubit.com
- */
-
-var allEventsByType = {};
-var unqueuedEvents = [];
-
-var inititated = false;
-var inititatedSuccessfully = false;
-
-var global = qubit.Define.global();
-
-function getUV() {
-  return global.uv;
-}
-
-function initiate() {
-  var uv = getUV();
-  
-  if (!uv || !uv.emit) {
-    return false;
-  }
-  
-  if (!inititated) {
-    inititated = true;
-    
-    // bring back any awaiting events
-    for (var i = 0; i < unqueuedEvents.length; i++) {
-      var tmp = unqueuedEvents[i];
-      if (tmp.on) {
-        uv.on.apply(uv, tmp.on);
-      } else if (tmp.emit) {
-        uv.emit.apply(uv, tmp.emit);
-      }
-    }
-    
-    uv.on(/.*/, function (event) {
-      var type = event.meta.type;
-      var obj = allEventsByType[type];
-
-      if (!obj) {
-        allEventsByType[type] = {current: event, history: [event]};
-      } else {
-        obj.current = event;
-        obj.history.push(event);
-      }
-    }).replay();
-    
-    inititatedSuccessfully = true;
-  }
-  
-  return true;
-}
-
-var PubSub = {
-  
-  allEventsByType: allEventsByType,
-  
-  
-  subscribe: function (eventName, callback) {
-    if (inititatedSuccessfully) {
-      var uv = getUV();
-      uv.on(eventName, callback);
-    } else {
-      unqueuedEvents.push({on: [eventName, callback]});
-    }
-  },
-  
-  getEventHistory: function (name) {
-    return this.allEventsByType[name];
-  },
-  
-  /**
-   * QProtocol event emmiter wrapper for opentag.
-   * 
-   * Always use this API to emit qprotocol events if you use opentag and not
-   * uv-api directly.
-   * 
-   * @param {String} eventName event.meta.type used in qprotocol.
-   * @param {Object} event Obect that will be dispatched.
-   */
-  publish: function (eventName, event) {
-    if (inititatedSuccessfully) {
-      var uv = getUV();
-      uv.emit(eventName, event);
-    } else {
-      unqueuedEvents.push({emit: [eventName, event]});
-    }
-  },
-  
-  /**
-   * 
-   * This is the function that enables the QProtocol wiring for opentag.
-   * It is run immediately after this class declaration.
-   */
-  connect: function () {
-    initiate();
-  }
-};
-
-// initialize the PubSub, later on the uv-api may not be added into opentag
-// and therefore excluded
-PubSub.connect();
-
-qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
-
-
-
-
-
-
-
-/*
- * TagSDK, a tag development platform
- * Copyright 2013-2016, Qubit Group
- * http://opentag.qubitproducts.com
- * Author: Peter Fronc <peter.fronc@qubitdigital.com>
- */
-
-(function () {
-  
-  var PubSub = qubit.qprotocol.PubSub;
-  var Utils = qubit.opentag.Utils;
-  var DELIMITER = ":";
-
-  /**
-   * #QProtocolVariable type variable class.
-   * 
-   * This is a page variable that makes it easy to read and listen to incoming
-   * qprotocol events. 
-   * 
-   * QProtocol does support value changed event handlers and handlers can be 
-   * added using `this.onValueChanged(callback)` function. 
-   * Callback will receive oldValue and variable instance reference as 
-   * parameters.
-   * 
-   * Example:
-   * 
-   * 
-   *     varRef.onValueChanged(function(oldValue, variableRef){
-   *       console.log(variableRef.getValue() !== oldValue); // true
-   *     });
-   * 
-   * 
-   * 
-   * See properties to check on configuration options.
-   * 
-   * Author: Peter Fronc <peter.fronc@qubitdigital.com>
-   * 
-   * @class qubit.opentag.pagevariable.QProtocolVariable
-   * @extends qubit.opentag.pagevariable.BaseVariable
-   * @param config {Object} config object used to build instance
-   */
-  function QProtocolVariable(config) {
-    QProtocolVariable.SUPER.apply(this, arguments);
-  }
-  
-  qubit.Define.clazz(
-          "qubit.opentag.pagevariable.QProtocolVariable",
-          QProtocolVariable,
-          qubit.opentag.pagevariable.BaseVariable);
-  
-  /**
-   * Init function is called by `getValue()`
-   */
-  QProtocolVariable.prototype.init = function () {
-    if (this.initialized) {
-      return false;
-    } else {
-      // mark first use
-      this.initialized = new Date().valueOf();
-    }
-    
-    this.callHandlersOnRead = true;
-    
-    /**
-     * Event name that this variable listens to. 
-     * Its the `meta.type` property in qprotocol event object.
-     * 
-     * Value can also contain optional object path that will be accessed.
-     * 
-     * Path property indicates which event object child should be
-     * used as this variable output value (normally event object is).
-     * 
-     * It may be usefult to not to have to check long object paths when
-     * accessing directly event (eq. code like: `a && a.b && a.b.c && a.b.c.d` to
-     * access `a.b.c.d` only).
-     * 
-     * Example: 
-     * 
-     * uv.variable.in.event@my.event.name
-     * 
-     * reference.     * 
-     * @property {String} value - event name (event.meta.type)
-     */
-    
-    if (!this.handlerAttached) {
-      var _this = this;
-      
-      var result = this.getValueAndPath(this.value);
-      
-      this.eventName = result[0];
-      this.objectPath = result[1];
-      
-      this.updateValue();
-      
-      PubSub.subscribe(this.eventName, function (event) {
-        _this.updateValue(event);
-      });
-      
-      this.handlerAttached = new Date().valueOf();
-    }
-  };
-  
-  QProtocolVariable.prototype.getValueAndPath = function (value) {
-    var eventName = value;
-    var opath;
-
-    if (eventName) {
-      var idx = value.indexOf(DELIMITER);
-      if (idx !== -1) {
-        eventName = value.substring(0, idx);
-        opath = value.substring(idx + 1);
-      }
-    }
-
-    return [eventName, opath];
-  };
-  
-  QProtocolVariable.prototype.getValue = function () {
-    this.init();
-    return this.currentValue;
-  };
-  
-  /**
-   * Function returns event hitory object that contains following properties:
-   * - `current` property, pointing to most recent qprotocol event that this 
-   *    page variable listens to.
-   * - `history` property that points to array containing all events that 
-   *    were published.
-   * 
-   * In general:
-   * ```
-   *     this.getEventsHistory().current === this.getEventsHistory().history[0]
-   * ```
-   * 
-   * @returns {Object} event history object.
-   */
-  QProtocolVariable.prototype.getEventsHistory = function () {
-    return PubSub.getEventHistory(this.eventName);
-  };
-  
-  /**
-   * Function is a worker used to update current variable state.
-   * 
-   * It is possible to overload/reimplement this method where necessary.
-   * 
-   * Normaqlly it updates current value when new event is incoming 
-   * from uv-api.
-   * 
-   * This function is used directly by
-   * @param {Object} event optional event.
-   * @returns {Object} the current value.
-   */
-  QProtocolVariable.prototype.updateValue = function (event) {
-    if (!event) {
-      var history = this.getEventsHistory();
-      if (history) {
-        event = history.current;
-      }
-    }
-    
-    var newValue;
-    var opath = this.objectPath;
-    
-    if (event && opath) {
-      newValue = Utils.getObjectUsingPath(opath, event);
-    } else {
-      newValue = event;
-    }
-
-    this._updateCurrentValue(newValue);
-    
-    return newValue;
-  };
-  
-  /**
-   * Disabled for QProtocol - qprotocol handles event by itself.
-   */
-  QProtocolVariable.prototype.startObservingForChanges = function () {
-    // this variable manages itself all updates
-  };
-  
-  /**
-   * Disabled for QProtocol - qprotocol handles event by itself.
-   */
-  QProtocolVariable.prototype.stopObservingForChanges = function () {
-    // this variable manages itself all updates
-  };
-  
-}());
-
-
-
-/*
- * TagSDK, a tag development platform
- * Copyright 2013-2016, Qubit Group
- * http://opentag.qubitproducts.com
- * Author: Peter Fronc <peter.fronc@qubitdigital.com>
- */
-
-(function () {
-
-  /**
-   * #UniversalVariable type variable class.
-   * 
-   * This class controlls how expression based page variables are executed
-   * and parsed. It will detect universal variable "arrays" objects with hash
-   * notation. It also provides all utilities to deal with expressions defined
-   * as a `uv` properties on parameter objects in tag configuration.
-   * In typical scenarion this class wil evaluate strings passed as values and
-   * return the value via `getValue`.
-   * 
-   * 
-   * Author: Peter Fronc <peter.fronc@qubitdigital.com>
-   * 
-   * @class qubit.opentag.pagevariable.UniversalVariable
-   * @extends qubit.opentag.pagevariable.Expression
-   * @param config {Object} config object used to build instance
-   */
-  function UniversalVariable(config) {
-    UniversalVariable.SUPER.apply(this, arguments);
-  }
-  
-  qubit.Define.clazz(
-          "qubit.opentag.pagevariable.UniversalVariable",
-          UniversalVariable,
-          qubit.opentag.pagevariable.Expression);
 }());
 }());
