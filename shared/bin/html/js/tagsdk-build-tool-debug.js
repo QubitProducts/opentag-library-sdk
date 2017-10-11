@@ -94,7 +94,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.1.3";
+var qversion = "3.2.0";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -2056,6 +2056,16 @@ var UNDEF;
     }
   };
   
+  var rndSeed = Math.floor(Math.random() * 1000000000000);
+  
+  Utils.UUID = function () {
+    if (!global.__qubit_uuid_cnt_43567bdfhgtb4vt5yeh978__) {
+      global.__qubit_uuid_cnt_43567bdfhgtb4vt5yeh978__ = new Date().valueOf();
+    }
+    
+    return rndSeed + "." + (++global.__qubit_uuid_cnt_43567bdfhgtb4vt5yeh978__);
+  };
+  
   /**
    * Shortcut to opverride object props. Commonly used.
    * @param {type} A
@@ -3602,6 +3612,106 @@ q.html.fileLoader.tidyUrl = function (path) {
   }
   return "//" + path;
 };
+/* 
+ * To change this license header, choose License Headers in 
+ * Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+
+
+
+(function () {
+  var Define = qubit.Define;
+  var Utils = qubit.opentag.Utils;
+  
+  /**
+   * @class qubit.Events
+   * Simple events manager.
+   * 
+   * @param {Object} config empty object.
+   */
+  function Events(config) {
+    this.log = new qubit.opentag.Log("Events -> ");/*L*/
+    this.calls = {};
+  }
+  
+  /**
+   * Simple events adding function. IT pushes a function to named
+   * execution array. If function already is in the array, 
+   * it has no effect. To access array, use 'this.calls' on 
+   * this object.
+   * @param {String} name simple name for event.
+   * @param {Function} call
+   * @returns {Number} index in array of events for the name. 
+   *        -1 if added at end of queue.
+   */
+  Events.prototype.on = function (name, call) {
+    if (!this.calls[name]) {
+      this.calls[name] = [];
+    }
+    return Utils.addToArrayIfNotExist(this.calls[name], call);
+  };
+  
+  /**
+   * Function will cause triggering event for given name.
+   * @param {String} name Event name
+   * @param {Object} event Event object
+   */
+  Events.prototype.call = function (name, event) {
+    var calls = this.calls[name];
+    if (calls) {
+      for (var i = 0; i < calls.length; i++) {
+        try {
+          calls[i](event);
+        } catch (ex) {
+          this.log.ERROR("Error while running event: " + ex);/*L*/
+        }
+      }
+    }
+  };
+
+  /**
+   * Delete event from array.
+   * @param {String} name event name
+   * @param {Function} call to be removed.
+   * @returns {undefined}
+   */
+  Events.prototype.remove = function (name, call) {
+    if (this.calls[name]) {
+      return Utils.removeFromArray(this.calls[name], call);
+    }
+    return null;
+  };
+  
+  /**
+   * Removes all event handlers === to call of any type from this object.
+   * @param {Function} call
+   * @returns {Number} Total amount of removed events.
+   */
+  Events.prototype.removeAll = function (call) {
+    var total = 0;
+    for (var prop in this.calls) {
+      if (this.calls.hasOwnProperty(prop)) {
+        total += Utils.removeFromArray(this.calls[prop], call);
+      }
+    }
+    return total;
+  };
+  
+  /**
+   * Removes all events of any type from this stack.
+   */
+  Events.prototype.clear = function () {
+    this.calls = {};
+  };
+  
+  Define.clazz("qubit.Events", Events);
+})();
+
+
 
 
 
@@ -3617,6 +3727,7 @@ q.html.fileLoader.tidyUrl = function (path) {
   var Utils = qubit.opentag.Utils;
   var counter = 0;
   var filters = [];
+  
   /**
    * @class qubit.opentag.filter.BaseFilter
    * 
@@ -3678,9 +3789,14 @@ q.html.fileLoader.tidyUrl = function (path) {
        * Session object - can be passed via configuration.
        * @cfg {qubit.opentag.Session} [session=undefined]
        */
-      session: undefined
+      session: undefined,
+      /**
+       * @cfg {Boolean} [restartable=true] if filter is restartable
+       */
+      restartable: true
     };
-
+    
+    this.runtimeId = Utils.UUID();
     /**
      * Session object - if attached, it will be attached normally by 
      * tag instance.
@@ -3700,10 +3816,11 @@ q.html.fileLoader.tidyUrl = function (path) {
 
       this.register(this);
     }
+    
+    this.events = new qubit.Events({});
   }
 
   qubit.Define.clazz("qubit.opentag.filter.BaseFilter", BaseFilter);
-
 
   /**
    * State value higher than 0 is used to distinqt delayed filters.
@@ -3724,12 +3841,48 @@ q.html.fileLoader.tidyUrl = function (path) {
     PASS: -1, // positive numbers are used for timeout
     FAIL: 0
   };
-
+  
+  var RESTART_EVENT = "restart";
+  
+  BaseFilter.prototype.EVENT_TYPES = {
+    RESTART_EVENT: RESTART_EVENT
+  };
+  
+  /**
+   * Function prepares filter for restarting it - 
+   * it will succeed only if config property `restartable` is set (default true).
+   * Restart functionality is related to tag/container execution logic. 
+   * When container or tag restarts, by default it will try to restart belonging
+   * filters too. This method is used to prepare filter for the process.
+   * (by calling this method).
+   * @returns {undefined}
+   */
+  BaseFilter.prototype.prepareForRestart = function () {
+    if (this.config.restartable) {
+      this.events.call(RESTART_EVENT, this);
+      this.reset();
+    }
+  };
+    
+  /**
+   * Multiple event handling method.
+   * 
+   * Fires on restart being prepared..
+   * @event before before event.
+   * @param {Function} callback function to be executed the BEFORE_EVENT 
+   *                             event fires. Takes filter reference as 
+   *                             argument.
+   */
+  BaseFilter.prototype.onRestart = function (callback) {
+    this.events.on(RESTART_EVENT, callback);
+  };
+  
   /**
    * Function will reset object to initial state (disabled state will be turned
    *  to enabled).
    */
   BaseFilter.prototype.reset = function () {
+    this.runtimeId = Utils.UUID();
     this.enable();
   };
 
@@ -4111,15 +4264,17 @@ q.html.fileLoader.tidyUrl = function (path) {
   /**
    * Custom starter function for session filter.
    * Takes 3 arguments in the order:
-   *  1) `session` the session object
+   *  1) `session` the session object.
    *  2) `ready` the ready callback that runs the tag, note: it will run the tag
    *  directly.
    *  3) `tag` tag reference object.
    * This function can be overrided by `config.customStarter` function.
    * 
-   * @param {qubit.opentag.Session} session
-   * @param {Function} ready
-   * @param {qubit.opentag.BaseTag} tag
+   * @param {qubit.opentag.Session} session - the session object.
+   * @param {Function} ready - the ready callback that runs the tag, note: 
+   *                            it will run the tag
+   *  directly.
+   * @param {qubit.opentag.BaseTag} tag - reference to executing tag.
    */
   Filter.prototype.customStarter = function (session, ready, tag) {
     ready(false);
@@ -4205,8 +4360,14 @@ q.html.fileLoader.tidyUrl = function (path) {
       if (!this._starterWasRun) {
         // enter "customStarter", only once
         this._starterWasRun = true;
+        // this step will enable callback to be cancelled easily.
+        var recallUUID = this.runtimeId;
         // prepare callback
         var callback = function (rerun) {
+          if (recallUUID !== this.runtimeId) {
+            this.log.FINE("Filter was cancelled (reset?)."); /*L*/
+            return;
+          }
           // mark starterExecuted on filter so any next tags will be fired immediately,
           // rather than queued for execution.
           this.reRun = rerun;
@@ -4286,8 +4447,8 @@ q.html.fileLoader.tidyUrl = function (path) {
    * Reset function.
    */
   Filter.prototype.reset = function () {
-    this._matchState = undefined;
     Filter.SUPER.prototype.reset.call(this);
+    this._matchState = undefined;
     this._starterWasRun = undefined;
     this.starterExecuted = undefined;
     this.tagsToRun = [];
@@ -6597,105 +6758,6 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     }
   };
 }());
-/* 
- * To change this license header, choose License Headers in 
- * Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
-
-
-(function () {
-  var Define = qubit.Define;
-  var Utils = qubit.opentag.Utils;
-  
-  /**
-   * @class qubit.Events
-   * Simple events manager.
-   * 
-   * @param {Object} config empty object.
-   */
-  function Events(config) {
-    this.log = new qubit.opentag.Log("Events -> ");/*L*/
-    this.calls = {};
-  }
-  
-  /**
-   * Simple events adding function. IT pushes a function to named
-   * execution array. If function already is in the array, 
-   * it has no effect. To access array, use 'this.calls' on 
-   * this object.
-   * @param {String} name simple name for event.
-   * @param {Function} call
-   * @returns {Number} index in array of events for the name. 
-   *        -1 if added at end of queue.
-   */
-  Events.prototype.on = function (name, call) {
-    if (!this.calls[name]) {
-      this.calls[name] = [];
-    }
-    return Utils.addToArrayIfNotExist(this.calls[name], call);
-  };
-  
-  /**
-   * Function will cause triggering event for given name.
-   * @param {String} name Event name
-   * @param {Object} event Event object
-   */
-  Events.prototype.call = function (name, event) {
-    var calls = this.calls[name];
-    if (calls) {
-      for (var i = 0; i < calls.length; i++) {
-        try {
-          calls[i](event);
-        } catch (ex) {
-          this.log.ERROR("Error while running event: " + ex);/*L*/
-        }
-      }
-    }
-  };
-
-  /**
-   * Delete event from array.
-   * @param {String} name event name
-   * @param {Function} call to be removed.
-   * @returns {undefined}
-   */
-  Events.prototype.remove = function (name, call) {
-    if (this.calls[name]) {
-      return Utils.removeFromArray(this.calls[name], call);
-    }
-    return null;
-  };
-  
-  /**
-   * Removes all event handlers === to call of any type from this object.
-   * @param {Function} call
-   * @returns {Number} Total amount of removed events.
-   */
-  Events.prototype.removeAll = function (call) {
-    var total = 0;
-    for (var prop in this.calls) {
-      if (this.calls.hasOwnProperty(prop)) {
-        total += Utils.removeFromArray(this.calls[prop], call);
-      }
-    }
-    return total;
-  };
-  
-  /**
-   * Removes all events of any type from this stack.
-   */
-  Events.prototype.clear = function () {
-    this.calls = {};
-  };
-  
-  Define.clazz("qubit.Events", Events);
-})();
-
 
 
 
@@ -6720,9 +6782,6 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   var TagHelper = qubit.opentag.TagHelper;
   var nameCounter = 0;
   var Log = qubit.opentag.Log;
-
-  var AFTER_EVENT = "after";
-  var BEFORE_EVENT = "before";
 
   /*
    * @TODO - extract lower generic class for a script loader so it is better 
@@ -6946,8 +7005,16 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
        * or build system.
        * @cfg {Boolean} [loadDependenciesOnLoad=false]
        */
-      loadDependenciesOnLoad: false
+      loadDependenciesOnLoad: false,
+      /**
+       * @cfg {Boolean} [restartable=true] if tag is restartable
+       */
+      restartable: true
     };
+    
+    this.restartCounter = 0;
+    this.cancelled = false;
+    this.runtimeId = Utils.UUID();
     
     /**
      * If checked and usesDocumentWrite is true, tag will be instructed to 
@@ -7021,6 +7088,16 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   }
   
   qubit.Define.clazz("qubit.opentag.GenericLoader", GenericLoader);
+  
+  var AFTER_EVENT = "after";
+  var BEFORE_EVENT = "before";
+  var RESTART_EVENT = "restart";
+  
+  GenericLoader.prototype.EVENT_TYPES = {
+    AFTER_EVENT: AFTER_EVENT,
+    BEFORE_EVENT: BEFORE_EVENT,
+    RESTART_EVENT: RESTART_EVENT
+  };
   
   /**
    * @event Empty on init event.
@@ -7408,9 +7485,17 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     return true;
   };
 
-  GenericLoader.prototype._setTimeout = function (fun, time) {
+  GenericLoader.prototype._setTimeout = function (cb, time) {
     this._wasTimed = new Date().valueOf();
-    return Timed.setTimeout(fun, time);
+    var _runtimeId = this.runtimeId;
+    
+    var cbWrapped = function () {
+      if (this.runtimeId === _runtimeId) {
+        return cb();
+      }
+    }.bind(this);
+    
+    return Timed.setTimeout(cbWrapped, time);
   };
 
   /**
@@ -7437,10 +7522,6 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * execution block.
    */
   GenericLoader.prototype.waitForDependenciesAndExecute = function () {
-    if (this.cancelled) {
-      this._handleCancel();
-      return;
-    }
     if (this.loadedDependencies) {
       // dependencies ready
       this.execute();      
@@ -7834,7 +7915,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * not be resumed. You need to reset and re-ru tag again.
    */
   GenericLoader.prototype.unCancel = function () {
-    this.cancelled = undefined;
+    this.cancelled = false;
   };
   
   /**
@@ -8517,6 +8598,48 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   };
   
   /**
+   * Multiple event handling method.
+   * 
+   * Fires on when tag restart is being prepared. 
+   * Actual tag starting can be delegated for later time.
+   * 
+   * @event before before event.
+   * @param {Function} callback function to be executed the BEFORE_EVENT 
+   *                             event fires. Takes tag reference as argument.
+   */
+  GenericLoader.prototype.onRestart = function (callback) {
+    this.events.on(RESTART_EVENT, callback);
+  };
+  
+  /**
+   * Restart function. This method will trigger reset process and only if tag
+   * config property `restartable` is set. See `this.restartCounter` to meassure
+   * how many restarts was done for this tag.
+   * @returns {undefined}
+   */
+  GenericLoader.prototype.prepareForRestart = function () {
+    if (this.config.restartable) {
+      var tmp = this.restartCounter + 1;
+      this.events.call(RESTART_EVENT, this);
+      this.reset();
+      this.restartCounter = tmp;
+    }
+  };
+  
+  /**
+   * Restart function. This method will trigger reset process and only if tag
+   * config property `restartable` is set. See `this.restartCounter` for 
+   * meassures of how many restarts were made for this tag.
+   * @returns {undefined}
+   */
+  GenericLoader.prototype.restart = function () {
+    if (this.config.restartable) {
+      this.prepareForRestart();
+      this.run();
+    }
+  };
+  
+  /**
    * Reset method. Brings this object to initial state.
    * Reset will keep logging information.
    */
@@ -8548,11 +8671,13 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     this.urlsLoaded = 0;
     this.waitForDependenciesFinished = u;
     this.isRunning = u;
-    this._lastRun = u;
+    this.lastRun = u;
     this.cancelled = u;
     this._beforeEntered = u;
     this.awaitingDependencies = u;
     this.timeoutCountdownStart = u;
+    this.restartCounter = 0;
+    this.runtimeId = Utils.UUID();
     this.addState("INITIAL");
   };
   
@@ -9807,7 +9932,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * re-run clean. It does not reset logs!
    * Used for debugging purposes.
    */
-  BaseTag.prototype.reset = function () {
+  BaseTag.prototype.reset = function (skipFilters) {
     BaseTag.SUPER.prototype.reset.call(this);
     var u;
     this.filtersPassed = u;
@@ -9821,6 +9946,10 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     this.reRunCounter = 0;
     
     this.detachVariablesChangedListeners();
+    
+    if (!skipFilters) {
+      this.resetFilters();
+    }
   };
   
   /**
@@ -10358,6 +10487,40 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     this.attachVariablesChangedListeners();
   };
   
+  /**
+   * Prepare for restart function.
+   * This metod will also prepare restart filters by default.
+   * @param {Boolean} noFilters use to exclude filters from restart process
+   * @returns {undefined}
+   */
+  BaseTag.prototype.prepareForRestart = function (noFilters) {
+    if (this.config.restartable) {
+      // generic loader has no filter logic!
+      BaseTag.SUPER.prototype.prepareForRestart.call(this, false);
+      if (!noFilters) {
+        this.log.FINE("Restarting filters."); /*L*/
+        var filters = this.getFilters();
+        for (var i = 0; i < filters.length; i++) {
+          filters[i].prepareForRestart();
+        }
+      }
+    }
+  };
+  
+  /**
+   * Restart function. This method will trigger reset process and only if tag
+   * config property `restartable` is set. See `this.restartCounter` for 
+   * meassures of how many restarts were made for this tag.
+   * This metod will also restart filters by default.
+   * @param {Boolean} noFilters use to exclude filters from restart process
+   * @returns {undefined}
+   */
+  BaseTag.prototype.restart = function (noFilters) {
+    if (this.config.restartable) {
+      this.prepareForRestart(noFilters);
+      this.runIfFiltersPass();
+    }
+  };
 }());
 
 
@@ -12726,6 +12889,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
 
 
 
+
 /*
  * TagSDK, a tag development platform
  * Copyright 2013-2016, Qubit Group
@@ -12902,7 +13066,11 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
       /**
        * @cfg {Boolean} [noPings=false] blocks pings.
        */
-      noPings: false
+      noPings: false,
+      /**
+       * @cfg {Boolean} [restartable=true] if container is restartable
+       */
+      restartable: true
     };/*~CFG*/
     
     /**
@@ -12953,12 +13121,21 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
       };
     }
     
+    this.events = new qubit.Events({});
+    
     return this;
   }
 
   qubit.Define.clazz("qubit.opentag.Container", Container);
 
   var containers = [];
+  
+  var RESTART_EVENT = "restart";
+  
+  Container.prototype.EVENT_TYPES = {
+    RESTART_EVENT: RESTART_EVENT
+  };
+  
   /**
    *  Registering container function.
    *  By default each container instance is immediately registered in a global 
@@ -13003,23 +13180,28 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     
     for (var i = 0; i < this.tags.length; i++) {
       var tag = this.tags[i];
-      tag.owningContainers = []; // unregister container from tag
+      // unregister container from tag
+      Utils.removeFromArray(tag.owningContainers, this);
       if (withTags && tag instanceof BaseTag) {
         tag.destroy();
       }
     }
     
     this.tags = []; // unregister all tags from container
-
-    var name = this.PACKAGE_NAME.split(".");
-    name = name[name.length - 1];
-    
-    var pkg = Utils.getParentObject(this.PACKAGE_NAME);
-    pkg[name] = null;
-    
-    delete pkg[name];
   };
   
+  /**
+   * Destroys all registered containers.
+   * @param {Boolean} withTags if to destroy tags with it.
+   * @returns {undefined}
+   */
+  Container.destroyAll = function (withTags) {
+    var items = Container.getContainers();
+    for (var i = 0; i < items.length; i++) {
+      items[i].destroy(withTags);
+    }
+  };
+
   /**
    * Function finds containers that have name equal to passed parameter.
    * @param {String} name string that will be used to compare.
@@ -13027,7 +13209,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * 
    */
   Container.findContainersByName = function (name) {
-    var items = this.getContainers();
+    var items = Container.getContainers();
     var results = [];
     for (var i = 0; i < items.length; i++) {
       if (items[i].config.name === name) {
@@ -13044,7 +13226,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    *  null otherwise.
    */
   Container.getById = function (id) {
-    var items = this.getContainers();
+    var items = Container.getContainers();
     for (var i = 0; i < items.length; i++) {
       if (items[i].getContainerId() === id) {
         return items[i];
@@ -13741,27 +13923,105 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * @param {Boolean} skipFilters - if filters reset should be skipped.
    */
   Container.prototype.resetAllTags = function (skipFilters) {
-    this.log.WARN("reseting all tags!");/*L*/
+    this.log.INFO("reseting all tags!");/*L*/
     for (var i = 0; i < this.tags.length; i++) {
-      var tag = this.tags[i];
-      tag.reset();
-      if (!skipFilters) {
-        tag.resetFilters();
-      }
+      this.tags[i].reset(skipFilters);
+    }
+  };
+  /**
+   * @protected
+   * Function restarts all tags registered with this container.
+   * @param {Boolean} noFilters use to exclude filters from restart process
+   * @returns {undefined}
+   */
+  Container.prototype._prepareTagsToRestart = function (noFilters) {
+    this.log.INFO("restarting all tags.");/*L*/
+    for (var i = 0; i < this.tags.length; i++) {
+      this.tags[i].prepareForRestart(noFilters);
     }
   };
   
   /**
    * Function reset this container (including it's registered tags).
+   * @param {Boolean} skipTags - if tags should not be reset.
    * @param {Boolean} skipFilters - if filters should not be reset.
    */
-  Container.prototype.reset = function (skipFilters) {
+  Container.prototype.reset = function (skipTags, skipFilters) {
     this.log.WARN("reseting container!");/*L*/
     this.runningFinished = undefined;
     this._waitForAllTagsToFinishWaiting = undefined;
     this.runningStarted = undefined;
     this._showFinishedOnce = undefined;
-    this.resetAllTags(skipFilters);
+    if (!skipTags) {
+      this.resetAllTags(skipFilters);
+    }
+  };
+  
+  /**
+   * Multiple event handling method.
+   * 
+   * Fires on before restart.
+   * @event before before event.
+   * @param {Function} callback function to be executed the BEFORE_EVENT 
+   *                             event fires. Takes container reference as 
+   *                             argument.
+   */
+  Container.prototype.onRestart = function (callback) {
+    this.events.on(RESTART_EVENT, callback);
+  };
+  
+  /**
+   * Function restarts this container (including it's registered tags).
+   * @param {Boolean} skipTags - if tags should not be restarted.
+   * @param {Boolean} skipFilters - if filters should not be restarted.
+   */
+  Container.prototype.restart = function (skipTags, skipFilters) {
+    if (this.config.restartable) {
+      this.events.call(RESTART_EVENT, this);
+      this.reset(true, true); // no tags , no filters
+      if (!skipTags) {
+        this._prepareTagsToRestart(skipFilters);
+      }
+      this.run();
+    }
+  };
+  
+  /**
+   * Function restarts all registered container instances, all tags will be 
+   * restarted (reset and run again, including underlaying filters).
+   * @param {Boolean} noTags - if tags should not be restarted
+   *                           (implies skipping filters).
+   * @param {Boolean} noFilters - if filters should not be restarted.
+   * @returns {undefined}
+   */
+  Container.restartAll = function (noTags, noFilters) {
+    var containers = Container.getContainers();
+    for (var i = 0; i < containers.length; i++) {
+      try {
+        containers[i].restart(noTags, noFilters);
+      } catch (ex) {
+        log.ERROR(
+          "Restart failed for container " + containers[i].config.name, ex);
+      }
+    }
+  };
+  
+  /**
+   * Function resets all registered containers.
+   * @param {type} skipFilters - if filters should be skipped
+   * @param {type} skipTags - if tags should be skipped (implies skipping filters)
+   * @returns {undefined}
+   */
+  Container.resetAll = function (skipTags, skipFilters) {
+    var containers = Container.getContainers();
+    for (var i = 0; i < containers.length; i++) {
+      try {
+        containers[i].reset(skipTags, skipFilters);
+      } catch (ex) {
+        log.ERROR(
+          "Reset failed for container " + containers[i].config.name, ex);
+      }
+    }
   };
   
   /*no-send*/
