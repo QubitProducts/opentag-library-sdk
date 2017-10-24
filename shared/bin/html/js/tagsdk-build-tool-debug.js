@@ -94,7 +94,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.0";
+var qversion = "3.2.1";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -7007,13 +7007,25 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
        */
       loadDependenciesOnLoad: false,
       /**
-       * @cfg {Boolean} [restartable=true] if tag is restartable
+       * @cfg {Boolean} [restartable=true] Indicates if tag is restartable.
        */
       restartable: true
     };
     
+    /*
+     * Restart counter.
+     * @property {Number} 
+     */
     this.restartCounter = 0;
+    /*
+     * If tag is cancelled (cancelled tag will not be re-fired!).
+     * @property {Boolean} 
+     */
     this.cancelled = false;
+    /*
+     * Unique runtime ID.
+     * @property {String} 
+     */
     this.runtimeId = Utils.UUID();
     
     /**
@@ -7113,6 +7125,11 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   GenericLoader.prototype.LOADING_TIMEOUT = 5 * 1000;
   
+  /**
+   * HTML getter for this tag, html can be passed various ways - this getter
+   * returns what is used by tag.
+   * @returns {String} HTML template in use with this tag..
+   */
   GenericLoader.prototype.getHtml = function () {
     if (this.config.html) {
       return this.config.html;
@@ -8598,10 +8615,12 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   };
   
   /**
+   * @event
    * Multiple event handling method.
    * 
-   * Fires on when tag restart is being prepared. 
-   * Actual tag starting can be delegated for later time.
+   * Fires when tag restart process is being prepared. 
+   * Although tag starting can be delegated for later, normally if tag is
+   * restarted through a container, this even is fired just before restart..
    * 
    * @event before before event.
    * @param {Function} callback function to be executed the BEFORE_EVENT 
@@ -8788,7 +8807,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * [LibraryTag](#!/api/qubit.opentag.LibraryTag) will be used.
    * 
    * @param {Object} config Please see properties for configuration options.
-   *  Each property can be set at initialization time via config object.
+   *  Each property can be set at initialisation time via config object.
    */
   function BaseTag(config) {
     
@@ -9037,7 +9056,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
       this.lock();
     }
     
-//    this.log.FINEST("Initializing variables.");/*L*/
+//    this.log.FINEST("Initialising variables.");/*L*/
 //    this.initPageVariablesForParameters();
   };
   
@@ -9397,7 +9416,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
       stack.push("Awaiting callback to run this tag. Not pooling.");
     }
     if (current & s.STARTED) {
-      stack.push("Tag is initialized and loading has been started.");
+      stack.push("Tag is initialised and loading has been started.");
     }
     if (current & s.LOADING_DEPENDENCIES) {
       stack.push("Dependencies are being loaded.");
@@ -9443,6 +9462,14 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * @event onTagInit
    */
   BaseTag.prototype.onTagInit = EMPTY_FUN;
+  
+  /**
+   * This property is reserved by opentag repository scheme and may be replaced 
+   * without warning. It is used only by Opentag tag manager and stores 
+   * post initialisation code block (if set).
+   * Opentag's tag  initialisation block is stored here and useful in debugging.
+   */
+  BaseTag.prototype.postInitialisationSection = EMPTY_FUN;
   /**
    * State being set global event.
    * @static
@@ -10107,7 +10134,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   
 //  /**
 //   * @protected
-//   * Function used to validate and initialize parameters and any variables 
+//   * Function used to validate and initialise parameters and any variables 
 //   * assigned. If variables were passed as plain objects, they will be converted
 //   * to BaseVariable instances.
 //   * It is always run at constructor time.
@@ -10508,10 +10535,10 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   };
   
   /**
-   * Restart function. This method will trigger reset process and only if tag
+   * Restart function. This method will restart tag and only if tag
    * config property `restartable` is set. See `this.restartCounter` for 
    * meassures of how many restarts were made for this tag.
-   * This metod will also restart filters by default.
+   * This metod will also restart tag's filters if no argument is passed.
    * @param {Boolean} noFilters use to exclude filters from restart process
    * @returns {undefined}
    */
@@ -13958,6 +13985,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
   };
   
   /**
+   * @event
    * Multiple event handling method.
    * 
    * Fires on before restart.
@@ -14489,6 +14517,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
           
           if (needDebugModeButNotInDebug) {
             container.destroy(true);
+            pruneContainerPackage(container);
             Main.loadDebugVersion(container);
           } else {
             if (!GLOBAL.QUBIT_OPENTAG_STOP_MAIN_EXECUTION) {
@@ -14516,8 +14545,19 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     }
   };
 
+  // function prunes container and everything in it.
+  function pruneContainerPackage(container) {
+    var name = container.PACKAGE_NAME.split(".");
+    name = name[name.length - 1];
+    
+    var pkg = Utils.getParentObject(container.PACKAGE_NAME);
+    pkg[name] = null;
+    
+    delete pkg[name];
+  }
+
   function getClientId(container) {
-    var parent = qubit.opentag.Utils.getParentObject(container.PACKAGE_NAME);
+    var parent = Utils.getParentObject(container.PACKAGE_NAME);
     var cfg = parent.ClientConfig;
     if (cfg && cfg.clientId) {
       return cfg.clientId;
