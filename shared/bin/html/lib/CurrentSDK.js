@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.2";
+var qversion = "3.2.3";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -4339,7 +4339,7 @@ q.html.fileLoader.tidyUrl = function (path) {
         var recallUUID = this.runtimeId;
         // prepare callback
         var callback = function (rerun) {
-          if (!rerun && recallUUID !== this.runtimeId) {
+          if (recallUUID !== this.runtimeId) {
             this.log.FINE("Filter was cancelled (reset?)."); /*L*/
             return;
           }
@@ -9934,7 +9934,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * re-run clean. It does not reset logs!
    * Used for debugging purposes.
    */
-  BaseTag.prototype.reset = function (skipFilters) {
+  BaseTag.prototype.reset = function () {
     BaseTag.SUPER.prototype.reset.call(this);
     var u;
     this.filtersPassed = u;
@@ -9948,10 +9948,6 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     this.reRunCounter = 0;
     
     this.detachVariablesChangedListeners();
-    
-    if (!skipFilters) {
-      this.resetFilters();
-    }
   };
   
   /**
@@ -13927,7 +13923,10 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
   Container.prototype.resetAllTags = function (skipFilters) {
     this.log.INFO("reseting all tags!");/*L*/
     for (var i = 0; i < this.tags.length; i++) {
-      this.tags[i].reset(skipFilters);
+      this.tags[i].reset();
+      if (!skipFilters) {
+        this.tags[i].resetFilters();
+      }
     }
   };
   /**
