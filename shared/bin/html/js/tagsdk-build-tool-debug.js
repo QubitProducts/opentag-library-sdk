@@ -94,7 +94,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.1";
+var qversion = "3.2.2";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -4364,7 +4364,7 @@ q.html.fileLoader.tidyUrl = function (path) {
         var recallUUID = this.runtimeId;
         // prepare callback
         var callback = function (rerun) {
-          if (recallUUID !== this.runtimeId) {
+          if (!rerun && recallUUID !== this.runtimeId) {
             this.log.FINE("Filter was cancelled (reset?)."); /*L*/
             return;
           }
