@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.3";
+var qversion = "3.2.4";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -10517,6 +10517,22 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     if (this.config.restartable) {
       this.prepareForRestart(noFilters);
       this.runIfFiltersPass();
+    }
+  };
+  
+  /**
+   * Control trigger for this.postInitialisationSection();
+   * @returns {undefined}
+   */
+  BaseTag.prototype.runPostInitialisationSection = function () {
+    if (!qubit.TAGS_POST_INITIALISATIONS_DISABLED) {
+      if (this.postInitialisationSection) {
+        try {
+          this.postInitialisationSection();
+        } catch (ex) {
+          this.log.ERROR("Tag initialisation failed!", ex); /*L*/
+        }
+      }
     }
   };
 }());
