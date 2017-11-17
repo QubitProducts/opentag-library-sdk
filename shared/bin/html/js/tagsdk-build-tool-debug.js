@@ -94,7 +94,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.5";
+var qversion = "3.2.6";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -9129,6 +9129,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     }
     
     this.resolveAllDynamicData();
+    this.runPostInitialisationSection();
     
     var params = this.parameters;
     
@@ -9258,6 +9259,8 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     }
     
     this.resolveAllDynamicData();
+    this.runPostInitialisationSection();
+
     var state = this.filtersState(true);
     this.addState("FILTER_ACTIVE");
     
@@ -10550,8 +10553,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    * @returns {undefined}
    */
   BaseTag.prototype.runPostInitialisationSection = function () {
-    if (!qubit.TAGS_POST_INITIALISATIONS_DISABLED &&
-        !this._postInitialisationRun) {
+    if (!this._postInitialisationRun) {
       this._postInitialisationRun = true;
       if (this.postInitialisationSection) {
         try {
@@ -14433,12 +14435,6 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * initial load - if the debug mode is used too.
    */
   Main.run = function () {
-    // this section must be always first.
-    var tags = qubit.opentag.BaseTag.getTags();
-    for (var i = 0; i < tags.length; i++) {
-      tags[i].runPostInitialisationSection();
-    }
-    
     var needDebugModeButNotInDebug = false;
     
     if (disabled()) {
