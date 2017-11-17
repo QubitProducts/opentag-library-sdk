@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.2.6";
+var qversion = "3.3.0";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -8939,13 +8939,12 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
     
     /**
      * @readonly
-     * Array of containers owning this tag. Its very unusual for this 
-     * array to be larger than 1. Normally tag is registered with one container 
-     * only. This array is managed by container instance and should never been 
-     * changed directly. To unregister tag from container - use container api.
+     * Container owning this tag. This reference is managed by container 
+     * instance and should never been  changed directly.
+     * To unregister tag from container - use container api.
      * @property Array of {qubit.opentag.Container}
      */
-    this.owningContainers = [];
+    this.owningContainer = null;
     
     /**
      * Idicates if tag stats has been submitted.
@@ -13199,9 +13198,11 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     for (var i = 0; i < this.tags.length; i++) {
       var tag = this.tags[i];
       // unregister container from tag
-      Utils.removeFromArray(tag.owningContainers, this);
-      if (withTags && tag instanceof BaseTag) {
-        tag.destroy();
+      if (tag.owningContainer === this) {
+        tag.owningContainer = null;
+        if (withTags && tag instanceof BaseTag) {
+          tag.destroy();
+        }
       }
     }
     
@@ -13280,9 +13281,11 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     if (withTags) {
       for (var i = 0; i < ref.tags.length; i++) {
         var tag = ref.tags[i];
-        tag.owningContainers = []; // unregister container from tag
-        if (tag instanceof BaseTag) {
-          tag.unregister();
+        if (tag.owningContainer === ref) {
+          tag.owningContainer = null; // unregister container from tag
+          if (tag instanceof BaseTag) {
+            tag.unregister();
+          }
         }
       }
       ref.tags = [];
@@ -13345,13 +13348,13 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * @param {qubit.opentag.BaseTag} tag
    */
   Container.prototype.registerTag = function (tag) {
-    if (Utils.existsInArray(tag.owningContainers, this)) {
+    if (tag.owningContainer !== null) {
       this.log.FINE(/*L*/
         "Tag `" + tag.config.name + "` is already registered!");/*L*/
       return false;
     } else {
       this.tags.push(tag);
-      tag.owningContainers.push(this);
+      tag.owningContainer = this;
       tag.onAfter(this._tagLoadedHandler);
       try {
         this.onTagRegistered(tag);
@@ -13368,15 +13371,8 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * @returns {undefined}
    */
   Container.prototype.unregisterTag = function (tag) {
-    var oc = tag.owningContainers;
-    var i;
-    
-    for (i = 0; i < oc.length;) {
-      if (oc[i] === this) {
-        oc.splice(i, 1);
-      } else {
-        i++;
-      }
+    if (tag.owningContainer === this) {
+      tag.owningContainer = null;
     }
     
     for (i = 0; i < this.tags.length;) {
