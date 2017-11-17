@@ -13375,7 +13375,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
       tag.owningContainer = null;
     }
     
-    for (i = 0; i < this.tags.length;) {
+    for (var i = 0; i < this.tags.length;) {
       if (this.tags[i] === tag) {
         this.tags.splice(i, 1);
       } else {
