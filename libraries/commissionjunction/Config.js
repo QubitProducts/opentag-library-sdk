@@ -1,9 +1,9 @@
 var Config = {
 /*config*/
 "id": 6,
-"name": "Commission Junction",
+"name": "CJ Affiliate",
 "imageUrl": "https://s3-eu-west-1.amazonaws.com/opentag-images/CommissionJunction.png",
-"description": "Commission Junction is a global leader in Affiliate Marketing, Online Marketing, and Search Engine Marketing."
+"description": "CJ Affiliate by Conversant (formerly Commission Junction) is the leading global affiliate marketing network, specializing in pay-for-performance programs that drive results for businesses around the world."
 /*~config*/
 };
 
