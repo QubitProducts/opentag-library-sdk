@@ -4,9 +4,9 @@ qubit.opentag.LibraryTag.define("commissionjunction.cjconversionpixel.v1.Tag", {
 	getDefaultConfig: function () {
       return {
 		/*config*/
-		name: "CJ Conversion Pixel",
+		name: "CJ Affiliate Simple Conversion Tag",
 		async: true,
-		description: "The conversion pixel code to enable Commission Junction to track purchases on the confirmation pages.",
+		description: "The purpose of this tag is to track transaction or lead information in order for commission to be paid out to the referring publisher.  For advertiser programs that offer a single product or service or do not process online orders through a standardized shopping cart, a simple integration is usually the preferred option.",
 		html: "",
 		locationDetail: "",
 		isPrivate: false,
@@ -14,35 +14,20 @@ qubit.opentag.LibraryTag.define("commissionjunction.cjconversionpixel.v1.Tag", {
 		usesDocWrite: false,
 		upgradeable: true,
 		parameters: [{
-			name: "Item IDs",
-			description: "Item IDs",
-			token: "item_ids",
-			uv: "universal_variable.transaction.line_items[#].product.id"
-		}, {
-			name: "Item SKUs",
-			description: "Item SKUs",
-			token: "item_skus",
-			uv: "universal_variable.transaction.line_items[#].product.sku_code"
-		}, {
-			name: "Item Quantites",
-			description: "Item Quantites",
-			token: "item_quantites",
-			uv: "universal_variable.transaction.line_items[#].quantity"
-		}, {
-			name: "Item Prices",
-			description: "Item Prices",
-			token: "item_prices",
-			uv: "universal_variable.transaction.line_items[#].product.unit_sale_price"
-		}, {
-			name: "Order ID",
-			description: "Order ID",
-			token: "orderid",
-			uv: "universal_variable.transaction.order_id"
-		}, {
-			name: "Enterprise ID",
-			description: "The Commission Junction Enterprise ID",
+			name: "Commission Junction Enterprise ID",
+			description: "View the Enterprise ID in your CJ Account Manager>Account>Tracking Settings area",
 			token: "cid",
 			uv: ""
+		}, {
+			name: "Order ID",
+			description: "",
+			token: "order_id",
+			uv: "universal_variable.transaction.order_id"
+		}, {
+			name: "CJ Event ID",
+			description: "",
+			token: "cjevent",
+			uv: "universal_variable.transaction.cjevent"
 		}, {
 			name: "Currency",
 			description: "Currency",
@@ -58,6 +43,11 @@ qubit.opentag.LibraryTag.define("commissionjunction.cjconversionpixel.v1.Tag", {
 			description: "Container Tag ID",
 			token: "containerid",
 			uv: ""
+		}, {
+			name: "Amount",
+			description: "Order Subtotal",
+			token: "amount",
+			uv: "universal_variable.transaction.amount"
 		}],
 		categories:[
 			"Affiliate Networks"
@@ -70,16 +60,12 @@ qubit.opentag.LibraryTag.define("commissionjunction.cjconversionpixel.v1.Tag", {
 		/*script*/
 		var url = "https://www.emjcd.com/tags/c?containerTagId=" + this.valueForToken(
 			"containerid") + "&";
-		for (var i = 0, ii = this.valueForToken("item_ids").length; i < ii; i++) {
-			url = url + "ITEM" + (i + 1) + "=" + 
-				this.valueForToken("item_skus")[i] + "&AMT" + (i + 1) + "=" + 
-				this.valueForToken("item_prices")[i] + "&QTY" + (i + 1) + "=" + 
-				this.valueForToken("item_quantites")[i] + "&";
-		}
 		url = url + "CID=" + 
 			this.valueForToken("cid") + "&OID=" + 
-			this.valueForToken("orderid") + "&TYPE=" + 
+			this.valueForToken("order_id") + "&TYPE=" + 
 			this.valueForToken("actionid") + "&CURRENCY=" +
+			this.valueForToken("cjevent") + "CJEVENT=" +
+			this.valueForToken("amount") + "AMOUNT=" +
 			this.valueForToken("currency");
 	
 		var iframe = document.createElement("iframe");
