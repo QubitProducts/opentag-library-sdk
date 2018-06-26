@@ -43,6 +43,11 @@ qubit.opentag.LibraryTag.define("mentionme.refereetag.v1.Tag", {
 			description: "Optionally override the way the flow is implemented (one of: link, form)",
 			token: "implementation",
 			uv: ""
+		}, {
+			name: "Locale*",
+			description: "A locale string representing what language and locale to serve an Offer in, e.g en_GB or fr_FR",
+			token: "locale",
+			uv: ""
 		}],
 		categories:[
 			"Social"
@@ -66,7 +71,9 @@ qubit.opentag.LibraryTag.define("mentionme.refereetag.v1.Tag", {
 			paramObj["fullname"] = "" + this.valueForToken("fullname");
 		if (("" + this.valueForToken("implementation")).length)
 			paramObj["implementation"] = "" + this.valueForToken("implementation");
-
+		if (("" + this.valueForToken("locale")).length)
+			paramObj["locale"] = "" + this.valueForToken("locale");
+		
 		for (var param in paramObj) {
 			var value = paramObj[param];
 			paramArr.push(param + "=" + encodeURIComponent(value));
