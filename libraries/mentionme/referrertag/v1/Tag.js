@@ -109,6 +109,11 @@ qubit.opentag.LibraryTag.define("mentionme.referrertag.v1.Tag", {
 			token: "segment",
 			uv: ""
 		}, {
+			name: "Locale*",
+			description: "A locale string representing what language and locale to serve an Offer in, e.g en_GB or fr_FR",
+			token: "locale",
+			uv: ""
+		}, {
 			name: "Username",
 			description: "username",
 			token: "username",
@@ -159,6 +164,8 @@ qubit.opentag.LibraryTag.define("mentionme.referrertag.v1.Tag", {
 			paramObj["implementation"] = "" + this.valueForToken("implementation");
 		if (("" + this.valueForToken("segment")).length)
 			paramObj["segment"] = "" + this.valueForToken("segment");
+		if (("" + this.valueForToken("locale")).length)
+			paramObj["segment"] = "" + this.valueForToken("locale");
 
 		for (var param in paramObj) {
 			var value = paramObj[param];
