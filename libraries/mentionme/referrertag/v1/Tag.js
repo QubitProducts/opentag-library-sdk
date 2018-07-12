@@ -165,7 +165,7 @@ qubit.opentag.LibraryTag.define("mentionme.referrertag.v1.Tag", {
 		if (("" + this.valueForToken("segment")).length)
 			paramObj["segment"] = "" + this.valueForToken("segment");
 		if (("" + this.valueForToken("locale")).length)
-			paramObj["segment"] = "" + this.valueForToken("locale");
+			paramObj["locale"] = "" + this.valueForToken("locale");
 
 		for (var param in paramObj) {
 			var value = paramObj[param];
