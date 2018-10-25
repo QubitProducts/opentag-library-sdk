@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.3.0";
+var qversion = "3.3.1";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
