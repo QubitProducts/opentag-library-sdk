@@ -119,26 +119,26 @@ var UNDEF;
 
 /*
  * Opentag, a tag deployment platform
- * Copyright 2013-2016, Qubit Group
+ * Copyright 2013-2018, Qubit Group
  * http://opentag.qubitproducts.com
  * Author: Peter Fronc <peter.fronc@qubitdigital.com>
  */
 
 (function () {
-  
+
   /**
    * @class qubit.Define
    * @singleton
-   * 
+   *
    * #Generic Utility
    * 
    * It delivers utility tools for copying or traversing objects, acessing
    * and manipulating CSS class names, managing arrays, creating classes and
    * many more useful utilities. Please see the API.
-   * 
+   *
    */
   function Define() {}
-  
+
   /**
    * Global scope accessor.
    * @returns {Object}
@@ -169,18 +169,18 @@ var UNDEF;
   Define.globalNamespace = function (path, instance, pckg, noOverride) {
     return _namespace(path, instance, pckg, noOverride, true);
   };
-  
+
   /**
    * Function builds desired name space in defalt PKG_ROOT scope.
    * It will not override existing elements.
    * @param {String} path dot notation based objects path.
-   * @param {Object} instance reference to be put as last `object` node. If `undefined` 
+   * @param {Object} instance reference to be put as last `object` node. If `undefined`
    *                  empty object will be used
    * @param {Object} pckg object to start namespace at
    * @param {Boolean} noOverride if set, "instance" parameter will not override
-   *    if object already exists in namespace. Can be ignored if 
+   *    if object already exists in namespace. Can be ignored if
    *    `GLOBAL.TAGSDK_NS_OVERRIDE` is set to true (no overriding mode)
-   * @returns {Object} `{root, object}` pair where namespace starts at "root" 
+   * @returns {Object} `{root, object}` pair where namespace starts at "root"
    *        and ends at "object". "object" is the top element namespace created.
    */
   Define.namespace = function (path, instance, pckg, noOverride) {
@@ -195,33 +195,33 @@ var UNDEF;
       last = null,
       lastName = null,
       i;
-    
+
     if (isGlobal) {
       current = GLOBAL;
     }
-    
+
     var root = current;
-    
+
     current = pckg || current;
-    
+
     for (i = 0; i < files.length - 1; i += 1) {
       last = current;
       lastName = files[i];
       current[lastName] = current[lastName] || {};
       current = current[lastName];
     }
-    
+
     last = current;
     lastName = files[files.length - 1];
-    
+
     if (GLOBAL.TAGSDK_NS_OVERRIDE) {
       noOverride = false;
     }
-    
+
     if (GLOBAL.TAGSDK_NS_FORCED_OVERRIDE_OPTION !== undefined) {
       noOverride = !GLOBAL.TAGSDK_NS_FORCED_OVERRIDE_OPTION;
     }
-    
+
     if (instance !== undefined) {
       if (last[lastName] === undefined || !noOverride) {
         last[lastName] = instance;
@@ -229,13 +229,13 @@ var UNDEF;
     } else {
       last[lastName] = last[lastName] || {};
     }
-    
+
     if (instance) {
       instance.CLASSPATH = files.join(".");
       files.splice(files.length - 1, 1);
       instance.PACKAGE_NAME = files.join(".");
     }
-  
+
     return {
       root: root,
       object: last,
@@ -243,22 +243,22 @@ var UNDEF;
     };
   }
 
-  
+
   /**
-   * Function behaves exactly the same as `Define.namespace`, with the 
-   * difference that path will be prefixed with client space namespace 
+   * Function behaves exactly the same as `Define.namespace`, with the
+   * difference that path will be prefixed with client space namespace
    * ("qubit.cs").
-   * 
+   *
    * Function builds desired name space in defalt PKG_ROOT scope.
    * It will not override existing elements.
    * @param {String} path dot notation based objects path.
-   * @param {Object} instance reference to be put as last `object` node. 
+   * @param {Object} instance reference to be put as last `object` node.
    *                  If `undefined` empty object will be used.
    * @param {Object} pckg object to start namespace at
    * @param {Boolean} noOverride if set, "instance" parameter will not override
-   *    if object already exists in namespace. Can be ignored if 
+   *    if object already exists in namespace. Can be ignored if
    *    `GLOBAL.TAGSDK_NS_OVERRIDE` is set to true (no overriding mode)
-   * @returns {Object} `{root, object}` pair where namespace starts at "root" 
+   * @returns {Object} `{root, object}` pair where namespace starts at "root"
    *        and ends at "object". "object" is the top element namespace created.
    */
   Define.clientNamespace = function (path, instance, pckg, noOverride) {
@@ -271,7 +271,7 @@ var UNDEF;
    * It does similiar job as namespace with addition of adding CLASS_NAME
    * and PACKAGE_NAME on prototype. It also sets SUPER to extending class
    * Class.
-   * 
+   *
    * @param {String} path
    * @param {Object} Class
    * @param {Function} SuperClass
@@ -306,14 +306,14 @@ var UNDEF;
   Define.clazz("qubit.Define", Define);
 
   /**
-   * Function behaves exactly the same as `Define.clazz`, with the 
-   * difference that path will be prefixed with client space namespace 
+   * Function behaves exactly the same as `Define.clazz`, with the
+   * difference that path will be prefixed with client space namespace
    * ("qubit.cs").
    * Utility for simple class declaration (not definition).
    * It does similiar job as namespace with addition of adding CLASS_NAME
    * and PACKAGE_NAME on prototype. It also sets SUPER to extending class
    * Class.
-   * 
+   *
    * @param {String} path
    * @param {Object} Class
    * @param {Function} SuperClass
@@ -329,13 +329,13 @@ var UNDEF;
       pckg,
       config);
   };
-  
+
   Define.STANDARD_VS_NS = "qubit.vs";
-  
+
   Define.vendorsSpaceClasspath = function (path) {
     var cp = qubit.VENDOR_SPACE_CP;
     var result = (cp === undefined || cp === null) ? Define.STANDARD_VS_NS : cp;
-    
+
     if (path) {
       if (result) {
         return result + "." + path;
@@ -343,28 +343,28 @@ var UNDEF;
         return path;
       }
     }
-    
+
     return result;
   };
-  
+
   var nsTmp = Define.vendorsSpaceClasspath();
   var _vspace;
-  
+
   if (nsTmp) {
     _vspace = Define.namespace(nsTmp, {}, null, true).instance;
   } else {
     _vspace = Define.global();
   }
-  
+
   Define.getVendorSpace = function () {
     return _vspace;
   };
-  
+
   Define.vendorNamespace = function (path, instance, pckg, noOverride) {
     path = Define.vendorsSpaceClasspath(path);
     return Define.namespace(path, instance, pckg, noOverride);
   };
-  
+
   Define.vendorClazz = function (path, Class, SuperClass, pckg, config) {
     path = Define.vendorsSpaceClasspath(path);
     return Define.clazz(path, Class, SuperClass, pckg, config);
@@ -374,44 +374,44 @@ var UNDEF;
 
 /*
  * TagSDK, a tag development platform
- * Copyright 2014, Qubit Group
+ * Copyright 2013-2018, Qubit Group
  * http://opentag.qubitproducts.com
  * Author: Peter Fronc <peter.fronc@qubitdigital.com>
  */
 
 (function () {
-  var cookieAlphabet = 
-          "abcdefghijklmnopqrstuvwxyz" + "0123456789" +
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "*!-#$&+()@" +
-          "'%./:<>?[" + "\"]^_`{|}~" +
-          "\\" +
-          ";=";
-  
+  var cookieAlphabet =
+    "abcdefghijklmnopqrstuvwxyz" + "0123456789" +
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "*!-#$&+()@" +
+    "'%./:<>?[" + "\"]^_`{|}~" +
+    "\\" +
+    ";=";
+
   var cookieAlphabetMap = {};
   for (var i = 0; i < cookieAlphabet.length; i++) {
     cookieAlphabetMap[cookieAlphabet.charAt(i)] = i;
   }
-  
+
   /**
    * @class qubit.Cookie
-   * 
+   *
    * Cookie class with static methods to use for setting and getting and
    * removing cookie.
-   * 
+   *
    * @param {Object} config
    */
   function Cookie(config) {
   }
 
   qubit.Define.clazz("qubit.Cookie", Cookie);
-  
+
   Cookie.cookieAlphabet = cookieAlphabet;
   Cookie.cookieAlphabetMap = cookieAlphabetMap;
-  
+
   /**
    * @static
    * Default decoding method for cookie. Defaulting to `decodeURIComponent`.
-   * 
+   *
    * @param {String} string string to decode
    * @returns {String} decoded string
    */
@@ -421,18 +421,18 @@ var UNDEF;
   /**
    * @static
    * Default encoding method for cookie. Defaulting to `encodeURIComponent`.
-   * 
+   *
    * @param {String} string string to encode
    * @returns {String} encoded string
    */
   Cookie.encode = function (string) {
     return escape(string);
   };
-  
+
   /**
    * @static
    * Cookie setter function.
-   * 
+   *
    * @param {String} name cookie name
    * @param {String} value cookie string to be set
    * @param {Number} days days to expire
@@ -449,12 +449,12 @@ var UNDEF;
     } else {
       expires = "";
     }
-    
+
     if (!notEncoded) {
       name = Cookie.encode(name);
       value = Cookie.encode(value);
     }
-    
+
     var cookie = name + "=" + value + expires + "; path=/;";
 
     if (domain) {
@@ -464,14 +464,70 @@ var UNDEF;
     document.cookie = cookie;
   };
 
+  var CHUNKS_CACHED;
+  var COOKIE_CACHE = {};
+
+  Cookie.resetCache = function () {
+    CHUNKS_CACHED = null;
+    COOKIE_CACHE = {};
+  };
+
   /**
-   * @static
-   * Get cookie function.
+   * Same as `Cookie.get()` function but values return are from cache made
+   * on first run of this function. Unless `Cookie.resetCache()` is run this 
+   * method will return cached values. Its very efficient to use it for 
+   * repeatetive cookie reads - on mobile devices cookie reads are expensive.
    * 
    * @param {String} name cookie name
    * @param {Boolean} notDecoded should NOT cookie be decoded using default
    *  method. If true, cookie will not be decoded.
-   * 
+   *
+   * @returns {String} cookie string or `null` if not found.
+   */
+  Cookie.getCached = function (name, notDecoded) {
+    var cachedName = name + "=" + (!!notDecoded);
+
+    if (COOKIE_CACHE[cachedName] !== undefined) {
+      return COOKIE_CACHE[cachedName];
+    }
+
+    var part = name + "=";
+    if (!CHUNKS_CACHED) {
+      CHUNKS_CACHED = document.cookie.split(';');
+    }
+
+    for (var i = 0; i < CHUNKS_CACHED.length; i++) {
+      var chunk = CHUNKS_CACHED[i];
+
+      while (chunk.charAt(0) === ' ') {
+        chunk = chunk.substring(1, chunk.length);
+      }
+
+      if (chunk.indexOf(part) === 0) {
+        var tmp = chunk.substring(part.length, chunk.length);
+        if (!notDecoded) {
+          tmp = Cookie.decode(tmp);
+        }
+
+        COOKIE_CACHE[cachedName] = tmp;
+
+        return tmp;
+      }
+    }
+
+    COOKIE_CACHE[cachedName] = null;
+
+    return null;
+  };
+
+  /**
+   * @static
+   * Get cookie function.
+   *
+   * @param {String} name cookie name
+   * @param {Boolean} notDecoded should NOT cookie be decoded using default
+   *  method. If true, cookie will not be decoded.
+   *
    * @returns {String} cookie string or `null` if not found.
    */
   Cookie.get = function (name, notDecoded) {
@@ -496,11 +552,11 @@ var UNDEF;
   /**
    * @static
    * Gets all of cookies for given name.
-   * 
+   *
    * @param {String} name cookie(s) name
    * @param {Boolean} decoded should cookies be decoded using default method.
-   * 
-   * @returns {Array} cookies strings array, if there is no cookies, 
+   *
+   * @returns {Array} cookies strings array, if there is no cookies,
    *    empty array is returned.
    */
   Cookie.getAllForName = function (name, decoded) {
@@ -552,7 +608,7 @@ var UNDEF;
   /**
    * @static
    * Clearing cookie function.
-   * 
+   *
    * @param {String} name cookie name
    * @param {String} domain cookie domain
    */
@@ -3612,11 +3668,11 @@ q.html.fileLoader.tidyUrl = function (path) {
   }
   return "//" + path;
 };
-/* 
- * To change this license header, choose License Headers in 
- * Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Opentag, a tag deployment platform
+ * Copyright 2013-2018, Qubit Group
+ * http://opentag.qubitproducts.com
+ * Author: Peter Fronc <peter.fronc@qubitdigital.com>
  */
 
 
@@ -3626,26 +3682,26 @@ q.html.fileLoader.tidyUrl = function (path) {
 (function () {
   var Define = qubit.Define;
   var Utils = qubit.opentag.Utils;
-  
+
   /**
    * @class qubit.Events
    * Simple events manager.
-   * 
+   *
    * @param {Object} config empty object.
    */
   function Events(config) {
     this.log = new qubit.opentag.Log("Events -> ");/*L*/
     this.calls = {};
   }
-  
+
   /**
    * Simple events adding function. IT pushes a function to named
-   * execution array. If function already is in the array, 
-   * it has no effect. To access array, use 'this.calls' on 
+   * execution array. If function already is in the array,
+   * it has no effect. To access array, use 'this.calls' on
    * this object.
    * @param {String} name simple name for event.
    * @param {Function} call
-   * @returns {Number} index in array of events for the name. 
+   * @returns {Number} index in array of events for the name.
    *        -1 if added at end of queue.
    */
   Events.prototype.on = function (name, call) {
@@ -3654,7 +3710,7 @@ q.html.fileLoader.tidyUrl = function (path) {
     }
     return Utils.addToArrayIfNotExist(this.calls[name], call);
   };
-  
+
   /**
    * Function will cause triggering event for given name.
    * @param {String} name Event name
@@ -3685,7 +3741,7 @@ q.html.fileLoader.tidyUrl = function (path) {
     }
     return null;
   };
-  
+
   /**
    * Removes all event handlers === to call of any type from this object.
    * @param {Function} call
@@ -3700,14 +3756,14 @@ q.html.fileLoader.tidyUrl = function (path) {
     }
     return total;
   };
-  
+
   /**
    * Removes all events of any type from this stack.
    */
   Events.prototype.clear = function () {
     this.calls = {};
   };
-  
+
   Define.clazz("qubit.Events", Events);
 })();
 
@@ -9257,6 +9313,8 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
       throw "Tag is destroyed.";
     }
     
+    // @todo this could be wrapped into one function and do 
+    // single check with marker if was run.
     this.resolveAllDynamicData();
     this.runPostInitialisationSection();
 
@@ -10320,9 +10378,9 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   BaseTag.prototype.cookieSaysToRunEvenIfDisabled = function () {
     var id = this._getUniqueId();
-    var ret = !!Cookie.get(cookieRunAll);
+    var ret = !!Cookie.getCached(cookieRunAll);
     if (!ret) {
-      ret = !!Cookie.get(forceCookiePrefix + id);
+      ret = !!Cookie.getCached(forceCookiePrefix + id);
     }
     return ret;
   };
@@ -10335,6 +10393,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   BaseTag.prototype.setCookieForcingTagToRun = function () {
     var id = this._getUniqueId();
     Cookie.set(forceCookiePrefix + id, "true");
+    Cookie.resetCache();
   };
   
   /**
@@ -10344,6 +10403,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   BaseTag.setCookieForcingTagsToRun = function () {
     Cookie.set(cookieRunAll, "true");
+    Cookie.resetCache();
   };
   
   /**
@@ -10352,6 +10412,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   BaseTag.prototype.setCookieToDisable = function () {
     var id = this._getUniqueId();
     Cookie.set(disableCookiePrefix + id, "true");
+    Cookie.resetCache();
   };
   
   /**
@@ -10360,6 +10421,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   BaseTag.prototype.rmCookieToDisable = function () {
     var id = this._getUniqueId();
     Cookie.rm(disableCookiePrefix + id);
+    Cookie.resetCache();
   };
   
   /**
@@ -10368,7 +10430,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   BaseTag.prototype.disabledByCookie = function () {
     var id = this._getUniqueId();
-    return !!Cookie.get(disableCookiePrefix + id);
+    return !!Cookie.getCached(disableCookiePrefix + id);
   };
   
   /**
@@ -10377,6 +10439,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   BaseTag.rmCookieForcingTagsToRun = function () {
     Cookie.rm(cookieRunAll);
+    Cookie.resetCache();
   };
   
   /**
@@ -10386,6 +10449,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
   BaseTag.prototype.rmCookieForcingTagToRun = function () {
     var id = this._getUniqueId();
     Cookie.rm(forceCookiePrefix + id);
+    Cookie.resetCache();
   };
   
   /**
@@ -10393,6 +10457,7 @@ qubit.Define.namespace("qubit.qprotocol.PubSub", PubSub);
    */
   BaseTag.rmAllDisablingCookies = function () {
     Utils.rmCookiesMatching(disableCookiePrefix);
+    Cookie.resetCache();
   };
   
   /**
@@ -12888,17 +12953,17 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
 (function () {
   var LibraryTag = qubit.opentag.LibraryTag;
   var Define = qubit.Define;
-  
+
   /**
    * @class qubit.Quick
    * @singleton
-   * 
+   *
    * #Quick is a quick reference for often used utilities.
-   * 
+   *
    */
   function Quick() {
   }
-  
+
   /**
    * Quick `qubit.opentag.LibraryTag.define(...)` shortcut.
    * @return {undefined}
@@ -12906,7 +12971,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
   Quick.library = function () {
     return LibraryTag.define.apply(LibraryTag, arguments);
   };
-  
+
   /**
    * Quick `qubit.opentag.LibraryTag.getLibraryByClasspath(...)` shortcut.
    * @return {undefined}
@@ -12916,7 +12981,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
       LibraryTag.getLibraryByClasspath,
       arguments);
   };
-  
+
   Define.namespace("qubit.Quick", Quick);
 }());
 
@@ -14321,7 +14386,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * @returns {Boolean}
    */
   Container.prototype.disabledByCookie = function () {
-    return !!Cookie.get(this._getCookieNameForDisabling());
+    return !!Cookie.getCached(this._getCookieNameForDisabling());
   };
   
   /**
@@ -14329,6 +14394,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    */
   Container.prototype.setCookieToDisable = function () {
     Cookie.set(this._getCookieNameForDisabling(), "true");
+    Cookie.resetCache();
   };
   
   /**
@@ -14337,6 +14403,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    */
   Container.prototype.rmCookieToDisable = function () {
     Cookie.rm(this._getCookieNameForDisabling());
+    Cookie.resetCache();
   };
   
   /**
@@ -14344,6 +14411,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    */
   Container.rmAllDisablingCookies = function () {
     Utils.rmCookiesMatching(disableCookiePrefix);
+    Cookie.resetCache();
   };
   
   /**
@@ -14354,6 +14422,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    */
   Container.setCookieForDisabledContainersToRun = function () {
     Cookie.set(forceCookiePrefix, "true");
+    Cookie.resetCache();
   };
   
   /**
@@ -14361,6 +14430,7 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    */
   Container.rmCookieForDisabledContainersToRun = function () {
     Cookie.rm(forceCookiePrefix);
+    Cookie.resetCache();
   };
 })();
 /* global qubit, GLOBAL, q */
