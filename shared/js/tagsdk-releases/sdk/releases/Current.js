@@ -69,7 +69,7 @@ if (!PKG_ROOT.qubit) {
   PKG_ROOT.qubit = qubit;
 }
 
-var qversion = "3.3.1";
+var qversion = "3.3.2";
 
 if (qubit.VERSION && qubit.VERSION !== qversion) {
   try {
@@ -13481,12 +13481,14 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * This method triggers default tags loading, which is running with filters 
    * configuration.
    * To run tags directly, use `runWithoutFilters()` method.
+   * @param {Boolean} force if set to true container will run even if disabled
+   *  or locked.
    */
-  Container.prototype.run = function () {
+  Container.prototype.run = function (force) {
     this.log.FINE("starting loading");/*L*/
     this.runTags({
       command: "runOnceIfFiltersPass"
-    });
+    }, force);
   };
 
   /**
@@ -13494,12 +13496,14 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
    * This method will trigger running all filters without filters check - any 
    * tags awaiting for filter condition will be tried to run WITHOUT that 
    * condition (ie. all filters disabled)!
+   * @param {Boolean} force if set to true container will run even if disabled
+   *  or locked.
    */
-  Container.prototype.runWithoutFilters = function () {
+  Container.prototype.runWithoutFilters = function (force) {
     this.log.FINE("starting loading");/*L*/
     this.runTags({
       command: "run"
-    });
+    }, force);
   };
 
   /**
@@ -13584,12 +13588,22 @@ q.cookie.SimpleSessionCounter.update = function (domain) {
     }
     
     if (!force) {
+      if (this.config.disabled) {
+        this.log.INFO("Container is disabled.");/*L*/
+        /*no-send*/
+        this.sendPingsNotTooOften();
+        /*~no-send*/
+        return;
+      }
       if (Container.LOCKED || Utils.global().QUBIT_CONTAINERS_LOCKED) {
         this.log.INFO("All containers are LOCKED.");/*L*/
         this.log.INFO("To run, set Container.LOCKED to false and " +/*L*/
           " set Utils.global().QUBIT_CONTAINERS_LOCKED to false or " +/*L*/
           "use force parameter.");/*L*/
         this.log.WARN("Container locked - stopping here.");/*L*/
+        /*no-send*/
+        this.sendPingsNotTooOften();
+        /*~no-send*/
         return;
       }
     }
