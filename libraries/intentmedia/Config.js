@@ -1,9 +1,9 @@
 var Config = {
 /*config*/
 "id": 1468349597652992,
-"name": "Intent Media",
-"imageUrl": "http://image.s4.exct.net/lib/fe9e15707067057e71/m/1/IMlogo2.png",
-"description": "Intent Media operates the world’s most powerful platform for advertising on commerce sites. We help travel sites unlock their full revenue potential and deliver online marketers a huge new source of highly-qualified shoppers — while providing consumers a better shopping experience."
+"name": "Intent",
+"imageUrl": "https://d1m54pdnjzjnhe.cloudfront.net/pngineer/06b52fc0-442f-11e9-be47-93fa85205597.png",
+"description": "Intent uses patented technology to predict user behavior in real-time and identify the future value of every user. Use our tools to integrate comparison shopping ads and other personalized site experiences to maximize user utility and revenue-per-user."
 /*~config*/
 };
 
