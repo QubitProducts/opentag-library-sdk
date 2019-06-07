@@ -5,9 +5,9 @@ qubit.opentag.LibraryTag.define(
 		getDefaultConfig: function () {
       return {
 			/*config*/
-			name: "CJ Conversion Pixel incl. Discount",
+			name: "CJ Affiliate Advanced Conversion Tag",
 			async: true,
-			description: "The conversion pixel code to enable Commission Junction to track purchases on the confirmation pages. If individual product discounts are available (one at least), then an array of these discounts (of equal length to the number of products) should be used. If no individual product discounts are available, then a total discount should be assigned to the transaction (either zero or whatever value is available). Check documentation on how to calculate the individual product discounts.",
+			description: "The purpose of this tag is to track transactional or lead information in order for commission to be paid out to the referring publisher.  Advanced conversion tracking integration includes pay-per-sale and pay-per-lead program support.  Product reporting and item-based commissions are additional features that are not available with simple conversion tracking integration.",
 			html: "",
 			locationDetail: "",
 			isPrivate: false,
@@ -44,6 +44,11 @@ qubit.opentag.LibraryTag.define(
 				description: "Action ID",
 				token: "action_id",
 				uv: ""
+			},	{
+				name: "CJ Event ID",
+				description: "",
+				token: "cjevent",
+				uv: "universal_variable.transaction.cjevent"
 			}, {
 				name: "Currency",
 				description: "Currency",
@@ -94,6 +99,7 @@ qubit.opentag.LibraryTag.define(
 			url += "CID=" + this.valueForToken("enterprise_id") +
 				"&OID=" + this.valueForToken("order_id") +
 				"&TYPE=" + this.valueForToken("action_id") +
+				"&CJEVENT=" + this.valueForToken("cjevent") +
 				"&CURRENCY=" + this.valueForToken("currency");
 
 			if (this.valueForToken("discounts").length !== this.valueForToken("skus").length) {
